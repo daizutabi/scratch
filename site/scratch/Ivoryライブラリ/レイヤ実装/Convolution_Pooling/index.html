@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>2.8 Convolution/Pooling &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2 current"><button class="section nav-item">Ivoryライブラリ</button>
+<ul class="subnav">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">レイヤ実装</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">2.8 Convolution/Pooling</a>
+<ul class="subnav">
+<li class="toctree-l5"><a class="nav-item toc" href="#281-4">2.8.1 4次元配列</a></li>
+<li class="toctree-l5"><a class="nav-item toc" href="#282-im2col">2.8.2 im2colによる展開</a></li>
+<li class="toctree-l5"><a class="nav-item toc" href="#283-convolution">2.8.3 Convolutionレイヤの実装</a></li>
+<li class="toctree-l5"><a class="nav-item toc" href="#284-pooling">2.8.4 Poolingレイヤの実装</a></li>
+<li class="toctree-l5"><a class="nav-item toc" href="#285-ivory">2.8.5 Ivoryライブラリでの実装</a></li>
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">自然言語処理編</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../自然言語処理編/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../Dropout/">&laquo; Previous</a></div>
+    <div class="next"><a href="../MatMul_Embedding/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>Ivoryライブラリ &raquo; </li><li>レイヤ実装</li>
+</ul>
+</nav>
+                <div id="content"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<h2 id="28-convolutionpooling"><span class="pheasant-header"><span class="header"><span class="number">2.8</span> <span class="title">Convolution/Pooling</span></span></span></h2>
+<p>Convolutionレイヤについて整理しておきます。2次元配列を複数チャネル持ったデータをあるバッチ数まとめて入力します。このデータ形状を、<span><span class="MathJax_Preview">(</span><script type="math/tex">(</script></span>バッチ数<span><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>, チャネル数<span><span class="MathJax_Preview">C</span><script type="math/tex">C</script></span>, 高さ<span><span class="MathJax_Preview">H</span><script type="math/tex">H</script></span>,幅<span><span class="MathJax_Preview">W)</span><script type="math/tex">W)</script></span>とします。Convolutionレイヤ自体は、パラメータとして3次元フィルタを複数個持ち、同じ数だけスカラーのバイアスを持ちます。フィルタの形状を<span><span class="MathJax_Preview">(</span><script type="math/tex">(</script></span>フィルタ数<span><span class="MathJax_Preview">FN</span><script type="math/tex">FN</script></span>, チャネル数<span><span class="MathJax_Preview">C</span><script type="math/tex">C</script></span>, 高さ<span><span class="MathJax_Preview">FH</span><script type="math/tex">FH</script></span>, 幅<span><span class="MathJax_Preview">FW)</span><script type="math/tex">FW)</script></span>とします。出力形状は<span><span class="MathJax_Preview">(</span><script type="math/tex">(</script></span>バッチ数<span><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>, チャネル数<span><span class="MathJax_Preview">FN</span><script type="math/tex">FN</script></span>, 高さ<span><span class="MathJax_Preview">OH</span><script type="math/tex">OH</script></span>,幅<span><span class="MathJax_Preview">OW)</span><script type="math/tex">OW)</script></span>となります。ここで、パディング<span><span class="MathJax_Preview">P</span><script type="math/tex">P</script></span>、ストライド<span><span class="MathJax_Preview">S</span><script type="math/tex">S</script></span>としたとき、</p>
+<div>
+<div class="MathJax_Preview"> OH = \frac{H+2P-FH}{S}+1 </div>
+<script type="math/tex; mode=display"> OH = \frac{H+2P-FH}{S}+1 </script>
+</div>
+<div>
+<div class="MathJax_Preview"> OW = \frac{W+2P-FW}{S}+1 </div>
+<script type="math/tex; mode=display"> OW = \frac{W+2P-FW}{S}+1 </script>
+</div>
+<p>です。注目する点は、</p>
+<ul>
+<li>フィルタは、入力データのチャネル数分をまとめて新たな一つの「画像」を作る</li>
+<li>出力のチャネル数はフィルタ数に等しくなる</li>
+<li>新しい「画像」のサイズが上述の（<span><span class="MathJax_Preview">OH</span><script type="math/tex">OH</script></span>, <span><span class="MathJax_Preview">OW</span><script type="math/tex">OW</script></span>）となる</li>
+</ul>
+<p>です。</p>
+<h3 id="281-4"><span class="pheasant-header"><span class="header"><span class="number">2.8.1</span> <span class="title">4次元配列</span></span></span></h3>
+<p>Convolutionレイヤへの入力データ<span><span class="MathJax_Preview">\mathbf{X}</span><script type="math/tex">\mathbf{X}</script></span>は4次元配列です。データの形状を<span><span class="MathJax_Preview">(</span><script type="math/tex">(</script></span>バッチ数<span><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>, チャネル数<span><span class="MathJax_Preview">C</span><script type="math/tex">C</script></span>, 高さ<span><span class="MathJax_Preview">H</span><script type="math/tex">H</script></span>, 幅<span><span class="MathJax_Preview">W)</span><script type="math/tex">W)</script></span>とします。</p>
+<div>
+<div class="MathJax_Preview">\mathbf X = \left[\begin{matrix}\left[\begin{matrix}x_{1111}&amp;x_{1112}&amp;x_{1113}\\x_{1121}&amp;x_{1122}&amp;x_{1123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{1211}&amp;x_{1212}&amp;x_{1213}\\x_{1221}&amp;x_{1222}&amp;x_{1223}\end{matrix}\right]\\\left[\begin{matrix}x_{2111}&amp;x_{2112}&amp;x_{2113}\\x_{2121}&amp;x_{2122}&amp;x_{2123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{2211}&amp;x_{2212}&amp;x_{2213}\\x_{2221}&amp;x_{2222}&amp;x_{2223}\end{matrix}\right]\\\left[\begin{matrix}x_{3111}&amp;x_{3112}&amp;x_{3113}\\x_{3121}&amp;x_{3122}&amp;x_{3123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{3211}&amp;x_{3212}&amp;x_{3213}\\x_{3221}&amp;x_{3222}&amp;x_{3223}\end{matrix}\right]\end{matrix}\right] </div>
+<script type="math/tex; mode=display">\mathbf X = \left[\begin{matrix}\left[\begin{matrix}x_{1111}&x_{1112}&x_{1113}\\x_{1121}&x_{1122}&x_{1123}\end{matrix}\right]&\left[\begin{matrix}x_{1211}&x_{1212}&x_{1213}\\x_{1221}&x_{1222}&x_{1223}\end{matrix}\right]\\\left[\begin{matrix}x_{2111}&x_{2112}&x_{2113}\\x_{2121}&x_{2122}&x_{2123}\end{matrix}\right]&\left[\begin{matrix}x_{2211}&x_{2212}&x_{2213}\\x_{2221}&x_{2222}&x_{2223}\end{matrix}\right]\\\left[\begin{matrix}x_{3111}&x_{3112}&x_{3113}\\x_{3121}&x_{3122}&x_{3123}\end{matrix}\right]&\left[\begin{matrix}x_{3211}&x_{3212}&x_{3213}\\x_{3221}&x_{3222}&x_{3223}\end{matrix}\right]\end{matrix}\right] </script>
+</div>
+<p>上記の例では、高さ2、幅3の画像が、チャネル数2（横方向）、バッチ数3（縦方向）で並んでいると解釈できます。</p>
+<h3 id="282-im2col"><span class="pheasant-header"><span class="header"><span class="number">2.8.2</span> <span class="title">im2colによる展開</span></span></span></h3>
+<p>「ゼロから作るDeep Learning」で導入されている<code>im2col</code>関数の動作を確認します。フィルタサイズが、<span><span class="MathJax_Preview">FH=2</span><script type="math/tex">FH=2</script></span>、<span><span class="MathJax_Preview">FW=2</span><script type="math/tex">FW=2</script></span>の場合に、<code>im2col</code>関数で<span><span class="MathJax_Preview">\mathbf{X}</span><script type="math/tex">\mathbf{X}</script></span>を2次元配列に変換した結果<span><span class="MathJax_Preview">\hat{\mathbf X}</span><script type="math/tex">\hat{\mathbf X}</script></span>は以下のようになります。</p>
+<div>
+<div class="MathJax_Preview">\hat{\mathbf X}=\left[\begin{matrix}x_{1111}&amp;x_{1112}&amp;x_{1121}&amp;x_{1122}&amp;x_{1211}&amp;x_{1212}&amp;x_{1221}&amp;x_{1222}\\x_{1112}&amp;x_{1113}&amp;x_{1122}&amp;x_{1123}&amp;x_{1212}&amp;x_{1213}&amp;x_{1222}&amp;x_{1223}\\x_{2111}&amp;x_{2112}&amp;x_{2121}&amp;x_{2122}&amp;x_{2211}&amp;x_{2212}&amp;x_{2221}&amp;x_{2222}\\x_{2112}&amp;x_{2113}&amp;x_{2122}&amp;x_{2123}&amp;x_{2212}&amp;x_{2213}&amp;x_{2222}&amp;x_{2223}\\x_{3111}&amp;x_{3112}&amp;x_{3121}&amp;x_{3122}&amp;x_{3211}&amp;x_{3212}&amp;x_{3221}&amp;x_{3222}\\x_{3112}&amp;x_{3113}&amp;x_{3122}&amp;x_{3123}&amp;x_{3212}&amp;x_{3213}&amp;x_{3222}&amp;x_{3223}\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\hat{\mathbf X}=\left[\begin{matrix}x_{1111}&x_{1112}&x_{1121}&x_{1122}&x_{1211}&x_{1212}&x_{1221}&x_{1222}\\x_{1112}&x_{1113}&x_{1122}&x_{1123}&x_{1212}&x_{1213}&x_{1222}&x_{1223}\\x_{2111}&x_{2112}&x_{2121}&x_{2122}&x_{2211}&x_{2212}&x_{2221}&x_{2222}\\x_{2112}&x_{2113}&x_{2122}&x_{2123}&x_{2212}&x_{2213}&x_{2222}&x_{2223}\\x_{3111}&x_{3112}&x_{3121}&x_{3122}&x_{3211}&x_{3212}&x_{3221}&x_{3222}\\x_{3112}&x_{3113}&x_{3122}&x_{3123}&x_{3212}&x_{3213}&x_{3222}&x_{3223}\end{matrix}\right]</script>
+</div>
+<p><span><span class="MathJax_Preview">\hat{\mathbf X}</span><script type="math/tex">\hat{\mathbf X}</script></span>の形状を確認しておきます。列の数は、一つのフィルタの形状<span><span class="MathJax_Preview">(C,\ FH,\ FW)</span><script type="math/tex">(C,\ FH,\ FW)</script></span>の要素数<span><span class="MathJax_Preview">C\times FH\times FW</span><script type="math/tex">C\times FH\times FW</script></span>に等しくなります。つまり、ある一つのフィルタによって畳み込まれる要素が一行に並ぶ形になります。今回の場合は、<span><span class="MathJax_Preview">2\times 2\times 2=8</span><script type="math/tex">2\times 2\times 2=8</script></span>です。行方向はどうでしょうか。今は、チャネルあたりの元画像が<span><span class="MathJax_Preview">2\times 3</span><script type="math/tex">2\times 3</script></span>でフィルタが<span><span class="MathJax_Preview">2\times 2</span><script type="math/tex">2\times 2</script></span>です。出力画像のサイズの式：</p>
+<div>
+<div class="MathJax_Preview"> OH = \frac{H+2P-FH}{S}+1 </div>
+<script type="math/tex; mode=display"> OH = \frac{H+2P-FH}{S}+1 </script>
+</div>
+<div>
+<div class="MathJax_Preview"> OW = \frac{W+2P-FW}{S}+1 </div>
+<script type="math/tex; mode=display"> OW = \frac{W+2P-FW}{S}+1 </script>
+</div>
+<p>を使うと、<span><span class="MathJax_Preview">OH=1</span><script type="math/tex">OH=1</script></span>、<span><span class="MathJax_Preview">OW=2</span><script type="math/tex">OW=2</script></span>で、出力される一つの画像の画素数が2となります。これが、バッチ数3個分繰り返されるので、行数は<span><span class="MathJax_Preview">2\times 3= 6</span><script type="math/tex">2\times 3= 6</script></span>となります。このように、一つのフィルタでの畳み込みで、出力画素ひとつが生成されるので、行数は出力画像の総画素数になります。結果的に、入力の4次元配列<span><span class="MathJax_Preview">(N,\ C,\ H,\ W)</span><script type="math/tex">(N,\ C,\ H,\ W)</script></span>は、</p>
+<div>
+<div class="MathJax_Preview">(N\times OH\times OW,\ C\times FH\times FW)=(6,\ 8)</div>
+<script type="math/tex; mode=display">(N\times OH\times OW,\ C\times FH\times FW)=(6,\ 8)</script>
+</div>
+<p>の2次元配列となりました。一つの行が一つのフィルタで変換され、それが出力される画像の総画素数分だけ行方向に並ぶ形状です。</p>
+<p>次にフィルタ<span><span class="MathJax_Preview">\mathbf W</span><script type="math/tex">\mathbf W</script></span>を見ていきます。フィルタはバッチ数とは関係なく、<span><span class="MathJax_Preview">(</span><script type="math/tex">(</script></span>フィルタ数<span><span class="MathJax_Preview">FN</span><script type="math/tex">FN</script></span>, チャネル数<span><span class="MathJax_Preview">C</span><script type="math/tex">C</script></span>, 高さ<span><span class="MathJax_Preview">FH</span><script type="math/tex">FH</script></span>, 幅<span><span class="MathJax_Preview">FW)</span><script type="math/tex">FW)</script></span>の4次元配列です。<span><span class="MathJax_Preview">FN=4</span><script type="math/tex">FN=4</script></span>のとき、</p>
+<div>
+<div class="MathJax_Preview">\mathbf W = \left[\begin{matrix}\left[\begin{matrix}w_{1111}&amp;w_{1112}\\w_{1121}&amp;w_{1122}\end{matrix}\right]&amp;\left[\begin{matrix}w_{1211}&amp;w_{1212}\\w_{1221}&amp;w_{1222}\end{matrix}\right]\\\left[\begin{matrix}w_{2111}&amp;w_{2112}\\w_{2121}&amp;w_{2122}\end{matrix}\right]&amp;\left[\begin{matrix}w_{2211}&amp;w_{2212}\\w_{2221}&amp;w_{2222}\end{matrix}\right]\\\left[\begin{matrix}w_{3111}&amp;w_{3112}\\w_{3121}&amp;w_{3122}\end{matrix}\right]&amp;\left[\begin{matrix}w_{3211}&amp;w_{3212}\\w_{3221}&amp;w_{3222}\end{matrix}\right]\\\left[\begin{matrix}w_{4111}&amp;w_{4112}\\w_{4121}&amp;w_{4122}\end{matrix}\right]&amp;\left[\begin{matrix}w_{4211}&amp;w_{4212}\\w_{4221}&amp;w_{4222}\end{matrix}\right]\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\mathbf W = \left[\begin{matrix}\left[\begin{matrix}w_{1111}&w_{1112}\\w_{1121}&w_{1122}\end{matrix}\right]&\left[\begin{matrix}w_{1211}&w_{1212}\\w_{1221}&w_{1222}\end{matrix}\right]\\\left[\begin{matrix}w_{2111}&w_{2112}\\w_{2121}&w_{2122}\end{matrix}\right]&\left[\begin{matrix}w_{2211}&w_{2212}\\w_{2221}&w_{2222}\end{matrix}\right]\\\left[\begin{matrix}w_{3111}&w_{3112}\\w_{3121}&w_{3122}\end{matrix}\right]&\left[\begin{matrix}w_{3211}&w_{3212}\\w_{3221}&w_{3222}\end{matrix}\right]\\\left[\begin{matrix}w_{4111}&w_{4112}\\w_{4121}&w_{4122}\end{matrix}\right]&\left[\begin{matrix}w_{4211}&w_{4212}\\w_{4221}&w_{4222}\end{matrix}\right]\end{matrix}\right]</script>
+</div>
+<p>です。なお、ここでのフィルタ数<span><span class="MathJax_Preview">FN</span><script type="math/tex">FN</script></span>が次のレイヤでのチャネル数<span><span class="MathJax_Preview">C</span><script type="math/tex">C</script></span>になります。</p>
+<h3 id="283-convolution"><span class="pheasant-header"><span class="header"><span class="number">2.8.3</span> <span class="title">Convolutionレイヤの実装</span></span></span></h3>
+<h4 id="2831"><span class="pheasant-header"><span class="header"><span class="number">2.8.3.1</span> <span class="title">順伝搬</span></span></span></h4>
+<p><a href="https://github.com/oreilly-japan/deep-learning-from-scratch/blob/master/common/layers.py">「ゼロから作るDeep Learning」の実装</a>を確認します。</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">def forward(self, x):
+    FN, C, FH, FW = self.W.shape
+    N, C, H, W = x.shape
+    out_h = 1 + int((H + 2*self.pad - FH) / self.stride)
+    out_w = 1 + int((W + 2*self.pad - FW) / self.stride)
+    col = im2col(x, FH, FW, self.stride, self.pad)
+    col_W = self.W.reshape(FN, -1).T
+    out = np.dot(col, col_W) + self.b
+    out = out.reshape(N, out_h, out_w, -1).transpose(0, 3, 1, 2)
+    self.x = x
+    self.col = col
+    self.col_W = col_W
+    return out</code></pre></div></div></div>
+
+<p>上記のフィルタ<span><span class="MathJax_Preview">\mathbf W</span><script type="math/tex">\mathbf W</script></span>は以下のように変換されています。</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">    col_W = self.W.reshape(FN, -1).T</code></pre></div></div></div>
+
+<p>変換後のフィルタを<span><span class="MathJax_Preview">\hat{\mathbf W}</span><script type="math/tex">\hat{\mathbf W}</script></span>とすると、</p>
+<div>
+<div class="MathJax_Preview">\hat{\mathbf W}=\left[\begin{matrix}w_{1111}&amp;w_{2111}&amp;w_{3111}&amp;w_{4111}\\w_{1112}&amp;w_{2112}&amp;w_{3112}&amp;w_{4112}\\w_{1121}&amp;w_{2121}&amp;w_{3121}&amp;w_{4121}\\w_{1122}&amp;w_{2122}&amp;w_{3122}&amp;w_{4122}\\w_{1211}&amp;w_{2211}&amp;w_{3211}&amp;w_{4211}\\w_{1212}&amp;w_{2212}&amp;w_{3212}&amp;w_{4212}\\w_{1221}&amp;w_{2221}&amp;w_{3221}&amp;w_{4221}\\w_{1222}&amp;w_{2222}&amp;w_{3222}&amp;w_{4222}\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\hat{\mathbf W}=\left[\begin{matrix}w_{1111}&w_{2111}&w_{3111}&w_{4111}\\w_{1112}&w_{2112}&w_{3112}&w_{4112}\\w_{1121}&w_{2121}&w_{3121}&w_{4121}\\w_{1122}&w_{2122}&w_{3122}&w_{4122}\\w_{1211}&w_{2211}&w_{3211}&w_{4211}\\w_{1212}&w_{2212}&w_{3212}&w_{4212}\\w_{1221}&w_{2221}&w_{3221}&w_{4221}\\w_{1222}&w_{2222}&w_{3222}&w_{4222}\end{matrix}\right]</script>
+</div>
+<p>です。一つの列が一つのフィルタを平坦化したものに対応し、フィルタ数分だけ列があります。すなわち形状は、<span><span class="MathJax_Preview">(C\times FH\times FW,\ FN)</span><script type="math/tex">(C\times FH\times FW,\ FN)</script></span>となります。今回の場合は、<span><span class="MathJax_Preview">(8,\ 4)</span><script type="math/tex">(8,\ 4)</script></span>です。</p>
+<p>さて、先の2次元化した入力<span><span class="MathJax_Preview">\hat{\mathbf X}</span><script type="math/tex">\hat{\mathbf X}</script></span>と比べてみます。こちらは一つの行が一つのフィルタに対応していました。</p>
+<div>
+<div class="MathJax_Preview">\hat{\mathbf X}=\left[\begin{matrix}x_{1111}&amp;x_{1112}&amp;x_{1121}&amp;x_{1122}&amp;x_{1211}&amp;x_{1212}&amp;x_{1221}&amp;x_{1222}\\x_{1112}&amp;x_{1113}&amp;x_{1122}&amp;x_{1123}&amp;x_{1212}&amp;x_{1213}&amp;x_{1222}&amp;x_{1223}\\x_{2111}&amp;x_{2112}&amp;x_{2121}&amp;x_{2122}&amp;x_{2211}&amp;x_{2212}&amp;x_{2221}&amp;x_{2222}\\x_{2112}&amp;x_{2113}&amp;x_{2122}&amp;x_{2123}&amp;x_{2212}&amp;x_{2213}&amp;x_{2222}&amp;x_{2223}\\x_{3111}&amp;x_{3112}&amp;x_{3121}&amp;x_{3122}&amp;x_{3211}&amp;x_{3212}&amp;x_{3221}&amp;x_{3222}\\x_{3112}&amp;x_{3113}&amp;x_{3122}&amp;x_{3123}&amp;x_{3212}&amp;x_{3213}&amp;x_{3222}&amp;x_{3223}\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\hat{\mathbf X}=\left[\begin{matrix}x_{1111}&x_{1112}&x_{1121}&x_{1122}&x_{1211}&x_{1212}&x_{1221}&x_{1222}\\x_{1112}&x_{1113}&x_{1122}&x_{1123}&x_{1212}&x_{1213}&x_{1222}&x_{1223}\\x_{2111}&x_{2112}&x_{2121}&x_{2122}&x_{2211}&x_{2212}&x_{2221}&x_{2222}\\x_{2112}&x_{2113}&x_{2122}&x_{2123}&x_{2212}&x_{2213}&x_{2222}&x_{2223}\\x_{3111}&x_{3112}&x_{3121}&x_{3122}&x_{3211}&x_{3212}&x_{3221}&x_{3222}\\x_{3112}&x_{3113}&x_{3122}&x_{3123}&x_{3212}&x_{3213}&x_{3222}&x_{3223}\end{matrix}\right]</script>
+</div>
+<p>順伝搬においては、2次元化したこれらの配列をAffineレイヤと同じように、</p>
+<div>
+<div class="MathJax_Preview">\hat{\mathbf Y} = \hat{\mathbf X}\cdot\hat{\mathbf W} + \mathbf B</div>
+<script type="math/tex; mode=display">\hat{\mathbf Y} = \hat{\mathbf X}\cdot\hat{\mathbf W} + \mathbf B</script>
+</div>
+<p>とします。（<span><span class="MathJax_Preview">\mathbf B</span><script type="math/tex">\mathbf B</script></span>はフィルタ数分のスカラー値を持ったバイアスで計算時にはブロードキャストされます。）形状を再確認しておきます。</p>
+<table>
+<thead>
+<tr>
+<th>2次元化した配列</th>
+<th>行数</th>
+<th>列数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span><span class="MathJax_Preview">\hat{\mathbf X}</span><script type="math/tex">\hat{\mathbf X}</script></span></td>
+<td><span><span class="MathJax_Preview">N\times OH\times OW</span><script type="math/tex">N\times OH\times OW</script></span></td>
+<td><span><span class="MathJax_Preview">C\times FH\times FW</span><script type="math/tex">C\times FH\times FW</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\hat{\mathbf W}</span><script type="math/tex">\hat{\mathbf W}</script></span></td>
+<td><span><span class="MathJax_Preview">C\times FH\times FW</span><script type="math/tex">C\times FH\times FW</script></span></td>
+<td><span><span class="MathJax_Preview">FN</span><script type="math/tex">FN</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\hat{\mathbf Y}</span><script type="math/tex">\hat{\mathbf Y}</script></span></td>
+<td><span><span class="MathJax_Preview">N\times OH\times OW</span><script type="math/tex">N\times OH\times OW</script></span></td>
+<td><span><span class="MathJax_Preview">FN</span><script type="math/tex">FN</script></span></td>
+</tr>
+</tbody>
+</table>
+<p>結果的に出力<span><span class="MathJax_Preview">\hat{\mathbf Y}</span><script type="math/tex">\hat{\mathbf Y}</script></span>の形状は、上表のとおりになります。</p>
+<p>次に、「ゼロから作るDeep Learning」の実装では、上述の計算結果を<code>out</code>として、</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">    out = out.reshape(N, out_h, out_w, -1).transpose(0, 3, 1, 2)</code></pre></div></div></div>
+
+<p>としています。<code>reshape</code>によって</p>
+<div>
+<div class="MathJax_Preview">(N\times OH\times OW,\ FN)\rightarrow(N,\ OH,\ OW,\ FN)</div>
+<script type="math/tex; mode=display">(N\times OH\times OW,\ FN)\rightarrow(N,\ OH,\ OW,\ FN)</script>
+</div>
+<p>となり、続く<code>transpose</code>によって軸の順番が変わり、</p>
+<div>
+<div class="MathJax_Preview">(N,\ OH,\ OW,\ FN)\rightarrow(N,\ FN,\ OH,\ OW)</div>
+<script type="math/tex; mode=display">(N,\ OH,\ OW,\ FN)\rightarrow(N,\ FN,\ OH,\ OW)</script>
+</div>
+<p>となります。結果的にConvolutionレイヤを通過することによって、</p>
+<div>
+<div class="MathJax_Preview">(N,\ C,\ H,\ W)\rightarrow(N,\ FN,\ OH,\ OW)</div>
+<script type="math/tex; mode=display">(N,\ C,\ H,\ W)\rightarrow(N,\ FN,\ OH,\ OW)</script>
+</div>
+<p>というふうに、「チャネル数」、「画像サイズ」が変換されます。当然、バッチ数には変化がありません。</p>
+<h4 id="2832"><span class="pheasant-header"><span class="header"><span class="number">2.8.3.2</span> <span class="title">逆伝搬</span></span></span></h4>
+<p>逆伝搬についても見ていきます。 「ゼロから作るDeep Learning」の実装を確認しておきます。</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">def backward(self, dout):
+    FN, C, FH, FW = self.W.shape
+    dout = dout.transpose(0,2,3,1).reshape(-1, FN)
+    self.db = np.sum(dout, axis=0)
+    self.dW = np.dot(self.col.T, dout)
+    self.dW = self.dW.transpose(1, 0).reshape(FN, C, FH, FW)
+    dcol = np.dot(dout, self.col_W.T)
+    dx = col2im(dcol, self.x.shape, FH, FW, self.stride, self.pad)
+    return dx</code></pre></div></div></div>
+
+<p>フィルタの形状が、<span><span class="MathJax_Preview">(FN,\ C,\ FH,\ FW)</span><script type="math/tex">(FN,\ C,\ FH,\ FW)</script></span>だったのを思い出しましょう。</p>
+<p>前述のとおり、Convolutionレイヤを通過することによって、<span><span class="MathJax_Preview">(N,\ FN,\ OH,\ OW)</span><script type="math/tex">(N,\ FN,\ OH,\ OW)</script></span>が伝搬されているので、逆伝搬における勾配も同じ形状です。Convolutionレイヤの出力の勾配<span><span class="MathJax_Preview">\partial L/\partial \mathbf{Y}</span><script type="math/tex">\partial L/\partial \mathbf{Y}</script></span>を<span><span class="MathJax_Preview">\mathbf G</span><script type="math/tex">\mathbf G</script></span>とします。</p>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \mathbf{Y}} = \mathbf G=\left[\begin{matrix}\left[\begin{matrix}g_{1111}&amp;g_{1112}\end{matrix}\right]&amp;\left[\begin{matrix}g_{1211}&amp;g_{1212}\end{matrix}\right]&amp;\left[\begin{matrix}g_{1311}&amp;g_{1312}\end{matrix}\right]&amp;\left[\begin{matrix}g_{1411}&amp;g_{1412}\end{matrix}\right]\\\left[\begin{matrix}g_{2111}&amp;g_{2112}\end{matrix}\right]&amp;\left[\begin{matrix}g_{2211}&amp;g_{2212}\end{matrix}\right]&amp;\left[\begin{matrix}g_{2311}&amp;g_{2312}\end{matrix}\right]&amp;\left[\begin{matrix}g_{2411}&amp;g_{2412}\end{matrix}\right]\\\left[\begin{matrix}g_{3111}&amp;g_{3112}\end{matrix}\right]&amp;\left[\begin{matrix}g_{3211}&amp;g_{3212}\end{matrix}\right]&amp;\left[\begin{matrix}g_{3311}&amp;g_{3312}\end{matrix}\right]&amp;\left[\begin{matrix}g_{3411}&amp;g_{3412}\end{matrix}\right]\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \mathbf{Y}} = \mathbf G=\left[\begin{matrix}\left[\begin{matrix}g_{1111}&g_{1112}\end{matrix}\right]&\left[\begin{matrix}g_{1211}&g_{1212}\end{matrix}\right]&\left[\begin{matrix}g_{1311}&g_{1312}\end{matrix}\right]&\left[\begin{matrix}g_{1411}&g_{1412}\end{matrix}\right]\\\left[\begin{matrix}g_{2111}&g_{2112}\end{matrix}\right]&\left[\begin{matrix}g_{2211}&g_{2212}\end{matrix}\right]&\left[\begin{matrix}g_{2311}&g_{2312}\end{matrix}\right]&\left[\begin{matrix}g_{2411}&g_{2412}\end{matrix}\right]\\\left[\begin{matrix}g_{3111}&g_{3112}\end{matrix}\right]&\left[\begin{matrix}g_{3211}&g_{3212}\end{matrix}\right]&\left[\begin{matrix}g_{3311}&g_{3312}\end{matrix}\right]&\left[\begin{matrix}g_{3411}&g_{3412}\end{matrix}\right]\end{matrix}\right]</script>
+</div>
+<p>それを、</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">    dout = dout.transpose(0, 2, 3, 1).reshape(-1, FN)</code></pre></div></div></div>
+
+<p>とすることによって、形状変換します。</p>
+<div>
+<div class="MathJax_Preview">(N,\ FN,\ OH,\ OW)\rightarrow(N,\ OH,\ OW,\ FN)\rightarrow(N\times OH\times OW,\ FN)</div>
+<script type="math/tex; mode=display">(N,\ FN,\ OH,\ OW)\rightarrow(N,\ OH,\ OW,\ FN)\rightarrow(N\times OH\times OW,\ FN)</script>
+</div>
+<p>実際に計算すると、</p>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \hat{\mathbf{Y}}} = \hat{\mathbf G}=\left[\begin{matrix}g_{1111}&amp;g_{1211}&amp;g_{1311}&amp;g_{1411}\\g_{1112}&amp;g_{1212}&amp;g_{1312}&amp;g_{1412}\\g_{2111}&amp;g_{2211}&amp;g_{2311}&amp;g_{2411}\\g_{2112}&amp;g_{2212}&amp;g_{2312}&amp;g_{2412}\\g_{3111}&amp;g_{3211}&amp;g_{3311}&amp;g_{3411}\\g_{3112}&amp;g_{3212}&amp;g_{3312}&amp;g_{3412}\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \hat{\mathbf{Y}}} = \hat{\mathbf G}=\left[\begin{matrix}g_{1111}&g_{1211}&g_{1311}&g_{1411}\\g_{1112}&g_{1212}&g_{1312}&g_{1412}\\g_{2111}&g_{2211}&g_{2311}&g_{2411}\\g_{2112}&g_{2212}&g_{2312}&g_{2412}\\g_{3111}&g_{3211}&g_{3311}&g_{3411}\\g_{3112}&g_{3212}&g_{3312}&g_{3412}\end{matrix}\right]</script>
+</div>
+<p>となり、順伝搬における</p>
+<div>
+<div class="MathJax_Preview">\hat{\mathbf Y}=\hat{\mathbf X}\cdot\hat{\mathbf W} + \mathbf B</div>
+<script type="math/tex; mode=display">\hat{\mathbf Y}=\hat{\mathbf X}\cdot\hat{\mathbf W} + \mathbf B</script>
+</div>
+<p>と同じ形状になります。次に、パラメータと入力の勾配を求めます。該当部分を再掲します。</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">    self.db = np.sum(dout, axis=0)
+    self.dW = np.dot(self.col.T, dout)
+    dcol = np.dot(dout, self.col_W.T)</code></pre></div></div></div>
+
+<p><span><span class="MathJax_Preview">\partial L/\partial\mathbf{B}</span><script type="math/tex">\partial L/\partial\mathbf{B}</script></span>はAffineレイヤと同じように軸0で和を取ります。<span><span class="MathJax_Preview">\partial L/\partial\hat{\mathbf{W}}</span><script type="math/tex">\partial L/\partial\hat{\mathbf{W}}</script></span>と<span><span class="MathJax_Preview">\partial L/\partial\hat{\mathbf{X}}</span><script type="math/tex">\partial L/\partial\hat{\mathbf{X}}</script></span>はAffineレイヤと同じように、</p>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial\hat{\mathbf{W}}} = \hat{\mathbf X}^\mathrm{T}\cdot\frac{\partial L}{\partial\hat{\mathbf{Y}}}</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial\hat{\mathbf{W}}} = \hat{\mathbf X}^\mathrm{T}\cdot\frac{\partial L}{\partial\hat{\mathbf{Y}}}</script>
+</div>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial\hat{\mathbf{X}}} = \frac{\partial L}{\partial\hat{\mathbf{Y}}}\cdot\hat{\mathbf W}^\mathrm{T} </div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial\hat{\mathbf{X}}} = \frac{\partial L}{\partial\hat{\mathbf{Y}}}\cdot\hat{\mathbf W}^\mathrm{T} </script>
+</div>
+<p>です。右辺の形状を確認しておきます。</p>
+<table>
+<thead>
+<tr>
+<th>2次元化した配列</th>
+<th>行数</th>
+<th>列数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span><span class="MathJax_Preview">\hat{\mathbf X}</span><script type="math/tex">\hat{\mathbf X}</script></span></td>
+<td><span><span class="MathJax_Preview">N\times OH\times OW</span><script type="math/tex">N\times OH\times OW</script></span></td>
+<td><span><span class="MathJax_Preview">C\times FH\times FW</span><script type="math/tex">C\times FH\times FW</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\hat{\mathbf W}</span><script type="math/tex">\hat{\mathbf W}</script></span></td>
+<td><span><span class="MathJax_Preview">C\times FH\times FW</span><script type="math/tex">C\times FH\times FW</script></span></td>
+<td><span><span class="MathJax_Preview">FN</span><script type="math/tex">FN</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\partial L/\partial \hat{\mathbf Y}</span><script type="math/tex">\partial L/\partial \hat{\mathbf Y}</script></span></td>
+<td><span><span class="MathJax_Preview">N\times OH\times OW</span><script type="math/tex">N\times OH\times OW</script></span></td>
+<td><span><span class="MathJax_Preview">FN</span><script type="math/tex">FN</script></span></td>
+</tr>
+</tbody>
+</table>
+<p>上式の内積の結果は、</p>
+<div>
+<div class="MathJax_Preview"> (C\times FH\times FW,\ N\times OH\times OW)\cdot(N\times OH\times OW,\ FN) \rightarrow(C\times FH\times FW,\ FN)</div>
+<script type="math/tex; mode=display"> (C\times FH\times FW,\ N\times OH\times OW)\cdot(N\times OH\times OW,\ FN) \rightarrow(C\times FH\times FW,\ FN)</script>
+</div>
+<div>
+<div class="MathJax_Preview"> (N\times OH\times OW,\ FN)\cdot(FN,\ C\times FH\times FW) \rightarrow(N\times OH\times OW,\ C\times FH\times F)</div>
+<script type="math/tex; mode=display"> (N\times OH\times OW,\ FN)\cdot(FN,\ C\times FH\times FW) \rightarrow(N\times OH\times OW,\ C\times FH\times F)</script>
+</div>
+<p>となり、確かに、<span><span class="MathJax_Preview">\hat{\mathbf W}</span><script type="math/tex">\hat{\mathbf W}</script></span>と<span><span class="MathJax_Preview">\hat{\mathbf X}</span><script type="math/tex">\hat{\mathbf X}</script></span>の形状に一致します。後は、前のレイヤに逆伝搬できるように、<span><span class="MathJax_Preview">\mathbf W</span><script type="math/tex">\mathbf W</script></span>と<span><span class="MathJax_Preview">\mathbf X</span><script type="math/tex">\mathbf X</script></span>の形状に戻すだけです。</p>
+<table>
+<thead>
+<tr>
+<th>4次元配列</th>
+<th>形状</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf X</span><script type="math/tex">\mathbf X</script></span></td>
+<td><span><span class="MathJax_Preview">(N,\ C,\ H,\ W)</span><script type="math/tex">(N,\ C,\ H,\ W)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf W</span><script type="math/tex">\mathbf W</script></span></td>
+<td><span><span class="MathJax_Preview">(FN,\ C,\ FH,\ FW)</span><script type="math/tex">(FN,\ C,\ FH,\ FW)</script></span></td>
+</tr>
+</tbody>
+</table>
+<p><span><span class="MathJax_Preview">\partial L/\hat{\mathbf{W}}\rightarrow\partial L/\mathbf{W}</span><script type="math/tex">\partial L/\hat{\mathbf{W}}\rightarrow\partial L/\mathbf{W}</script></span>については簡単です。形状の順番が違うだけなので、転置した後、<code>reshape</code>で4次元配列に戻しています:</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">    self.dW = self.dW.transpose(1, 0).reshape(FN, C, FH, FW)</code></pre></div></div></div>
+
+<p><span><span class="MathJax_Preview">\partial L/\hat{\mathbf{X}}\rightarrow\partial L/\mathbf{X}</span><script type="math/tex">\partial L/\hat{\mathbf{X}}\rightarrow\partial L/\mathbf{X}</script></span>については、<code>im2col</code>関数の逆変換、<code>col2im</code>関数が用意されています。逆伝搬の関数の中で、該当する部分は以下です。</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">    dx = col2im(dcol, self.x.shape, FH, FW, self.stride, self.pad)</code></pre></div></div></div>
+
+<p>さて、2次元化された入力<span><span class="MathJax_Preview">\hat{\mathbf{X}}</span><script type="math/tex">\hat{\mathbf{X}}</script></span>が、</p>
+<div>
+<div class="MathJax_Preview">\hat{\mathbf X}=\left[\begin{matrix}x_{1111}&amp;x_{1112}&amp;x_{1121}&amp;x_{1122}&amp;x_{1211}&amp;x_{1212}&amp;x_{1221}&amp;x_{1222}\\x_{1112}&amp;x_{1113}&amp;x_{1122}&amp;x_{1123}&amp;x_{1212}&amp;x_{1213}&amp;x_{1222}&amp;x_{1223}\\x_{2111}&amp;x_{2112}&amp;x_{2121}&amp;x_{2122}&amp;x_{2211}&amp;x_{2212}&amp;x_{2221}&amp;x_{2222}\\x_{2112}&amp;x_{2113}&amp;x_{2122}&amp;x_{2123}&amp;x_{2212}&amp;x_{2213}&amp;x_{2222}&amp;x_{2223}\\x_{3111}&amp;x_{3112}&amp;x_{3121}&amp;x_{3122}&amp;x_{3211}&amp;x_{3212}&amp;x_{3221}&amp;x_{3222}\\x_{3112}&amp;x_{3113}&amp;x_{3122}&amp;x_{3123}&amp;x_{3212}&amp;x_{3213}&amp;x_{3222}&amp;x_{3223}\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\hat{\mathbf X}=\left[\begin{matrix}x_{1111}&x_{1112}&x_{1121}&x_{1122}&x_{1211}&x_{1212}&x_{1221}&x_{1222}\\x_{1112}&x_{1113}&x_{1122}&x_{1123}&x_{1212}&x_{1213}&x_{1222}&x_{1223}\\x_{2111}&x_{2112}&x_{2121}&x_{2122}&x_{2211}&x_{2212}&x_{2221}&x_{2222}\\x_{2112}&x_{2113}&x_{2122}&x_{2123}&x_{2212}&x_{2213}&x_{2222}&x_{2223}\\x_{3111}&x_{3112}&x_{3121}&x_{3122}&x_{3211}&x_{3212}&x_{3221}&x_{3222}\\x_{3112}&x_{3113}&x_{3122}&x_{3123}&x_{3212}&x_{3213}&x_{3222}&x_{3223}\end{matrix}\right]</script>
+</div>
+<p>だったことを思い出しましょう。勾配も同じ形状なので、簡単のためにこのまま<code>im2col</code>関数に渡してみます。ここで、<span><span class="MathJax_Preview">x</span><script type="math/tex">x</script></span>は入力データではなく、勾配であると読み替えます。すると、4次元に戻った勾配<span><span class="MathJax_Preview">\partial L/\partial \mathbf{X}</span><script type="math/tex">\partial L/\partial \mathbf{X}</script></span>が、</p>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \mathbf{X}} = \left[\begin{matrix}\left[\begin{matrix}x_{1111} &amp; 2 x_{1112} &amp; x_{1113}\\x_{1121} &amp; 2 x_{1122} &amp; x_{1123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{1211} &amp; 2 x_{1212} &amp; x_{1213}\\x_{1221} &amp; 2 x_{1222} &amp; x_{1223}\end{matrix}\right]\\\left[\begin{matrix}x_{2111} &amp; 2 x_{2112} &amp; x_{2113}\\x_{2121} &amp; 2 x_{2122} &amp; x_{2123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{2211} &amp; 2 x_{2212} &amp; x_{2213}\\x_{2221} &amp; 2 x_{2222} &amp; x_{2223}\end{matrix}\right]\\\left[\begin{matrix}x_{3111} &amp; 2 x_{3112} &amp; x_{3113}\\x_{3121} &amp; 2 x_{3122} &amp; x_{3123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{3211} &amp; 2 x_{3212} &amp; x_{3213}\\x_{3221} &amp; 2 x_{3222} &amp; x_{3223}\end{matrix}\right]\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \mathbf{X}} = \left[\begin{matrix}\left[\begin{matrix}x_{1111} & 2 x_{1112} & x_{1113}\\x_{1121} & 2 x_{1122} & x_{1123}\end{matrix}\right]&\left[\begin{matrix}x_{1211} & 2 x_{1212} & x_{1213}\\x_{1221} & 2 x_{1222} & x_{1223}\end{matrix}\right]\\\left[\begin{matrix}x_{2111} & 2 x_{2112} & x_{2113}\\x_{2121} & 2 x_{2122} & x_{2123}\end{matrix}\right]&\left[\begin{matrix}x_{2211} & 2 x_{2212} & x_{2213}\\x_{2221} & 2 x_{2222} & x_{2223}\end{matrix}\right]\\\left[\begin{matrix}x_{3111} & 2 x_{3112} & x_{3113}\\x_{3121} & 2 x_{3122} & x_{3123}\end{matrix}\right]&\left[\begin{matrix}x_{3211} & 2 x_{3212} & x_{3213}\\x_{3221} & 2 x_{3222} & x_{3223}\end{matrix}\right]\end{matrix}\right]</script>
+</div>
+<p>と計算されます。入力データをもう一度確認します。</p>
+<div>
+<div class="MathJax_Preview">\mathbf{X} = \left[\begin{matrix}\left[\begin{matrix}x_{1111}&amp;x_{1112}&amp;x_{1113}\\x_{1121}&amp;x_{1122}&amp;x_{1123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{1211}&amp;x_{1212}&amp;x_{1213}\\x_{1221}&amp;x_{1222}&amp;x_{1223}\end{matrix}\right]\\\left[\begin{matrix}x_{2111}&amp;x_{2112}&amp;x_{2113}\\x_{2121}&amp;x_{2122}&amp;x_{2123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{2211}&amp;x_{2212}&amp;x_{2213}\\x_{2221}&amp;x_{2222}&amp;x_{2223}\end{matrix}\right]\\\left[\begin{matrix}x_{3111}&amp;x_{3112}&amp;x_{3113}\\x_{3121}&amp;x_{3122}&amp;x_{3123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{3211}&amp;x_{3212}&amp;x_{3213}\\x_{3221}&amp;x_{3222}&amp;x_{3223}\end{matrix}\right]\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\mathbf{X} = \left[\begin{matrix}\left[\begin{matrix}x_{1111}&x_{1112}&x_{1113}\\x_{1121}&x_{1122}&x_{1123}\end{matrix}\right]&\left[\begin{matrix}x_{1211}&x_{1212}&x_{1213}\\x_{1221}&x_{1222}&x_{1223}\end{matrix}\right]\\\left[\begin{matrix}x_{2111}&x_{2112}&x_{2113}\\x_{2121}&x_{2122}&x_{2123}\end{matrix}\right]&\left[\begin{matrix}x_{2211}&x_{2212}&x_{2213}\\x_{2221}&x_{2222}&x_{2223}\end{matrix}\right]\\\left[\begin{matrix}x_{3111}&x_{3112}&x_{3113}\\x_{3121}&x_{3122}&x_{3123}\end{matrix}\right]&\left[\begin{matrix}x_{3211}&x_{3212}&x_{3213}\\x_{3221}&x_{3222}&x_{3223}\end{matrix}\right]\end{matrix}\right]</script>
+</div>
+<p>添え字の場所が一致していることが確認できます。また、定数倍になっているのは、文字通り定数倍するのではなく、その要素が出力に伝搬される経路数を表しています。経路ごとに異なった勾配が、その要素の位置で和算されます。畳み込みされる頻度の高い画像中央ほど経路数が多いことが確認できます。</p>
+<p>以上で、Convolutionレイヤの実装の確認ができました。</p>
+<h3 id="284-pooling"><span class="pheasant-header"><span class="header"><span class="number">2.8.4</span> <span class="title">Poolingレイヤの実装</span></span></span></h3>
+<h4 id="2841"><span class="pheasant-header"><span class="header"><span class="number">2.8.4.1</span> <span class="title">順伝搬</span></span></span></h4>
+<p>「ゼロから作るDeep Learning」の実装を確認します。</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">def forward(self, x):
+    N, C, H, W = x.shape
+    out_h = int(1 + (H - self.pool_h) / self.stride)
+    out_w = int(1 + (W - self.pool_w) / self.stride)
+    col = im2col(x, self.pool_h, self.pool_w, self.stride, self.pad)
+    col = col.reshape(-1, self.pool_h * self.pool_w)
+    arg_max = np.argmax(col, axis=1)
+    out = np.max(col, axis=1)
+    out = out.reshape(N, out_h, out_w, C).transpose(0, 3, 1, 2)
+    self.x = x
+    self.arg_max = arg_max
+    return out</code></pre></div></div></div>
+
+<p>Convolutionレイヤと同じ入力を考えます。</p>
+<div>
+<div class="MathJax_Preview">\mathbf X=\left[\begin{matrix}\left[\begin{matrix}x_{1111}&amp;x_{1112}&amp;x_{1113}\\x_{1121}&amp;x_{1122}&amp;x_{1123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{1211}&amp;x_{1212}&amp;x_{1213}\\x_{1221}&amp;x_{1222}&amp;x_{1223}\end{matrix}\right]\\\left[\begin{matrix}x_{2111}&amp;x_{2112}&amp;x_{2113}\\x_{2121}&amp;x_{2122}&amp;x_{2123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{2211}&amp;x_{2212}&amp;x_{2213}\\x_{2221}&amp;x_{2222}&amp;x_{2223}\end{matrix}\right]\\\left[\begin{matrix}x_{3111}&amp;x_{3112}&amp;x_{3113}\\x_{3121}&amp;x_{3122}&amp;x_{3123}\end{matrix}\right]&amp;\left[\begin{matrix}x_{3211}&amp;x_{3212}&amp;x_{3213}\\x_{3221}&amp;x_{3222}&amp;x_{3223}\end{matrix}\right]\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\mathbf X=\left[\begin{matrix}\left[\begin{matrix}x_{1111}&x_{1112}&x_{1113}\\x_{1121}&x_{1122}&x_{1123}\end{matrix}\right]&\left[\begin{matrix}x_{1211}&x_{1212}&x_{1213}\\x_{1221}&x_{1222}&x_{1223}\end{matrix}\right]\\\left[\begin{matrix}x_{2111}&x_{2112}&x_{2113}\\x_{2121}&x_{2122}&x_{2123}\end{matrix}\right]&\left[\begin{matrix}x_{2211}&x_{2212}&x_{2213}\\x_{2221}&x_{2222}&x_{2223}\end{matrix}\right]\\\left[\begin{matrix}x_{3111}&x_{3112}&x_{3113}\\x_{3121}&x_{3122}&x_{3123}\end{matrix}\right]&\left[\begin{matrix}x_{3211}&x_{3212}&x_{3213}\\x_{3221}&x_{3222}&x_{3223}\end{matrix}\right]\end{matrix}\right]</script>
+</div>
+<p><code>im2col</code>関数を適用した後、<code>reshape</code>します。ここで、<span><span class="MathJax_Preview">PH=2</span><script type="math/tex">PH=2</script></span>、<span><span class="MathJax_Preview">PW=2</span><script type="math/tex">PW=2</script></span>とします。</p>
+<div>
+<div class="MathJax_Preview">\hat{\mathbf X}=\left[\begin{matrix}x_{1111}&amp;x_{1112}&amp;x_{1121}&amp;x_{1122}\\x_{1211}&amp;x_{1212}&amp;x_{1221}&amp;x_{1222}\\x_{1112}&amp;x_{1113}&amp;x_{1122}&amp;x_{1123}\\x_{1212}&amp;x_{1213}&amp;x_{1222}&amp;x_{1223}\\x_{2111}&amp;x_{2112}&amp;x_{2121}&amp;x_{2122}\\x_{2211}&amp;x_{2212}&amp;x_{2221}&amp;x_{2222}\\x_{2112}&amp;x_{2113}&amp;x_{2122}&amp;x_{2123}\\x_{2212}&amp;x_{2213}&amp;x_{2222}&amp;x_{2223}\\x_{3111}&amp;x_{3112}&amp;x_{3121}&amp;x_{3122}\\x_{3211}&amp;x_{3212}&amp;x_{3221}&amp;x_{3222}\\x_{3112}&amp;x_{3113}&amp;x_{3122}&amp;x_{3123}\\x_{3212}&amp;x_{3213}&amp;x_{3222}&amp;x_{3223}\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\hat{\mathbf X}=\left[\begin{matrix}x_{1111}&x_{1112}&x_{1121}&x_{1122}\\x_{1211}&x_{1212}&x_{1221}&x_{1222}\\x_{1112}&x_{1113}&x_{1122}&x_{1123}\\x_{1212}&x_{1213}&x_{1222}&x_{1223}\\x_{2111}&x_{2112}&x_{2121}&x_{2122}\\x_{2211}&x_{2212}&x_{2221}&x_{2222}\\x_{2112}&x_{2113}&x_{2122}&x_{2123}\\x_{2212}&x_{2213}&x_{2222}&x_{2223}\\x_{3111}&x_{3112}&x_{3121}&x_{3122}\\x_{3211}&x_{3212}&x_{3221}&x_{3222}\\x_{3112}&x_{3113}&x_{3122}&x_{3123}\\x_{3212}&x_{3213}&x_{3222}&x_{3223}\end{matrix}\right]</script>
+</div>
+<p>配列の形状は以下のようになります。</p>
+<table>
+<thead>
+<tr>
+<th>2次元化した配列</th>
+<th>行数</th>
+<th>列数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span><span class="MathJax_Preview">\hat{\mathbf X}</span><script type="math/tex">\hat{\mathbf X}</script></span></td>
+<td><span><span class="MathJax_Preview">N\times OH\times OW\times C</span><script type="math/tex">N\times OH\times OW\times C</script></span></td>
+<td><span><span class="MathJax_Preview">PH\times PW</span><script type="math/tex">PH\times PW</script></span></td>
+</tr>
+</tbody>
+</table>
+<p>Convolutionレイヤの場合と比べて、<code>reshape</code>の結果、チャネル<span><span class="MathJax_Preview">C</span><script type="math/tex">C</script></span>が列から行に移っています。後は軸1で最大値を取った後、<code>reshape</code>と<code>transpose</code>によって、</p>
+<div>
+<div class="MathJax_Preview">N\times OH\times OW\times C\rightarrow(N,\ OH,\ OW,\ C) \rightarrow(N,\ C,\ OH,\ OW)</div>
+<script type="math/tex; mode=display">N\times OH\times OW\times C\rightarrow(N,\ OH,\ OW,\ C) \rightarrow(N,\ C,\ OH,\ OW)</script>
+</div>
+<p>となります。このように、Poolingレイヤを通過することで、バッチ数とチャネル数はそのままで、画像のサイズが<span><span class="MathJax_Preview">OH\times OW</span><script type="math/tex">OH\times OW</script></span>に変更になりました。</p>
+<h4 id="2842"><span class="pheasant-header"><span class="header"><span class="number">2.8.4.2</span> <span class="title">逆伝搬</span></span></span></h4>
+<p>「ゼロから作るDeep Learning」の実装を確認します。</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">def backward(self, dout):
+    dout = dout.transpose(0, 2, 3, 1)
+    pool_size = self.pool_h * self.pool_w
+    dmax = np.zeros((dout.size, pool_size))
+    dmax[np.arange(self.arg_max.size), self.arg_max.flatten()] = dout.flatten()
+    dmax = dmax.reshape(dout.shape + (pool_size,))
+    dcol = dmax.reshape(dmax.shape[0] * dmax.shape[1] * dmax.shape[2], -1)
+    dx = col2im(dcol, self.x.shape, self.pool_h, self.pool_w, self.stride, self.pad)
+    return dx</code></pre></div></div></div>
+
+<p>前述のとおり、Poolingレイヤを通過することによって、<span><span class="MathJax_Preview">(N,\ C,\ OH,\ OW)</span><script type="math/tex">(N,\ C,\ OH,\ OW)</script></span>が伝搬されているので、逆伝搬における勾配も同じ形状です。Poolingレイヤの出力の勾配<span><span class="MathJax_Preview">\partial L/\partial \mathbf{Y}</span><script type="math/tex">\partial L/\partial \mathbf{Y}</script></span>を<span><span class="MathJax_Preview">\mathbf G</span><script type="math/tex">\mathbf G</script></span>とします。</p>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \mathbf{Y}} = \mathbf G=\left[\begin{matrix}\left[\begin{matrix}g_{1111}&amp;g_{1112}\end{matrix}\right]&amp;\left[\begin{matrix}g_{1211}&amp;g_{1212}\end{matrix}\right]\\\left[\begin{matrix}g_{2111}&amp;g_{2112}\end{matrix}\right]&amp;\left[\begin{matrix}g_{2211}&amp;g_{2212}\end{matrix}\right]\\\left[\begin{matrix}g_{3111}&amp;g_{3112}\end{matrix}\right]&amp;\left[\begin{matrix}g_{3211}&amp;g_{3212}\end{matrix}\right]\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \mathbf{Y}} = \mathbf G=\left[\begin{matrix}\left[\begin{matrix}g_{1111}&g_{1112}\end{matrix}\right]&\left[\begin{matrix}g_{1211}&g_{1212}\end{matrix}\right]\\\left[\begin{matrix}g_{2111}&g_{2112}\end{matrix}\right]&\left[\begin{matrix}g_{2211}&g_{2212}\end{matrix}\right]\\\left[\begin{matrix}g_{3111}&g_{3112}\end{matrix}\right]&\left[\begin{matrix}g_{3211}&g_{3212}\end{matrix}\right]\end{matrix}\right]</script>
+</div>
+<p><code>transpose</code>によって、中間状態<code>dout</code>は、</p>
+<div>
+<div class="MathJax_Preview">(N,\ C,\ OH,\ OW) \rightarrow (N,\ OH,\ OW,\ C)</div>
+<script type="math/tex; mode=display">(N,\ C,\ OH,\ OW) \rightarrow (N,\ OH,\ OW,\ C)</script>
+</div>
+<p>となります。また、<code>dmax</code>は、<span><span class="MathJax_Preview">\hat{\mathbf{X}}</span><script type="math/tex">\hat{\mathbf{X}}</script></span>と同じ形状のゼロ配列です。</p>
+<p><code>dout</code>は<code>flatten</code>されてベクトルになった後、<code>dmax</code>に代入されますが、このとき、元々の入力が最大だった列へのみ代入します。</p>
+<div>
+<div class="MathJax_Preview">\mathrm{dout'}=\left[\begin{matrix}g_{1111}\\g_{1211}\\g_{1112}\\g_{1212}\\g_{2111}\\g_{2211}\\g_{2112}\\g_{2212}\\g_{3111}\\g_{3211}\\g_{3112}\\g_{3212}\end{matrix}\right],\ \ \mathrm{dmax}=\left[\begin{matrix}0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0\end{matrix}\right] \ \rightarrow \left[\begin{matrix}g_{1111}&amp;g_{1111}&amp;g_{1111}&amp;g_{1111}\\g_{1211}&amp;g_{1211}&amp;g_{1211}&amp;g_{1211}\\g_{1112}&amp;g_{1112}&amp;g_{1112}&amp;g_{1112}\\g_{1212}&amp;g_{1212}&amp;g_{1212}&amp;g_{1212}\\g_{2111}&amp;g_{2111}&amp;g_{2111}&amp;g_{2111}\\g_{2211}&amp;g_{2211}&amp;g_{2211}&amp;g_{2211}\\g_{2112}&amp;g_{2112}&amp;g_{2112}&amp;g_{2112}\\g_{2212}&amp;g_{2212}&amp;g_{2212}&amp;g_{2212}\\g_{3111}&amp;g_{3111}&amp;g_{3111}&amp;g_{3111}\\g_{3211}&amp;g_{3211}&amp;g_{3211}&amp;g_{3211}\\g_{3112}&amp;g_{3112}&amp;g_{3112}&amp;g_{3112}\\g_{3212}&amp;g_{3212}&amp;g_{3212}&amp;g_{3212}\end{matrix}\right] </div>
+<script type="math/tex; mode=display">\mathrm{dout'}=\left[\begin{matrix}g_{1111}\\g_{1211}\\g_{1112}\\g_{1212}\\g_{2111}\\g_{2211}\\g_{2112}\\g_{2212}\\g_{3111}\\g_{3211}\\g_{3112}\\g_{3212}\end{matrix}\right],\ \ \mathrm{dmax}=\left[\begin{matrix}0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\\0 & 0 & 0 & 0\end{matrix}\right] \ \rightarrow \left[\begin{matrix}g_{1111}&g_{1111}&g_{1111}&g_{1111}\\g_{1211}&g_{1211}&g_{1211}&g_{1211}\\g_{1112}&g_{1112}&g_{1112}&g_{1112}\\g_{1212}&g_{1212}&g_{1212}&g_{1212}\\g_{2111}&g_{2111}&g_{2111}&g_{2111}\\g_{2211}&g_{2211}&g_{2211}&g_{2211}\\g_{2112}&g_{2112}&g_{2112}&g_{2112}\\g_{2212}&g_{2212}&g_{2212}&g_{2212}\\g_{3111}&g_{3111}&g_{3111}&g_{3111}\\g_{3211}&g_{3211}&g_{3211}&g_{3211}\\g_{3112}&g_{3112}&g_{3112}&g_{3112}\\g_{3212}&g_{3212}&g_{3212}&g_{3212}\end{matrix}\right] </script>
+</div>
+<p>上の例では、仮想的に<code>dmax</code>のすべての列に勾配を代入しています。本来であれば、非ゼロの要素は各行につき一つです。形状を確認しておきます。</p>
+<table>
+<thead>
+<tr>
+<th>2次元化した配列</th>
+<th>行数</th>
+<th>列数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span><span class="MathJax_Preview">\mathrm{dmax}</span><script type="math/tex">\mathrm{dmax}</script></span></td>
+<td><span><span class="MathJax_Preview">N\times OH\times OW\times C</span><script type="math/tex">N\times OH\times OW\times C</script></span></td>
+<td><span><span class="MathJax_Preview">PH\times PW</span><script type="math/tex">PH\times PW</script></span></td>
+</tr>
+</tbody>
+</table>
+<p>つぎに、2回の<code>reshape</code>によって、</p>
+<div>
+<div class="MathJax_Preview">(N\times OH\times OW\times C,\ PH\times PW)\rightarrow (N,\ OH,\ OW,\ C,\ PH\times PW)\ </div>
+<script type="math/tex; mode=display">(N\times OH\times OW\times C,\ PH\times PW)\rightarrow (N,\ OH,\ OW,\ C,\ PH\times PW)\ </script>
+</div>
+<div>
+<div class="MathJax_Preview">(N,\ OH,\ OW,\ C,\ PH\times PW)\rightarrow (N\times OH\times OW,\ C\times PH\times PW)</div>
+<script type="math/tex; mode=display">(N,\ OH,\ OW,\ C,\ PH\times PW)\rightarrow (N\times OH\times OW,\ C\times PH\times PW)</script>
+</div>
+<p>と変化します。実際に確認してみます。</p>
+<div>
+<div class="MathJax_Preview">\mathrm{dcol} = \left[\begin{matrix}g_{1111}&amp;g_{1111}&amp;g_{1111}&amp;g_{1111}&amp;g_{1211}&amp;g_{1211}&amp;g_{1211}&amp;g_{1211}\\g_{1112}&amp;g_{1112}&amp;g_{1112}&amp;g_{1112}&amp;g_{1212}&amp;g_{1212}&amp;g_{1212}&amp;g_{1212}\\g_{2111}&amp;g_{2111}&amp;g_{2111}&amp;g_{2111}&amp;g_{2211}&amp;g_{2211}&amp;g_{2211}&amp;g_{2211}\\g_{2112}&amp;g_{2112}&amp;g_{2112}&amp;g_{2112}&amp;g_{2212}&amp;g_{2212}&amp;g_{2212}&amp;g_{2212}\\g_{3111}&amp;g_{3111}&amp;g_{3111}&amp;g_{3111}&amp;g_{3211}&amp;g_{3211}&amp;g_{3211}&amp;g_{3211}\\g_{3112}&amp;g_{3112}&amp;g_{3112}&amp;g_{3112}&amp;g_{3212}&amp;g_{3212}&amp;g_{3212}&amp;g_{3212}\end{matrix}\right] </div>
+<script type="math/tex; mode=display">\mathrm{dcol} = \left[\begin{matrix}g_{1111}&g_{1111}&g_{1111}&g_{1111}&g_{1211}&g_{1211}&g_{1211}&g_{1211}\\g_{1112}&g_{1112}&g_{1112}&g_{1112}&g_{1212}&g_{1212}&g_{1212}&g_{1212}\\g_{2111}&g_{2111}&g_{2111}&g_{2111}&g_{2211}&g_{2211}&g_{2211}&g_{2211}\\g_{2112}&g_{2112}&g_{2112}&g_{2112}&g_{2212}&g_{2212}&g_{2212}&g_{2212}\\g_{3111}&g_{3111}&g_{3111}&g_{3111}&g_{3211}&g_{3211}&g_{3211}&g_{3211}\\g_{3112}&g_{3112}&g_{3112}&g_{3112}&g_{3212}&g_{3212}&g_{3212}&g_{3212}\end{matrix}\right] </script>
+</div>
+<p>最終的に、<code>col2im</code>関数を適用します。</p>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \mathbf{X}} = \left[\begin{matrix}\left[\begin{matrix}g_{1111} &amp; g_{1111} + g_{1112} &amp; g_{1112}\\g_{1111} &amp; g_{1111} + g_{1112} &amp; g_{1112}\end{matrix}\right]&amp;\left[\begin{matrix}g_{1211} &amp; g_{1211} + g_{1212} &amp; g_{1212}\\g_{1211} &amp; g_{1211} + g_{1212} &amp; g_{1212}\end{matrix}\right]\\\left[\begin{matrix}g_{2111} &amp; g_{2111} + g_{2112} &amp; g_{2112}\\g_{2111} &amp; g_{2111} + g_{2112} &amp; g_{2112}\end{matrix}\right]&amp;\left[\begin{matrix}g_{2211} &amp; g_{2211} + g_{2212} &amp; g_{2212}\\g_{2211} &amp; g_{2211} + g_{2212} &amp; g_{2212}\end{matrix}\right]\\\left[\begin{matrix}g_{3111} &amp; g_{3111} + g_{3112} &amp; g_{3112}\\g_{3111} &amp; g_{3111} + g_{3112} &amp; g_{3112}\end{matrix}\right]&amp;\left[\begin{matrix}g_{3211} &amp; g_{3211} + g_{3212} &amp; g_{3212}\\g_{3211} &amp; g_{3211} + g_{3212} &amp; g_{3212}\end{matrix}\right]\end{matrix}\right]</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \mathbf{X}} = \left[\begin{matrix}\left[\begin{matrix}g_{1111} & g_{1111} + g_{1112} & g_{1112}\\g_{1111} & g_{1111} + g_{1112} & g_{1112}\end{matrix}\right]&\left[\begin{matrix}g_{1211} & g_{1211} + g_{1212} & g_{1212}\\g_{1211} & g_{1211} + g_{1212} & g_{1212}\end{matrix}\right]\\\left[\begin{matrix}g_{2111} & g_{2111} + g_{2112} & g_{2112}\\g_{2111} & g_{2111} + g_{2112} & g_{2112}\end{matrix}\right]&\left[\begin{matrix}g_{2211} & g_{2211} + g_{2212} & g_{2212}\\g_{2211} & g_{2211} + g_{2212} & g_{2212}\end{matrix}\right]\\\left[\begin{matrix}g_{3111} & g_{3111} + g_{3112} & g_{3112}\\g_{3111} & g_{3111} + g_{3112} & g_{3112}\end{matrix}\right]&\left[\begin{matrix}g_{3211} & g_{3211} + g_{3212} & g_{3212}\\g_{3211} & g_{3211} + g_{3212} & g_{3212}\end{matrix}\right]\end{matrix}\right]</script>
+</div>
+<p>ここで同じ添え字の勾配が<span><span class="MathJax_Preview">PH\times PW</span><script type="math/tex">PH\times PW</script></span>回出現しますが、実際にゼロではないのは一つです。そして、その位置は、Poolingされる範囲で最大の要素がある位置になります。</p>
+<p>以上でPoolingレイヤの実装の確認ができました。</p>
+<h3 id="285-ivory"><span class="pheasant-header"><span class="header"><span class="number">2.8.5</span> <span class="title">Ivoryライブラリでの実装</span></span></span></h3>
+<p>実際にIvoryライブラリでの実装を確認します。まずは孤立したレイヤを作成する例を示します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">conv = Convolution((2, 6, 6, 3, 3, 3))  # (C, H, W, FN, FH, FW)
+print(conv.x)  # (C, H, W)
+print(conv.W)  # (FN, C, FH, FW)
+print(conv.b)  # (FN,)
+print(conv.y)  # (FN, OH, OW)</code></pre></div>
+<div class="report"><p><span class="count">[65]</span>
+<span class="start">2019-06-12 20:01:24</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.09s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Input(&#39;Convolution.1.x&#39;, (2, 6, 6)) at 0x1aec976cd68&gt;
+&lt;Weight(&#39;Convolution.1.W&#39;, (3, 2, 3, 3)) at 0x1aec976cdd8&gt;
+&lt;Weight(&#39;Convolution.1.b&#39;, (3,)) at 0x1aec80794e0&gt;
+&lt;Output(&#39;Convolution.1.y&#39;, (3, 4, 4)) at 0x1aec976cda0&gt;</code></pre></div></div></div></div>
+
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">pool = Pooling((3, 4, 4, 2, 2))  # (C, H, W, PH, PW)
+print(pool.x)  # (C, H, W)
+print(pool.y)  # (C, OH, OW)</code></pre></div>
+<div class="report"><p><span class="count">[66]</span>
+<span class="start">2019-06-12 20:01:24</span> (<span class="time">13.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.11s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Input(&#39;Pooling.1.x&#39;, (3, 4, 4)) at 0x1aec976ccc0&gt;
+&lt;Output(&#39;Pooling.1.y&#39;, (3, 2, 2)) at 0x1aec976cc50&gt;</code></pre></div></div></div></div>
+
+<p>「ゼロから作るDeep Learing」の<code>SimpleConvNet</code>を再現します。ここではAffineレイヤを接続するためにFlattenレイヤを間に入れます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.model import sequential
+
+net = [
+    (&#34;input&#34;, 1, 10, 10),
+    (&#34;convolution&#34;, 10, 3, 3, &#34;relu&#34;),
+    (&#34;pooling&#34;, 2, 2, &#34;flatten&#34;),
+    (&#34;affine&#34;, 10, &#34;relu&#34;),
+    (&#34;affine&#34;, 10, &#34;softmax_cross_entropy&#34;),
+]
+model = sequential(net)
+model.layers</code></pre></div>
+<div class="report"><p><span class="count">[67]</span>
+<span class="start">2019-06-12 20:01:24</span> (<span class="time">17.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.12s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[&lt;Convolution(&#39;Convolution.2&#39;, (1, 10, 10, 10, 3, 3)) at 0x1aec97788d0&gt;,
+ &lt;Relu(&#39;Relu.1&#39;, (10, 8, 8)) at 0x1aec8b42278&gt;,
+ &lt;Pooling(&#39;Pooling.2&#39;, (10, 8, 8, 2, 2)) at 0x1aec9767c50&gt;,
+ &lt;Flatten(&#39;Flatten.1&#39;, (10, 4, 4, 160)) at 0x1aec97675f8&gt;,
+ &lt;Affine(&#39;Affine.1&#39;, (160, 10)) at 0x1aec9767588&gt;,
+ &lt;Relu(&#39;Relu.2&#39;, (10,)) at 0x1aec8020668&gt;,
+ &lt;Affine(&#39;Affine.2&#39;, (10, 10)) at 0x1aec898c2e8&gt;,
+ &lt;SoftmaxCrossEntropy(&#39;SoftmaxCrossEntropy.1&#39;, (10,)) at 0x1aec5bad048&gt;]</code></pre></div></div></div></div>
+
+<p>例題に合わせるため重みの標準偏差を0.01に設定します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">for v in model.weight_variables:
+    if v.parameters[0].name == &#34;W&#34;:
+        v.data = v.init(std=0.01)
+        print(v.parameters[0].name, v.data.std())</code></pre></div>
+<div class="report"><p><span class="count">[68]</span>
+<span class="start">2019-06-12 20:01:25</span> (<span class="time">23.9ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.15s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">W 0.009962479
+W 0.010202464
+W 0.010482968</code></pre></div></div></div></div>
+
+<p>ランダムデータで評価してみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+
+x = np.random.rand(100).reshape((1, 1, 10, 10))
+t = np.array([1])
+
+model.set_data(x, t)
+model.forward()
+model.backward()
+
+for v in model.grad_variables:
+    print(v.parameters[0].name, model.gradient_error(v))</code></pre></div>
+<div class="report"><p><span class="count">[69]</span>
+<span class="start">2019-06-12 20:01:25</span> (<span class="time">928ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.08s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">x 4.65996037693533e-12
+W 5.970507979976521e-07
+b 4.4278590312536723e-10
+W 8.194454141895044e-11
+b 4.3282836403521485e-09
+W 1.5676114057263746e-10
+b 1.7663007221835335e-07</code></pre></div></div></div></div>
+
+<p>最後に、実装コードを記載します。</p>
+<div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">File</span> <span class="number">2.2</span>
+<span class="title"><code>layers/convolution.py</code></span></p>
+<div class="content">
+<div class="pheasant-fenced-code"><div class="cell embed file"><div class="code"><pre><code class="python">from ivory.common.context import np
+from ivory.common.util import col2im, im2col
+from ivory.core.layer import Layer
+
+class Convolution(Layer):
+    &#34;&#34;&#34;Convolution((C, H, W, FN, FH, FW)).
+
+    * Input: (N, C, H, W)
+    * Filter : (FN, C, FH, FW)
+    * Output:  (N, FN, OH, OW)
+    &#34;&#34;&#34;
+
+    input_ndim = 3
+
+    def init(self, stride=1, padding=0):
+        C, W, H, FN, FH, FW = self.shape
+        self.W = self.add_weight((FN, C, FH, FW)).randn()
+        self.b = self.add_weight((FN,)).zeros()
+        self.stride = self.add_state(stride)
+        self.padding = self.add_state(padding)
+        OH = 1 + int((H - FH + 2 * padding) / stride)
+        OW = 1 + int((W - FW + 2 * padding) / stride)
+        self.y.shape = FN, OH, OW
+
+    def forward(self):
+        FN, C, FH, FW = self.W.shape
+        FN, OH, OW = self.y.shape
+        self.x_2d = im2col(self.x.d, FH, FW, self.stride.d, self.padding.d)
+        self.W_2d = self.W.d.reshape(FN, -1).T
+        y_2d = self.x_2d @ self.W_2d + self.b.d
+        N = self.x.d.shape[0]
+        self.y.d = y_2d.reshape(N, OH, OW, -1).transpose(0, 3, 1, 2)
+
+    def backward(self):
+        FN, C, FH, FW = self.W.shape
+        dy_2d = self.y.g.transpose(0, 2, 3, 1).reshape(-1, FN)
+        self.b.g = np.sum(dy_2d, axis=0)
+        dW_2d = self.x_2d.T @ dy_2d
+        self.W.g = dW_2d.transpose(1, 0).reshape(FN, C, FH, FW)
+        dx_2d = dy_2d @ self.W_2d.T
+        self.x.g = col2im(dx_2d, self.x.d.shape, FH, FW, self.stride.d, self.padding.d)
+
+
+class Pooling(Layer):
+    &#34;&#34;&#34;Pooling((C, H, W, PH, PW)).
+
+    * Input: (N, C, H, W)
+    * Output:  (N, C, OH, OW)
+    &#34;&#34;&#34;
+
+    input_ndim = 3
+
+    def init(self, stride=0, padding=0):
+        C, H, W, PH, PW = self.shape
+        stride = stride or PH
+        self.stride = self.add_state(stride)
+        self.padding = self.add_state(padding)
+        OH = 1 + int((H - PH + 2 * padding) / stride)
+        OW = 1 + int((W - PW + 2 * padding) / stride)
+        self.y.shape = C, OH, OW
+
+    def forward(self):
+        PH, PW = self.shape[3:5]
+        C, OH, OW = self.y.shape
+        x_2d = im2col(self.x.d, PH, PW, self.stride.d, self.padding.d)
+        pool_size = self.shape[3] * self.shape[4]
+        x_2d = x_2d.reshape(-1, pool_size)
+        self.arg_max = np.argmax(x_2d, axis=1)
+        N = self.x.d.shape[0]
+        self.y.d = np.max(x_2d, axis=1).reshape(N, OH, OW, C).transpose(0, 3, 1, 2)
+
+    def backward(self):
+        PH, PW = self.shape[3:5]
+        dy = self.y.g.transpose(0, 2, 3, 1)
+        pool_size = self.shape[3] * self.shape[4]
+        dmax = np.zeros((dy.size, pool_size))
+        dmax[np.arange(self.arg_max.size), self.arg_max.flatten()] = dy.flatten()
+        dmax = dmax.reshape(dy.shape + (pool_size,))
+        dx_2d = dmax.reshape(dmax.shape[0] * dmax.shape[1] * dmax.shape[2], -1)
+        self.x.g = col2im(dx_2d, self.x.d.shape, PH, PW, self.stride.d, self.padding.d)</code></pre></div></div></div>
+
+</div></div></div></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../Dropout/" title="2.7 Dropout"><span>Previous</span></a></div>
+        <div class="next"><a href="../MatMul_Embedding/" title="2.9 MatMul/Embeddingレイヤ"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

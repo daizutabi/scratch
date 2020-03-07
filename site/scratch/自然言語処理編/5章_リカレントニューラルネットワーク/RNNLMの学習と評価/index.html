@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>5.7 RNNLMの学習と評価 &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2"><button class="section nav-item hide">Ivoryライブラリ</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">レイヤ実装</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2 current"><button class="section nav-item">自然言語処理編</button>
+<ul class="subnav">
+    <li class="toctree-l3"><a class="nav-item" href="../../0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav">
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">5.7 RNNLMの学習と評価</a>
+<ul class="subnav">
+</ul></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../../4章_word2vecの高速化/改良版word2vecの学習/">&laquo; Previous</a></div>
+    <div class="next"><a href="../../6章_ゲート付きRNN/LSTMを使った言語モデル/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>自然言語処理編 &raquo; </li><li>5章 リカレントニューラルネットワーク</li>
+</ul>
+</nav>
+                <div id="content"><style>
+ .vega-actions a { margin-right: 12px; color: #757575; font-weight: normal; font-size: 13px; } .error { color: red; } </style>
+<script src="https://cdn.jsdelivr.net/npm/vega@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@2.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+<h2 id="57-rnnlm"><span class="pheasant-header"><span class="header"><span class="number">5.7</span> <span class="title">RNNLMの学習と評価</span></span></span></h2>
+<p>PTBデータセットを読み出します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.dataset import TimeDataset
+from ivory.utils.repository import import_module
+
+ptb = import_module(&#34;scratch2/dataset/ptb&#34;)
+corpus, word_to_id, id_to_word = ptb.load_data(&#34;train&#34;)
+corpus = corpus[:1000]
+vocab_size = int(max(corpus) + 1)
+x, t = corpus[:-1], corpus[1:]
+data = TimeDataset((x, t), time_size=5, batch_size=10)
+data.epochs = 100
+data</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-06-19 12:26:46</span> (<span class="time">39.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">625ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">TimeDataset(time_size=5, batch_size=10, epochs=100, len=19, column=0, size=(999,))</code></pre></div></div></div></div>
+
+<p>ハイパーパラメータの設定を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">wordvec_size = 100
+hidden_size = 100</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-19 12:26:46</span> (<span class="time">7.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">632ms</span>)</span></p></div></div></div></div>
+
+<p>モデルを作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.trainer import sequential
+
+net = [
+    (&#34;input&#34;, vocab_size),
+    (&#34;embedding&#34;, wordvec_size),
+    (&#34;rnn&#34;, hidden_size),
+    (&#34;affine&#34;, vocab_size, &#34;softmax_cross_entropy&#34;),
+]
+trainer = sequential(net, optimizer=&#34;sgd&#34;, metrics=[&#34;loss&#34;])
+trainer.optimizer.learning_rate = 0.1
+model = trainer.model
+for layer in model.layers:
+    print(layer)</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-19 12:26:46</span> (<span class="time">27.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">659ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Embedding(&#39;Embedding.1&#39;, (418, 100)) at 0x247e876e908&gt;
+&lt;RNN(&#39;RNN.2&#39;, (100, 100)) at 0x247e87c87f0&gt;
+&lt;Affine(&#39;Affine.1&#39;, (100, 418)) at 0x247e87c8978&gt;
+&lt;SoftmaxCrossEntropy(&#39;SoftmaxCrossEntropy.3&#39;, (418,)) at 0x247e87c8b38&gt;</code></pre></div></div></div></div>
+
+<p>重みの初期値を設定します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.context import np
+
+model.init(std=&#34;xavier&#34;)
+for p in model.weights:
+    if p.name != &#34;b&#34;:
+        std1, std2 = f&#34;{p.d.std():.03f}&#34;, f&#34;{np.sqrt(1/p.d.shape[0]):.03f}&#34;
+        print(p.layer.name, p.name, std1, std2)</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-19 12:26:46</span> (<span class="time">29.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">688ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">Embedding.1 W 0.049 0.049
+RNN.2 W 0.100 0.100
+RNN.2 U 0.101 0.100
+Affine.1 W 0.100 0.100</code></pre></div></div></div></div>
+
+<p>モデルに代入し、パープレキシティを計算してみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">trainer.set_data(*data[0])
+model.forward()
+print(model.perplexity)</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-06-19 12:26:46</span> (<span class="time">11.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">699ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">422.05288041862997</code></pre></div></div></div></div>
+
+<p>訓練を実施します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">trainer.fit(data)
+df = trainer.to_frame()
+df[&#34;epoch&#34;] = df.iteration // len(data)
+df = df.groupby(&#34;epoch&#34;).mean().reset_index()
+df[&#34;ppl&#34;] = np.exp(df.loss)
+df.tail()</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-19 12:26:46</span> (<span class="time">5.18s</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">5.88s</span>)</span></p></div></div>
+
+<div class="cell jupyter display"><div class="content"><table class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>epoch</th>
+      <th>iteration</th>
+      <th>loss</th>
+      <th>ppl</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>95</th>
+      <td>95</td>
+      <td>1814</td>
+      <td>1.719615</td>
+      <td>5.582377</td>
+    </tr>
+    <tr>
+      <th>96</th>
+      <td>96</td>
+      <td>1833</td>
+      <td>1.594855</td>
+      <td>4.927614</td>
+    </tr>
+    <tr>
+      <th>97</th>
+      <td>97</td>
+      <td>1852</td>
+      <td>1.583730</td>
+      <td>4.873099</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>98</td>
+      <td>1871</td>
+      <td>1.560221</td>
+      <td>4.759871</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>99</td>
+      <td>1890</td>
+      <td>1.460754</td>
+      <td>4.309210</td>
+    </tr>
+  </tbody>
+</table></div></div></div></div>
+
+<p>可視化します</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import altair as alt
+
+alt.Chart(df).mark_line().encode(x=&#34;epoch&#34;, y=&#34;ppl&#34;).properties(width=300, height=200)</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-06-19 12:26:51</span> (<span class="time">41.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">5.92s</span>)</span></p></div></div>
+
+<div class="cell jupyter display"><div class="content"><div id="pheasant-altair-1"><script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var spec = {"config": {"view": {"width": 400, "height": 300}}, "data": {"name": "data-2ad86c50cf0c33e4e12c7ed540977ab4"}, "mark": "line", "encoding": {"x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "ppl"}}, "height": 200, "width": 300, "$schema": "https://vega.github.io/schema/vega-lite/v2.6.0.json", "datasets": {"data-2ad86c50cf0c33e4e12c7ed540977ab4": [{"epoch": 0, "iteration": 9, "loss": 6.016624691611843, "ppl": 410.1917329016633}, {"epoch": 1, "iteration": 28, "loss": 5.709117206774259, "ppl": 301.604696141723}, {"epoch": 2, "iteration": 47, "loss": 5.471577437551399, "ppl": 237.83506697879096}, {"epoch": 3, "iteration": 66, "loss": 5.39117810701069, "ppl": 219.46178277914737}, {"epoch": 4, "iteration": 85, "loss": 5.346148296155428, "ppl": 209.79865732483626}, {"epoch": 5, "iteration": 104, "loss": 5.316310713918585, "ppl": 203.63124059026424}, {"epoch": 6, "iteration": 123, "loss": 5.294548693205181, "ppl": 199.24768383878228}, {"epoch": 7, "iteration": 142, "loss": 5.277413490696956, "ppl": 195.86261913661974}, {"epoch": 8, "iteration": 161, "loss": 5.262967224121095, "ppl": 193.05347520364367}, {"epoch": 9, "iteration": 180, "loss": 5.250023659153988, "ppl": 190.57077714865605}, {"epoch": 10, "iteration": 199, "loss": 5.237791089509664, "ppl": 188.2538069861776}, {"epoch": 11, "iteration": 218, "loss": 5.225695061934621, "ppl": 185.99040045691095}, {"epoch": 12, "iteration": 237, "loss": 5.213299014442845, "ppl": 183.69908558441418}, {"epoch": 13, "iteration": 256, "loss": 5.200334312037418, "ppl": 181.33285349869294}, {"epoch": 14, "iteration": 275, "loss": 5.1868285169099515, "ppl": 178.90027307232364}, {"epoch": 15, "iteration": 294, "loss": 5.17476368151213, "ppl": 176.75483890422677}, {"epoch": 16, "iteration": 313, "loss": 5.170230809261924, "ppl": 175.95544494397518}, {"epoch": 17, "iteration": 332, "loss": 5.1473373894942425, "ppl": 171.97298310315728}, {"epoch": 18, "iteration": 351, "loss": 5.13626988461143, "ppl": 170.0801649807061}, {"epoch": 19, "iteration": 370, "loss": 5.111507841411391, "ppl": 165.9203479230192}, {"epoch": 20, "iteration": 389, "loss": 5.108224294562088, "ppl": 165.37643415921602}, {"epoch": 21, "iteration": 408, "loss": 5.078918344598068, "ppl": 160.60024781970753}, {"epoch": 22, "iteration": 427, "loss": 5.0665959890265215, "ppl": 158.63341734042388}, {"epoch": 23, "iteration": 446, "loss": 5.026262223093134, "ppl": 152.3624501944102}, {"epoch": 24, "iteration": 465, "loss": 5.020084421258224, "ppl": 151.42408666639383}, {"epoch": 25, "iteration": 484, "loss": 4.975085641961349, "ppl": 144.76122225231816}, {"epoch": 26, "iteration": 503, "loss": 4.952040790758636, "ppl": 141.46336666793277}, {"epoch": 27, "iteration": 522, "loss": 4.9148415816457645, "ppl": 136.29771603230506}, {"epoch": 28, "iteration": 541, "loss": 4.899780530427631, "ppl": 134.2603103983387}, {"epoch": 29, "iteration": 560, "loss": 4.842209328099301, "ppl": 126.74907290674064}, {"epoch": 30, "iteration": 579, "loss": 4.811950555098685, "ppl": 122.97124592781682}, {"epoch": 31, "iteration": 598, "loss": 4.802357129548724, "ppl": 121.7971711392939}, {"epoch": 32, "iteration": 617, "loss": 4.742486170718544, "ppl": 114.71905859631167}, {"epoch": 33, "iteration": 636, "loss": 4.68804592734889, "ppl": 108.64068047295414}, {"epoch": 34, "iteration": 655, "loss": 4.654240690532484, "ppl": 105.02943986576959}, {"epoch": 35, "iteration": 674, "loss": 4.619484333239105, "ppl": 101.44170852267906}, {"epoch": 36, "iteration": 693, "loss": 4.589732939067639, "ppl": 98.46812965966959}, {"epoch": 37, "iteration": 712, "loss": 4.52743792082134, "ppl": 92.52121048946223}, {"epoch": 38, "iteration": 731, "loss": 4.473746129086144, "ppl": 87.68458630006711}, {"epoch": 39, "iteration": 750, "loss": 4.4467603984632, "ppl": 85.34999566616182}, {"epoch": 40, "iteration": 769, "loss": 4.404742961682771, "ppl": 81.83810461077317}, {"epoch": 41, "iteration": 788, "loss": 4.371347720497532, "ppl": 79.15023223993664}, {"epoch": 42, "iteration": 807, "loss": 4.321006116365131, "ppl": 75.26431486978713}, {"epoch": 43, "iteration": 826, "loss": 4.24242218017578, "ppl": 69.5761739324469}, {"epoch": 44, "iteration": 845, "loss": 4.21147515547903, "ppl": 67.45597450164945}, {"epoch": 45, "iteration": 864, "loss": 4.1814608443410775, "ppl": 65.46141233228177}, {"epoch": 46, "iteration": 883, "loss": 4.106585115131579, "ppl": 60.738946505055104}, {"epoch": 47, "iteration": 902, "loss": 4.059700333444696, "ppl": 57.95694071965001}, {"epoch": 48, "iteration": 921, "loss": 4.016758358604029, "ppl": 55.520835160633666}, {"epoch": 49, "iteration": 940, "loss": 3.968173105340255, "ppl": 52.8878220485206}, {"epoch": 50, "iteration": 959, "loss": 3.919483353464227, "ppl": 50.37441228824637}, {"epoch": 51, "iteration": 978, "loss": 3.8642555959601146, "ppl": 47.66777513777812}, {"epoch": 52, "iteration": 997, "loss": 3.828503931949013, "ppl": 45.99367706575581}, {"epoch": 53, "iteration": 1016, "loss": 3.7870311375668173, "ppl": 44.12520396004824}, {"epoch": 54, "iteration": 1035, "loss": 3.7135246357164884, "ppl": 40.9980553756175}, {"epoch": 55, "iteration": 1054, "loss": 3.655112481368215, "ppl": 38.67187073546294}, {"epoch": 56, "iteration": 1073, "loss": 3.6015950413754116, "ppl": 36.65665672247234}, {"epoch": 57, "iteration": 1092, "loss": 3.5441197445518084, "ppl": 34.609206986851895}, {"epoch": 58, "iteration": 1111, "loss": 3.488742338481702, "ppl": 32.74473999956586}, {"epoch": 59, "iteration": 1130, "loss": 3.444855603669819, "ppl": 31.338757918306566}, {"epoch": 60, "iteration": 1149, "loss": 3.3758206176757817, "ppl": 29.248275587771772}, {"epoch": 61, "iteration": 1168, "loss": 3.3149985544305105, "ppl": 27.522354199064182}, {"epoch": 62, "iteration": 1187, "loss": 3.2451540977076476, "ppl": 25.665664775621327}, {"epoch": 63, "iteration": 1206, "loss": 3.219701489900288, "ppl": 25.020650149682293}, {"epoch": 64, "iteration": 1225, "loss": 3.1579798969469572, "ppl": 23.52302895753799}, {"epoch": 65, "iteration": 1244, "loss": 3.1181288387900903, "ppl": 22.60404423657973}, {"epoch": 66, "iteration": 1263, "loss": 3.0533412732576073, "ppl": 21.186014556551857}, {"epoch": 67, "iteration": 1282, "loss": 2.9962249755859376, "ppl": 20.00985646859059}, {"epoch": 68, "iteration": 1301, "loss": 2.950989604749178, "ppl": 19.124870429263485}, {"epoch": 69, "iteration": 1320, "loss": 2.8922042043585527, "ppl": 18.033014275531077}, {"epoch": 70, "iteration": 1339, "loss": 2.8526849766781455, "ppl": 17.33426150210701}, {"epoch": 71, "iteration": 1358, "loss": 2.8262599824604235, "ppl": 16.882202870506084}, {"epoch": 72, "iteration": 1377, "loss": 2.7634279592413655, "ppl": 15.854097103295137}, {"epoch": 73, "iteration": 1396, "loss": 2.730093889738384, "ppl": 15.33432668824215}, {"epoch": 74, "iteration": 1415, "loss": 2.6830520388954557, "ppl": 14.629675566719227}, {"epoch": 75, "iteration": 1434, "loss": 2.660897843210321, "ppl": 14.309130688782218}, {"epoch": 76, "iteration": 1453, "loss": 2.57747473465769, "ppl": 13.163853927492756}, {"epoch": 77, "iteration": 1472, "loss": 2.514977585641961, "ppl": 12.36633159262178}, {"epoch": 78, "iteration": 1491, "loss": 2.4729115937885484, "ppl": 11.856919174813155}, {"epoch": 79, "iteration": 1510, "loss": 2.408144169857627, "ppl": 11.113317565781513}, {"epoch": 80, "iteration": 1529, "loss": 2.341950474789268, "ppl": 10.40150466271232}, {"epoch": 81, "iteration": 1548, "loss": 2.306735783627159, "ppl": 10.04159316680034}, {"epoch": 82, "iteration": 1567, "loss": 2.2895934335809005, "ppl": 9.870923679155823}, {"epoch": 83, "iteration": 1586, "loss": 2.231728724429482, "ppl": 9.315956889446971}, {"epoch": 84, "iteration": 1605, "loss": 2.1360645575272414, "ppl": 8.466054313191982}, {"epoch": 85, "iteration": 1624, "loss": 2.1298763475920017, "ppl": 8.41382635722457}, {"epoch": 86, "iteration": 1643, "loss": 2.093481220446135, "ppl": 8.113109583300478}, {"epoch": 87, "iteration": 1662, "loss": 2.0453697124280428, "ppl": 7.732016632183591}, {"epoch": 88, "iteration": 1681, "loss": 1.9880110730622944, "ppl": 7.300998160063144}, {"epoch": 89, "iteration": 1700, "loss": 1.987742389879729, "ppl": 7.299036768149905}, {"epoch": 90, "iteration": 1719, "loss": 1.9230300662392064, "ppl": 6.841657769555823}, {"epoch": 91, "iteration": 1738, "loss": 1.835744155080695, "ppl": 6.269798111983248}, {"epoch": 92, "iteration": 1757, "loss": 1.8187802766498766, "ppl": 6.164335079166767}, {"epoch": 93, "iteration": 1776, "loss": 1.7540514815481085, "ppl": 5.777964635882711}, {"epoch": 94, "iteration": 1795, "loss": 1.7387802686189346, "ppl": 5.690398430484139}, {"epoch": 95, "iteration": 1814, "loss": 1.7196146352667556, "ppl": 5.5823767985687915}, {"epoch": 96, "iteration": 1833, "loss": 1.5948549933182568, "ppl": 4.9276144832851685}, {"epoch": 97, "iteration": 1852, "loss": 1.583730115388569, "ppl": 4.873099174001212}, {"epoch": 98, "iteration": 1871, "loss": 1.5602206099660776, "ppl": 4.7598712043427875}, {"epoch": 99, "iteration": 1890, "loss": 1.4607544909025492, "ppl": 4.309209561542152}]}};
+    var opt = {
+      "mode": "vega-lite",
+      "renderer": "canvas",
+      "actions": {"editor": true, "source": true, "export": true}
+    };
+    vegaEmbed("#pheasant-altair-1", spec, opt).catch(console.err);
+  });</script></div></div></div></div></div></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../../4章_word2vecの高速化/改良版word2vecの学習/" title="4.3 改良版word2vecの実装"><span>Previous</span></a></div>
+        <div class="next"><a href="../../6章_ゲート付きRNN/LSTMを使った言語モデル/" title="6.4 LSTMを使った言語モデル"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

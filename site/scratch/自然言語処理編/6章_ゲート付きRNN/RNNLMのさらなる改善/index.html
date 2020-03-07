@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>6.5 RNNLMのさらなる改善 &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2"><button class="section nav-item hide">Ivoryライブラリ</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">レイヤ実装</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2 current"><button class="section nav-item">自然言語処理編</button>
+<ul class="subnav">
+    <li class="toctree-l3"><a class="nav-item" href="../../0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">6章 ゲート付きRNN</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">6.5 RNNLMのさらなる改善</a>
+<ul class="subnav">
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../LSTMを使った言語モデル/">&laquo; Previous</a></div>
+    <div class="next"><a href="../まとめ/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>自然言語処理編 &raquo; </li><li>6章 ゲート付きRNN</li>
+</ul>
+</nav>
+                <div id="content">
+<h2 id="65-rnnlm"><span class="pheasant-header"><span class="header"><span class="number">6.5</span> <span class="title">RNNLMのさらなる改善</span></span></span></h2>
+<p>高速化のためにGPUを使います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.context import np
+np.context = &#39;gpu&#39;</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-06-20 20:37:10</span> (<span class="time">192ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">192ms</span>)</span></p></div></div></div></div>
+
+<p>PTBデータセットを読み出します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.dataset import TimeDataset
+from ivory.utils.repository import import_module
+
+ptb = import_module(&#34;scratch2/dataset/ptb&#34;)
+corpus, _, _ = ptb.load_data(&#34;train&#34;)
+corpus_val, _, _ = ptb.load_data(&#34;val&#34;)
+corpus_test, _, _ = ptb.load_data(&#34;test&#34;)
+vocab_size = int(max(corpus) + 1)
+x, t = corpus[:-1], corpus[1:]
+data = TimeDataset((x, t), time_size=35, batch_size=20)
+data.epochs = 1
+data</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-20 20:37:11</span> (<span class="time">529ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">721ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">TimeDataset(time_size=35, batch_size=20, epochs=1, len=1327, column=0, size=(929588,))</code></pre></div></div></div></div>
+
+<p>ハイパーパラメータの設定を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">wordvec_size = 650
+hidden_size = 650
+lr = 20.0
+max_epoch = 40
+max_grad = 0.25
+dropout = 0.5</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-20 20:37:11</span> (<span class="time">4.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">725ms</span>)</span></p></div></div></div></div>
+
+<p>モデルを作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.trainer import sequential
+
+net = [
+    (&#34;input&#34;, vocab_size),
+    (&#34;embedding&#34;, wordvec_size, &#34;dropout&#34;),
+    (&#34;lstm&#34;, hidden_size, &#34;dropout&#34;),
+    (&#34;lstm&#34;, hidden_size, &#34;dropout&#34;),
+    (&#34;affine&#34;, vocab_size, &#34;softmax_cross_entropy&#34;),
+]
+trainer = sequential(net, optimizer=&#34;sgd&#34;, metrics=[&#34;loss&#34;])
+trainer.optimizer.learning_rate = lr
+trainer.max_grad = max_grad
+model = trainer.model
+for layer in model.layers:
+    print(layer)</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-20 20:37:11</span> (<span class="time">223ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">949ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Embedding(&#39;Embedding.1&#39;, (10000, 650)) at 0x1cf823acba8&gt;
+&lt;Dropout(&#39;Dropout.1&#39;, (650,)) at 0x1cf823accc0&gt;
+&lt;LSTM(&#39;LSTM.1&#39;, (650, 650)) at 0x1cf823acdd8&gt;
+&lt;Dropout(&#39;Dropout.2&#39;, (650,)) at 0x1cf823acf98&gt;
+&lt;LSTM(&#39;LSTM.2&#39;, (650, 650)) at 0x1cf82368160&gt;
+&lt;Dropout(&#39;Dropout.3&#39;, (650,)) at 0x1cf82368400&gt;
+&lt;Affine(&#39;Affine.1&#39;, (650, 10000)) at 0x1cf823685f8&gt;
+&lt;SoftmaxCrossEntropy(&#39;SoftmaxCrossEntropy.1&#39;, (10000,)) at 0x1cf823688d0&gt;</code></pre></div></div></div></div>
+
+<p>重みの初期値とドロップアウト率を設定します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.context import np
+
+model.init(std=&#34;xavier&#34;, dropout_ratio=dropout)
+for p in model.weights:
+    if p.name != &#34;b&#34;:
+        std1 = f&#34;{float(p.d.std()):.03f}&#34;
+        std2 = f&#34;{float(np.sqrt(1/p.d.shape[0])):.03f}&#34;
+        print(p.layer.name, p.name, std1, std2, type(p.d), p.d.dtype)
+
+for layer in model.layers:
+    if layer.name.startswith(&#39;Dropout&#39;):
+        print(layer.name, layer.dropout_ratio.d)</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-06-20 20:37:11</span> (<span class="time">114ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.06s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">Embedding.1 W 0.010 0.010 &lt;class &#39;cupy.core.core.ndarray&#39;&gt; float32
+LSTM.1 W 0.039 0.039 &lt;class &#39;cupy.core.core.ndarray&#39;&gt; float32
+LSTM.1 U 0.039 0.039 &lt;class &#39;cupy.core.core.ndarray&#39;&gt; float32
+LSTM.2 W 0.039 0.039 &lt;class &#39;cupy.core.core.ndarray&#39;&gt; float32
+LSTM.2 U 0.039 0.039 &lt;class &#39;cupy.core.core.ndarray&#39;&gt; float32
+Affine.1 W 0.039 0.039 &lt;class &#39;cupy.core.core.ndarray&#39;&gt; float32
+Dropout.1 0.5
+Dropout.2 0.5
+Dropout.3 0.5</code></pre></div></div></div></div>
+
+<p>重みの共有をします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">em = model.layers[0]
+affine = model.layers[-2]
+affine.W.share_variable(em.W, transpose=True)
+trainer.build()
+for v in trainer.optimizer.variables:
+    print(v)</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-20 20:37:12</span> (<span class="time">15.5ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.08s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Variable([&#39;Embedding.1.W&#39;, &#39;Affine.1.W&#39;], (10000, 650)) at 0x1cf82368ba8&gt;
+&lt;Variable([&#39;LSTM.1.W&#39;], (650, 2600)) at 0x1cf82368be0&gt;
+&lt;Variable([&#39;LSTM.1.U&#39;], (650, 2600)) at 0x1cf82368cf8&gt;
+&lt;Variable([&#39;LSTM.1.b&#39;], (2600,)) at 0x1cf82368c18&gt;
+&lt;Variable([&#39;LSTM.2.W&#39;], (650, 2600)) at 0x1cf82368dd8&gt;
+&lt;Variable([&#39;LSTM.2.U&#39;], (650, 2600)) at 0x1cf82368c88&gt;
+&lt;Variable([&#39;LSTM.2.b&#39;], (2600,)) at 0x1cf82368e48&gt;
+&lt;Variable([&#39;Affine.1.b&#39;], (10000,)) at 0x1cf82368f28&gt;</code></pre></div></div></div></div>
+
+<p>訓練を実施します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">trainer.fit(data)
+it = iter(trainer)
+loss = next(it)[1]
+print(data.iteration, int(np.exp(loss)))
+
+for i in range(8):
+    loss = 0.0
+    for _ in range(20):
+        loss += next(it)[1]
+    loss /= 20.0
+    print(data.iteration, int(np.exp(loss)))</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-06-20 20:37:12</span> (<span class="time">28.2s</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">29.3s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">0 9989
+20 3680
+40 1958
+60 1303
+80 1091
+100 837
+120 808
+140 698
+160 695</code></pre></div></div></div></div>
+
+<p>「ゼロから作るDeep Learning ❷」の<code>ch06/train_better_rnnlm.py</code>の実行結果の冒頭を記載します。</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="bash">| epoch 1 |  iter 1 / 1327 | time 2[s] | perplexity 9999.86
+| epoch 1 |  iter 21 / 1327 | time 60[s] | perplexity 4233.17
+| epoch 1 |  iter 41 / 1327 | time 116[s] | perplexity 1645.35
+| epoch 1 |  iter 61 / 1327 | time 172[s] | perplexity 1346.09
+| epoch 1 |  iter 81 / 1327 | time 227[s] | perplexity 1022.61
+| epoch 1 |  iter 101 / 1327 | time 283[s] | perplexity 845.07
+| epoch 1 |  iter 121 / 1327 | time 339[s] | perplexity 810.82
+| epoch 1 |  iter 141 / 1327 | time 395[s] | perplexity 749.34
+| epoch 1 |  iter 161 / 1327 | time 451[s] | perplexity 685.36</code></pre></div></div></div>
+
+<p>実際の訓練は独立したスクリプトファイルを作成して実行します。次節で、結果を検証します。</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../LSTMを使った言語モデル/" title="6.4 LSTMを使った言語モデル"><span>Previous</span></a></div>
+        <div class="next"><a href="../まとめ/" title="6.6 まとめ"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

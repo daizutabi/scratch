@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>2.1 SigmoidCrossEntropy &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2 current"><button class="section nav-item">Ivoryライブラリ</button>
+<ul class="subnav">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">レイヤ実装</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">2.1 SigmoidCrossEntropy</a>
+<ul class="subnav">
+<li class="toctree-l5"><a class="nav-item toc" href="#211">2.1.1 定式化</a></li>
+<li class="toctree-l5"><a class="nav-item toc" href="#212">2.1.2 時系列データでない場合</a></li>
+<li class="toctree-l5"><a class="nav-item toc" href="#213">2.1.3 時系列データの場合</a></li>
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">自然言語処理編</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../自然言語処理編/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../はじめに/">&laquo; Previous</a></div>
+    <div class="next"><a href="../SoftmaxCrossEntropy/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>Ivoryライブラリ &raquo; </li><li>レイヤ実装</li>
+</ul>
+</nav>
+                <div id="content"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<h2 id="21-sigmoidcrossentropy"><span class="pheasant-header"><span class="header"><span class="number">2.1</span> <span class="title">SigmoidCrossEntropy</span></span></span></h2>
+<h3 id="211"><span class="pheasant-header"><span class="header"><span class="number">2.1.1</span> <span class="title">定式化</span></span></span></h3>
+<p>シグモイド関数と交差エントロピー誤差を合わせたSigmoidCrossEntropyレイヤを実装します。シグモイド関数は、</p>
+<div>
+<div class="MathJax_Preview"> y = \frac1{1+\exp(-x)} </div>
+<script type="math/tex; mode=display"> y = \frac1{1+\exp(-x)} </script>
+</div>
+<p>交差エントロピー誤差は、</p>
+<div>
+<div class="MathJax_Preview"> L = -\delta_{t0}\log (1-y) - \delta_{t1}\log y</div>
+<script type="math/tex; mode=display"> L = -\delta_{t0}\log (1-y) - \delta_{t1}\log y</script>
+</div>
+<p>です。ここで、<span><span class="MathJax_Preview">\delta</span><script type="math/tex">\delta</script></span>はクローネッカーのデルタで、<span><span class="MathJax_Preview">i=j</span><script type="math/tex">i=j</script></span>のとき<span><span class="MathJax_Preview">\delta_{ij}=1</span><script type="math/tex">\delta_{ij}=1</script></span>、<span><span class="MathJax_Preview">i\ne j</span><script type="math/tex">i\ne j</script></span>のとき<span><span class="MathJax_Preview">\delta_{ij}=0</span><script type="math/tex">\delta_{ij}=0</script></span>となります。</p>
+<p>まずは、形状を定義します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">N, T = 3, 4</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-12 20:00:46</span> (<span class="time">6.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">187ms</span>)</span></p></div></div></div></div>
+
+<p>ここで<span><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>はバッチ数、<span><span class="MathJax_Preview">T</span><script type="math/tex">T</script></span>はタイムステップ数です。形状の確認を行います。シグモイド関数の入力（スコア）を<span><span class="MathJax_Preview">\mathbf{X}</span><script type="math/tex">\mathbf{X}</script></span>、出力（確率）を<span><span class="MathJax_Preview">\mathbf{Y}</span><script type="math/tex">\mathbf{Y}</script></span>、また、交差エントロピー誤差のターゲットを<span><span class="MathJax_Preview">4</span><script type="math/tex">4</script></span>、出力を<span><span class="MathJax_Preview">L</span><script type="math/tex">L</script></span>とします。</p>
+<p>時系列データでない場合、</p>
+<table>
+<thead>
+<tr>
+<th>パラメータ</th>
+<th>形状</th>
+<th>具体例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf{X}</span><script type="math/tex">\mathbf{X}</script></span></td>
+<td><span><span class="MathJax_Preview">(N,)</span><script type="math/tex">(N,)</script></span></td>
+<td><span><span class="MathJax_Preview">(3,)</span><script type="math/tex">(3,)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf{Y}</span><script type="math/tex">\mathbf{Y}</script></span></td>
+<td><span><span class="MathJax_Preview">(N,)</span><script type="math/tex">(N,)</script></span></td>
+<td><span><span class="MathJax_Preview">(3,)</span><script type="math/tex">(3,)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf{T}</span><script type="math/tex">\mathbf{T}</script></span></td>
+<td><span><span class="MathJax_Preview">(N,)</span><script type="math/tex">(N,)</script></span></td>
+<td><span><span class="MathJax_Preview">(3,)</span><script type="math/tex">(3,)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">L</span><script type="math/tex">L</script></span></td>
+<td><span><span class="MathJax_Preview">()</span><script type="math/tex">()</script></span></td>
+<td><span><span class="MathJax_Preview">()</span><script type="math/tex">()</script></span></td>
+</tr>
+</tbody>
+</table>
+<p>時系列データの場合、</p>
+<table>
+<thead>
+<tr>
+<th>パラメータ</th>
+<th>形状</th>
+<th>具体例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf{X}</span><script type="math/tex">\mathbf{X}</script></span></td>
+<td><span><span class="MathJax_Preview">(N, T)</span><script type="math/tex">(N, T)</script></span></td>
+<td><span><span class="MathJax_Preview">(3, 4)</span><script type="math/tex">(3, 4)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf{Y}</span><script type="math/tex">\mathbf{Y}</script></span></td>
+<td><span><span class="MathJax_Preview">(N, T)</span><script type="math/tex">(N, T)</script></span></td>
+<td><span><span class="MathJax_Preview">(3, 4)</span><script type="math/tex">(3, 4)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf{T}</span><script type="math/tex">\mathbf{T}</script></span></td>
+<td><span><span class="MathJax_Preview">(N, T)</span><script type="math/tex">(N, T)</script></span></td>
+<td><span><span class="MathJax_Preview">(3, 4)</span><script type="math/tex">(3, 4)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">L</span><script type="math/tex">L</script></span></td>
+<td><span><span class="MathJax_Preview">()</span><script type="math/tex">()</script></span></td>
+<td><span><span class="MathJax_Preview">()</span><script type="math/tex">()</script></span></td>
+</tr>
+</tbody>
+</table>
+<p>となります。</p>
+<h3 id="212"><span class="pheasant-header"><span class="header"><span class="number">2.1.2</span> <span class="title">時系列データでない場合</span></span></span></h3>
+<p>まず、時系列データでない場合を考え、入力を乱数で発生させます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+
+x = np.random.randn(N)
+x</code></pre></div>
+<div class="report"><p><span class="count">[19]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">8.08ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">417ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([ 0.18325944, -0.60097398, -1.82407824])</code></pre></div></div></div></div>
+
+<p>シグモイド関数の出力を求めます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">y = 1 / (1 + np.exp(-x))
+y</code></pre></div>
+<div class="report"><p><span class="count">[20]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">8.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">425ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([0.54568707, 0.35412089, 0.13894524])</code></pre></div></div></div></div>
+
+<p>次に、交差エントロピー誤差を求めます。ターゲットは、バッチ数分だけ正解ラベルが並んだベクトルです。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">t = np.random.randint(0, 2, N)
+t</code></pre></div>
+<div class="report"><p><span class="count">[21]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">456ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([1, 0, 1])</code></pre></div></div></div></div>
+
+<p>例えば、上の例は、バッチデータ0の正解ラベルが1で、バッチデータ1の正解ラベルが0であることを示します。交差エントロピー誤差の式に忠実に書くと、</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">[-np.log(yi) if ti else -np.log(1 - yi) for yi, ti in zip(y, t)]</code></pre></div>
+<div class="report"><p><span class="count">[24]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">8.97ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">487ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[0.6057096037062325, 0.4371429351987146, 1.9736754108588104]</code></pre></div></div></div></div>
+
+<p>となります。forループを使わないで書くと、</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">-np.log(np.c_[1 - y, y][np.arange(N), t])</code></pre></div>
+<div class="report"><p><span class="count">[25]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">8.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">495ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([0.6057096 , 0.43714294, 1.97367541])</code></pre></div></div></div></div>
+
+<p>となります。発散を防ぐための微小値の加算とバッチ数分の平均化をすれば、交差エントロピー誤差が、以下のように求まります。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">-np.sum(np.log(np.c_[1 - y, y][np.arange(N), t] + 1e-7)) / N</code></pre></div>
+<div class="report"><p><span class="count">[26]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">31.2ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">526ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">1.0055089639910264</code></pre></div></div></div></div>
+
+<p>「ゼロから作るDeep Learning」の実装と比較します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.utils.repository import import_module
+
+layers = import_module(&#34;scratch2/common.layers&#34;)
+s = layers.SigmoidWithLoss()
+s.forward(x, t)</code></pre></div>
+<div class="report"><p><span class="count">[27]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">16.8ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">543ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">1.0055089639910264</code></pre></div></div></div></div>
+
+<p>以上が、順伝搬になり、上のスカラー値が損失関数の値になります。</p>
+<p>逆伝搬は、シグモイド関数と交差エントロピー誤差を合わせたレイヤの勾配が次式で与えられることを天下り的に認めたうえで、数値微分によって正しいことを確認します。</p>
+<div>
+<div class="MathJax_Preview"> \partial L/x = y - t </div>
+<script type="math/tex; mode=display"> \partial L/x = y - t </script>
+</div>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">dx = (y - t) / N
+dx</code></pre></div>
+<div class="report"><p><span class="count">[28]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">14.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">557ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([-0.15143764,  0.1180403 , -0.28701825])</code></pre></div></div></div></div>
+
+<p>「ゼロから作るDeep Learning」の実装と比較します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">s.backward()</code></pre></div>
+<div class="report"><p><span class="count">[29]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">7.07ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">564ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([-0.15143764,  0.1180403 , -0.28701825])</code></pre></div></div></div></div>
+
+<p><code>SigmoidCrossEntropy</code>クラスの実装を確認しておきます。</p>
+<div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">Code</span> <span class="number">2.2</span>
+<span class="title"><code>SigmoidCrossEntropy</code>クラスの定義</span></p>
+<div class="content">
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter source"><div class="code">
+      <pre><code class="python">class SigmoidCrossEntropy(LossLayer):
+    def forward(self):
+        self.y.d = 1 / (1 + np.exp(-self.x.d))
+        y = self.y.d.reshape(-1)
+        self.size = y.shape[0]
+        loss = np.c_[1 - y, y][np.arange(self.size), self.t.d.reshape(-1)]
+        self.loss.d = -np.sum(np.log(loss + 1e-7)) / self.size
+
+    def backward(self):
+        self.x.g = (self.y.d - self.t.d) / self.size
+
+    def predict(self) -&gt; float:
+        return (self.x.d &gt; 0).astype(int)
+
+    @property
+    def accuracy(self) -&gt; float:
+        return float(np.average(self.predict() == self.t.d))
+</code></pre></div></div></div></div>
+
+</div></div></div>
+
+<p>実際にインスタンスを作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.model import sequential
+
+net = [(&#34;input&#34;, ()), &#34;sigmoid_cross_entropy&#34;]
+model = sequential(net)
+layer = model.layers[0]
+layer.parameters</code></pre></div>
+<div class="report"><p><span class="count">[32]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">22.9ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">622ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[&lt;Input(&#39;SigmoidCrossEntropy.1.x&#39;, ((),)) at 0x1f3ebf94240&gt;,
+ &lt;Output(&#39;SigmoidCrossEntropy.1.y&#39;, ((),)) at 0x1f3ebf942b0&gt;,
+ &lt;Input(&#39;SigmoidCrossEntropy.1.t&#39;, ()) at 0x1f3ebf94208&gt;,
+ &lt;Loss(&#39;SigmoidCrossEntropy.1.loss&#39;, ()) at 0x1f3ebf942e8&gt;]</code></pre></div></div></div></div>
+
+<p>変数を設定した後、入力とターゲットを代入します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">layer.set_variables()
+layer.set_data(x, t)</code></pre></div>
+<div class="report"><p><span class="count">[33]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">638ms</span>)</span></p></div></div></div></div>
+
+<p>順伝搬を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.forward()</code></pre></div>
+<div class="report"><p><span class="count">[34]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">7.73ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">645ms</span>)</span></p></div></div></div></div>
+
+<p>逆伝搬を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.backward()
+layer.x.g</code></pre></div>
+<div class="report"><p><span class="count">[35]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">9.31ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">655ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([-0.15143764,  0.1180403 , -0.28701825])</code></pre></div></div></div></div>
+
+<p>さて、この勾配が正しいかは、数値微分による勾配確認によって検証できます。入力データの第1要素を少しだけずらして、損失を求めます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">epsilon = 1e-4
+layer.x.d[0] += epsilon
+model.forward()
+plus = model.loss</code></pre></div>
+<div class="report"><p><span class="count">[36]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">6.01ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">661ms</span>)</span></p></div></div></div></div>
+
+<p>逆方向にずらします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">layer.x.d[0] -= 2 * epsilon
+model.forward()
+minus = model.loss</code></pre></div>
+<div class="report"><p><span class="count">[37]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">5.03ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">666ms</span>)</span></p></div></div></div></div>
+
+<p>勾配は次式で得られます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print((plus - minus) / (2 * epsilon))</code></pre></div>
+<div class="report"><p><span class="count">[38]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">10.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">676ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">-0.15143761637581576</code></pre></div></div></div></div>
+
+<p>これまでの結果に一致しています。入力をもとに戻しておきます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">layer.x.d[0] += epsilon</code></pre></div>
+<div class="report"><p><span class="count">[39]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">31.2ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">707ms</span>)</span></p></div></div></div></div>
+
+<p>ある変数の全ての要素について数値微分による勾配を求めるメソッド<code>numerical_gradient</code>が用意されています。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(model.numerical_gradient(layer.x.variable))</code></pre></div>
+<div class="report"><p><span class="count">[40]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">722ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[-0.15143762  0.11804028 -0.28701805]</code></pre></div></div></div></div>
+
+<p>正しいことが確認できました。</p>
+<h3 id="213"><span class="pheasant-header"><span class="header"><span class="number">2.1.3</span> <span class="title">時系列データの場合</span></span></span></h3>
+<p>入力を乱数で発生させます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = np.random.randn(N, T)
+t = np.random.randint(0, 2, (N, T))
+
+layer.set_data(x, t)</code></pre></div>
+<div class="report"><p><span class="count">[41]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">6.03ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">728ms</span>)</span></p></div></div></div></div>
+
+<p>順伝搬を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.forward()
+print(layer.loss.d)</code></pre></div>
+<div class="report"><p><span class="count">[42]</span>
+<span class="start">2019-06-12 20:00:47</span> (<span class="time">6.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">734ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">0.7857680503475944</code></pre></div></div></div></div>
+
+<p>逆伝搬を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.backward()
+print(layer.x.g)</code></pre></div>
+<div class="report"><p><span class="count">[43]</span>
+<span class="start">2019-06-12 20:00:48</span> (<span class="time">6.98ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">741ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[ 0.01143075 -0.06636342  0.01849615 -0.0497973 ]
+ [-0.026705    0.03135866 -0.07129697 -0.01323991]
+ [ 0.03217591  0.04082025 -0.0730233  -0.02233509]]</code></pre></div></div></div></div>
+
+<p>数値微分で確かめてみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(model.numerical_gradient(layer.x.variable))</code></pre></div>
+<div class="report"><p><span class="count">[44]</span>
+<span class="start">2019-06-12 20:00:48</span> (<span class="time">9.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">750ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[ 0.01143075 -0.06636339  0.01849615 -0.04979728]
+ [-0.02670499  0.03135866 -0.07129692 -0.01323991]
+ [ 0.0321759   0.04082024 -0.07302324 -0.02233509]]</code></pre></div></div></div></div>
+
+<p>「ゼロから作るDeep Learning」の実装と比較します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.utils.repository import import_module
+
+layers = import_module(&#34;scratch2/common.time_layers&#34;)
+s = layers.TimeSigmoidWithLoss()
+print(s.forward(x, t))
+print(s.backward())</code></pre></div>
+<div class="report"><p><span class="count">[45]</span>
+<span class="start">2019-06-12 20:00:48</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">782ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">0.7857680503475944
+[[ 0.01143075 -0.06636342  0.01849615 -0.0497973 ]
+ [-0.026705    0.03135866 -0.07129697 -0.01323991]
+ [ 0.03217591  0.04082024 -0.0730233  -0.02233509]]</code></pre></div></div></div></div></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../はじめに/" title="2 はじめに"><span>Previous</span></a></div>
+        <div class="next"><a href="../SoftmaxCrossEntropy/" title="2.2 SoftmaxCrossEntropy"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

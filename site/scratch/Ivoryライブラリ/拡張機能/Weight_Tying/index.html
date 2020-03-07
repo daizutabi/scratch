@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>3.3 重み共有 &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2 current"><button class="section nav-item">Ivoryライブラリ</button>
+<ul class="subnav">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">レイヤ実装</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">拡張機能</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">3.3 重み共有</a>
+<ul class="subnav">
+</ul></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">自然言語処理編</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../自然言語処理編/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../TimeDataset/">&laquo; Previous</a></div>
+    <div class="next"><a href="../../../Deep_Learningの理論と実践/0章_はじめに/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>Ivoryライブラリ &raquo; </li><li>拡張機能</li>
+</ul>
+</nav>
+                <div id="content">
+<h2 id="33"><span class="pheasant-header"><span class="header"><span class="number">3.3</span> <span class="title">重み共有</span></span></span></h2>
+<p>Ivoryライブラリでは重みを共有したときの勾配の加算は自動で行われます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+from ivory.core.trainer import sequential
+
+N, L, M = 3, 2, 3
+net = [(&#34;input&#34;, L), (&#34;affine&#34;, L), (&#34;affine&#34;, L, &#34;softmax_cross_entropy&#34;)]
+trainer = sequential(net)
+model = trainer.model
+m1, m2, s = model.layers
+w = np.random.randn(L, L)
+m1.W.variable.data = w
+m2.W.variable.data = w.copy()</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">193ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">193ms</span>)</span></p></div></div></div></div>
+
+<p>データを作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = np.random.randn(N, L)
+t = np.random.randint(0, L, N)
+model.set_data(x, t)
+model.forward()
+model.backward()
+print(m1.W.g)
+print(model.numerical_gradient(m1.W.variable))
+
+print(m2.W.g)
+print(model.numerical_gradient(m2.W.variable))</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">15.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">208ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[-0.40498775  1.0927607 ]
+ [ 0.28648926 -0.77302142]]
+[[-0.40498734  1.0927596 ]
+ [ 0.2864887  -0.77301992]]
+[[-0.08368836  0.08368836]
+ [ 1.0943208  -1.0943208 ]]
+[[-0.08368839  0.08368839]
+ [ 1.09431886 -1.09431886]]</code></pre></div></div></div></div>
+
+<p>勾配を加算してみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(m1.W.g + m2.W.g)</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">5.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">213ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[-0.48867611  1.17644907]
+ [ 1.38081006 -1.86734222]]</code></pre></div></div></div></div>
+
+<p>重みを共有し、トレーナーをビルドします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">m2.W.share_variable(m1.W)
+trainer.build()
+for v in trainer.optimizer.variables:
+    print(v)</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">7.99ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">221ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Variable([&#39;Affine.1.W&#39;, &#39;Affine.2.W&#39;], (2, 2)) at 0x210cf452390&gt;
+&lt;Variable([&#39;Affine.1.b&#39;], (2,)) at 0x210cf4523c8&gt;
+&lt;Variable([&#39;Affine.2.b&#39;], (2,)) at 0x210cf452438&gt;</code></pre></div></div></div></div>
+
+<p>重みが共有されていることが分かります。順伝搬と逆伝搬を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.forward()
+model.backward()
+print(m1.W.g)
+print(m2.W.g)
+print(model.numerical_gradient(m1.W.variable))
+print(model.numerical_gradient(m2.W.variable))</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">13.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">234ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[-0.48867611  1.17644907]
+ [ 1.38081006 -1.86734222]]
+[[-0.48867611  1.17644907]
+ [ 1.38081006 -1.86734222]]
+[[-0.48867573  1.17644799]
+ [ 1.38080756 -1.86733878]]
+[[-0.48867573  1.17644799]
+ [ 1.38080756 -1.86733878]]</code></pre></div></div></div></div>
+
+<p>加算した勾配に等しいことが分かります。</p>
+<p>次に、転置した重みを共有することを考えます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">net = [(&#34;input&#34;, L), (&#34;affine&#34;, M), (&#34;affine&#34;, L, &#34;softmax_cross_entropy&#34;)]
+trainer = sequential(net)
+model = trainer.model
+m1, m2, s = model.layers
+w = np.random.randn(L, M)
+m1.W.variable.data = w
+m2.W.variable.data = w.T.copy()</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">8.03ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">242ms</span>)</span></p></div></div></div></div>
+
+<p>データを入力します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.set_data(x, t)
+model.forward()
+model.backward()
+print(m1.W.g)
+print(model.numerical_gradient(m1.W.variable))
+
+print(m2.W.g)
+print(model.numerical_gradient(m2.W.variable))</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">14.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">256ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[-0.00575904  1.01910273 -0.23117434]
+ [ 0.0054599  -0.9661672   0.21916639]]
+[[-0.00575904  1.01910201 -0.23117417]
+ [ 0.00545988 -0.96616376  0.21916561]]
+[[-8.19761747e-04  8.19761747e-04]
+ [ 9.63815137e-01 -9.63815137e-01]
+ [-2.25673019e-01  2.25673019e-01]]
+[[-8.19503663e-04  8.19503663e-04]
+ [ 9.63811574e-01 -9.63811574e-01]
+ [-2.25672573e-01  2.25672573e-01]]</code></pre></div></div></div></div>
+
+<p>勾配を加算してみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(m1.W.g + m2.W.g.T)</code></pre></div>
+<div class="report"><p><span class="count">[8]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">8.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">264ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[-0.0065788   1.98291786 -0.45684736]
+ [ 0.00627966 -1.92998234  0.44483941]]</code></pre></div></div></div></div>
+
+<p>重みを共有し、トレーナーをビルドします。このとき、<code>transpose</code>キーワードに<code>True</code>を指定します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">m2.W.share_variable(m1.W, transpose=True)
+trainer.build()
+for v in trainer.optimizer.variables:
+    print(v)</code></pre></div>
+<div class="report"><p><span class="count">[9]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">7.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">271ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Variable([&#39;Affine.3.W&#39;, &#39;Affine.4.W&#39;], (2, 3)) at 0x210ce6053c8&gt;
+&lt;Variable([&#39;Affine.3.b&#39;], (3,)) at 0x210ce605898&gt;
+&lt;Variable([&#39;Affine.4.b&#39;], (2,)) at 0x210ce6058d0&gt;</code></pre></div></div></div></div>
+
+<p>重みが共有されていることが分かります。順伝搬と逆伝搬を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.forward()
+model.backward()
+print(m1.W.g)
+print(m2.W.g)
+print(model.numerical_gradient(m1.W.variable))
+print(model.numerical_gradient(m2.W.variable))</code></pre></div>
+<div class="report"><p><span class="count">[10]</span>
+<span class="start">2019-06-19 22:10:46</span> (<span class="time">14.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">285ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[-0.0065788   1.98291786 -0.45684736]
+ [ 0.00627966 -1.92998234  0.44483941]]
+[[-0.0065788   1.98291786 -0.45684736]
+ [ 0.00627966 -1.92998234  0.44483941]]
+[[-0.00657854  1.98291358 -0.45684675]
+ [ 0.00627938 -1.92997533  0.44483818]]
+[[-0.00657854  1.98291358 -0.45684675]
+ [ 0.00627938 -1.92997533  0.44483818]]</code></pre></div></div></div></div>
+
+<p>加算した勾配に等しいことが分かります。</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../TimeDataset/" title="3.2 TimeDataset"><span>Previous</span></a></div>
+        <div class="next"><a href="../../../Deep_Learningの理論と実践/0章_はじめに/" title="はじめに"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

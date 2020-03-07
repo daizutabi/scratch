@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>1.3 パラメータ &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2 current"><button class="section nav-item">Ivoryライブラリ</button>
+<ul class="subnav">
+    <li class="toctree-l3 current"><button class="section nav-item">基本機能</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">1.3 パラメータ</a>
+<ul class="subnav">
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">レイヤ実装</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../レイヤ実装/Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">自然言語処理編</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../自然言語処理編/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../レイヤ/">&laquo; Previous</a></div>
+    <div class="next"><a href="../モデル/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>Ivoryライブラリ &raquo; </li><li>基本機能</li>
+</ul>
+</nav>
+                <div id="content">
+<h2 id="13"><span class="pheasant-header"><span class="header"><span class="number">1.3</span> <span class="title">パラメータ</span></span></span></h2>
+<p>Affineレイヤを作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.layers.affine import Affine
+
+affine = Affine((2, 3))
+affine</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-06-12 20:00:14</span> (<span class="time">186ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">186ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">&lt;Affine(&#39;Affine.1&#39;, (2, 3)) at 0x2920e1bafd0&gt;</code></pre></div></div></div></div>
+
+<p>重み<code>weights</code>を覗いてみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">affine.W</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">6.97ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">193ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">&lt;Weight(&#39;Affine.1.W&#39;, (2, 3)) at 0x2920e1c9080&gt;</code></pre></div></div></div></div>
+
+<p>重みは2次元配列なので、<code>Variable</code>インスタンスでよさそうです。しかしながら、実際は本節で説明する<code>Parameter</code>インスタンスになっています。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.parameter import Parameter
+
+isinstance(affine.W, Parameter)</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">209ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">True</code></pre></div></div></div></div>
+
+<p>実際はそのサブクラス<code>Weight</code>のインスタンスです。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">type(affine.W)</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">240ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">ivory.core.parameter.Weight</code></pre></div></div></div></div>
+
+<p>他も見てみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(type(affine.x))
+print(type(affine.b))
+print(type(affine.weight_decay))
+print(type(affine.y))</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">11.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">251ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;class &#39;ivory.core.parameter.Input&#39;&gt;
+&lt;class &#39;ivory.core.parameter.Weight&#39;&gt;
+&lt;class &#39;ivory.core.parameter.State&#39;&gt;
+&lt;class &#39;ivory.core.parameter.Output&#39;&gt;</code></pre></div></div></div></div>
+
+<p>属性を確認します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">vars(affine.W)</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">12.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">263ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">{&#39;shape&#39;: (2, 3),
+ &#39;layer&#39;: &lt;Affine(&#39;Affine.1&#39;, (2, 3)) at 0x2920e1bafd0&gt;,
+ &#39;name&#39;: &#39;W&#39;,
+ &#39;variable&#39;: None,
+ &#39;init&#39;: &lt;function ivory.core.parameter.Parameter.randn.&lt;locals&gt;.init(std=&#39;he&#39;)&gt;}</code></pre></div></div></div></div>
+
+<p><code>layer</code>属性によって自分がどのレイヤに属しているかが分かります。</p>
+<p><code>Parameter</code>には実データを保持する<code>Variable</code>インスタンスを生成して自分に割り当てる<code>set_variable</code>メソッドが用意されています。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">v = affine.W.set_variable()
+v</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">7.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">270ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">&lt;Variable([&#39;Affine.1.W&#39;], (2, 3)) at 0x2920ef757f0&gt;</code></pre></div></div></div></div>
+
+<p>値を確認してみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(v.data, v.data.dtype)</code></pre></div>
+<div class="report"><p><span class="count">[8]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">19.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">289ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[ 0.31447205  0.64247173 -0.7479663 ]
+ [ 1.6699485  -1.1002742   1.509816  ]] float32</code></pre></div></div></div></div>
+
+<p>乱数で初期化されています。</p>
+<p><code>Parameter</code>インスタンスからも変数のデータと勾配にアクセスできます。この場合には<code>d</code>プロパティと<code>g</code>プロパティを使います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(affine.W.d)
+print(affine.W.g)</code></pre></div>
+<div class="report"><p><span class="count">[9]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">305ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[ 0.31447205  0.64247173 -0.7479663 ]
+ [ 1.6699485  -1.1002742   1.509816  ]]
+None</code></pre></div></div></div></div>
+
+<p>勾配はまだ計算されていません。</p>
+<p>値を代入できるでしょうか？</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">affine.W.d = 0</code></pre></div>
+<div class="report"><p><span class="count">[10]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">176ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">481ms</span>)</span></p></div></div><div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">AttributeError: can&#39;t set attribute</code></pre></div>
+      <div class="report"><pre><code class="nohighlight">AttributeError                            Traceback (most recent call last)
+&lt;ipython-input-11-a0e3e703c681&gt; in &lt;module&gt;
+----&gt; 1 affine.W.d = 0</code></pre></div></div></div></div>
+
+<p>重みに関してはデータの読み出しは可能ですが、書き込みは不可能です（当然、<code>W.d[0, 0] = 0</code>といった書き換えは可能ですが）。なぜならレイヤ自身が重みの値を直接操作することは必要ないからです。出力に関してはどうでしょうか。適当な値を代入してみます。（以下では簡単のために、スカラー値を代入しますが、実際にはバッチ数×データ次元の2次元配列になります。）</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">affine.y.set_variable()
+affine.y.d = 1
+affine.y.d</code></pre></div>
+<div class="report"><p><span class="count">[11]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">93.2ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">574ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">1</code></pre></div></div></div></div>
+
+<p>レイヤは、所望の計算を行って値を出力する必要があるので、変数に値を代入できるのは当然です。もう一回代入してみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">affine.y.d = 2
+affine.y.d</code></pre></div>
+<div class="report"><p><span class="count">[12]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">8.40ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">583ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">3</code></pre></div></div></div></div>
+
+<p>通常では2となると思われますが、加算されて3になりました。これは、パラメータを介した変数への値の代入が通常とは違う論理で行われているからです。同じ変数に複数回代入があるということは、その変数に複数のレイヤから値が出力されたことを意味します。それぞれの出力を加算することは暗黙的にSumノードを想定しています。このようにしているは、逆伝搬において分岐したノードからの勾配が加算されることに対称な動作とするためです。実際、</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">affine.x.set_variable()
+affine.x.g = 1
+affine.x.g = 1
+affine.x.g</code></pre></div>
+<div class="report"><p><span class="count">[13]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">614ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">2</code></pre></div></div></div></div>
+
+<p>となります。ところで、</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">affine.x.d = 1
+affine.y.g = 1</code></pre></div>
+<div class="report"><p><span class="count">[14]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">18.8ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">633ms</span>)</span></p></div></div><div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">AttributeError: can&#39;t set attribute</code></pre></div>
+      <div class="report"><pre><code class="nohighlight">AttributeError                            Traceback (most recent call last)
+&lt;ipython-input-15-f4a2e3433d84&gt; in &lt;module&gt;
+----&gt; 1 affine.x.d = 1
+      2 affine.y.g = 1</code></pre></div></div></div></div>
+
+<p>となり、入力のデータおよび出力の勾配には値の代入ができません。順伝搬、逆伝搬の動作を考えれば妥当な仕様です。以下にパラメータの種類と挙動を示します。</p>
+<table>
+<thead>
+<tr>
+<th>クラス名</th>
+<th>データ</th>
+<th>勾配</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Input</code></td>
+<td>代入不可</td>
+<td>加算代入</td>
+</tr>
+<tr>
+<td><code>Output</code></td>
+<td>加算代入</td>
+<td>代入不可</td>
+</tr>
+<tr>
+<td><code>Weight</code></td>
+<td>代入不可</td>
+<td>加算代入</td>
+</tr>
+<tr>
+<td><code>State</code></td>
+<td>通常代入</td>
+<td>なし</td>
+</tr>
+<tr>
+<td><code>Loss</code></td>
+<td>加算代入</td>
+<td>なし</td>
+</tr>
+</tbody>
+</table>
+<p>次に、Affineレイヤに別のAffineレイヤを接続することを考えます。1つ目の出力と2つ目の入力に同じ変数を割り当てるために、<code>Variable.add_parameter</code>メソッドを使います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">a = Affine((2, 3))
+b = Affine((3, 2))
+v = a.y.set_variable()
+print(v)
+v.add_parameter(b.x)
+print(v)</code></pre></div>
+<div class="report"><p><span class="count">[15]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">29.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">662ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Variable([&#39;Affine.2.y&#39;], (3,)) at 0x2920ef97c18&gt;
+&lt;Variable([&#39;Affine.2.y&#39;, &#39;Affine.3.x&#39;], (3,)) at 0x2920ef97c18&gt;</code></pre></div></div></div></div>
+
+<p>上記のように、<code>Variable</code>の<code>repr</code>関数は、接続されている<code>Parameter</code>のリストを表示します。動作を確認します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">a.y.d = 1
+print(b.x.d)
+b.x.g = 10
+print(a.y.g)</code></pre></div>
+<div class="report"><p><span class="count">[16]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">678ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">1
+10</code></pre></div></div></div></div>
+
+<p>このように値が伝搬することが確認できます。</p>
+<p>データおよび勾配が加算される理由は、以下のような並列構造で明らかになります。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">a = Affine((1, 1), name=&#34;A&#34;)
+b = Affine((1, 1), name=&#34;B&#34;)
+c = Affine((1, 1), name=&#34;C&#34;)
+x = a.x.set_variable()
+x.add_parameter(b.x)
+x.add_parameter(c.x)
+y = a.y.set_variable()
+y.add_parameter(b.y)
+y.add_parameter(c.y)
+print(x)
+print(y)</code></pre></div>
+<div class="report"><p><span class="count">[17]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">15.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">693ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Variable([&#39;A.x&#39;, &#39;B.x&#39;, &#39;C.x&#39;], (1,)) at 0x2920f09cd30&gt;
+&lt;Variable([&#39;A.y&#39;, &#39;B.y&#39;, &#39;C.y&#39;], (1,)) at 0x2920f09ce80&gt;</code></pre></div></div></div></div>
+
+<p>それぞれのレイヤが別の値を出力したとします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">y.data = 0
+a.y.d = 1
+b.y.d = 2
+c.y.d = 3
+print(y.data)</code></pre></div>
+<div class="report"><p><span class="count">[18]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">6.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">699ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">6</code></pre></div></div></div></div>
+
+<p>変数の値は加算されたものとなります。逆伝搬も同じです。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x.grad = 0
+a.x.g = 10
+b.x.g = 20
+c.x.g = 30
+print(x.grad)</code></pre></div>
+<div class="report"><p><span class="count">[19]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">7.06ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">706ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">60</code></pre></div></div></div></div>
+
+<p>損失関数の例を見てみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.layers.loss import SoftmaxCrossEntropy
+
+s = SoftmaxCrossEntropy((3,))
+print(type(s.y))
+print(type(s.loss))</code></pre></div>
+<div class="report"><p><span class="count">[20]</span>
+<span class="start">2019-06-12 20:00:15</span> (<span class="time">7.98ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">714ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;class &#39;ivory.core.parameter.Output&#39;&gt;
+&lt;class &#39;ivory.core.parameter.Loss&#39;&gt;</code></pre></div></div></div></div>
+
+<p>損失パラメータ<code>loss</code>は特別な<code>Loss</code>クラスのインスタンスです。ニューラルネットワークの学習では、損失に対して各種の操作を行うため、Ivoryライブラリでは特別のクラスを与えています。</p>
+<p>なお、実験用に、レイヤを作成した後に、全てのパラメータに変数を自動で割り当てるメソッド<code>Layer.set_variables</code>も用意されています。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">s.set_variables()</code></pre></div>
+<div class="report"><p><span class="count">[21]</span>
+<span class="start">2019-06-12 20:00:16</span> (<span class="time">6.99ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">721ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[&lt;Variable([&#39;SoftmaxCrossEntropy.1.x&#39;], (3,)) at 0x2920f09c208&gt;,
+ &lt;Variable([&#39;SoftmaxCrossEntropy.1.y&#39;], (3,)) at 0x2920f09c198&gt;,
+ &lt;Variable([&#39;SoftmaxCrossEntropy.1.t&#39;], ()) at 0x2920f09c240&gt;,
+ &lt;Variable([&#39;SoftmaxCrossEntropy.1.loss&#39;], ()) at 0x2920f09c278&gt;]</code></pre></div></div></div></div>
+
+<p><code>set_data</code>メソッドを使えば、入力データをセットできます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">s.set_data([1, 2, 3], 2)
+print(s.x.d)
+print(s.t.d)</code></pre></div>
+<div class="report"><p><span class="count">[22]</span>
+<span class="start">2019-06-12 20:00:16</span> (<span class="time">18.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">739ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[1, 2, 3]
+2</code></pre></div></div></div></div></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../レイヤ/" title="1.2 レイヤ"><span>Previous</span></a></div>
+        <div class="next"><a href="../モデル/" title="1.4 モデル"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

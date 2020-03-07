@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>2.6 BatchNormalization &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2 current"><button class="section nav-item">Ivoryライブラリ</button>
+<ul class="subnav">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">レイヤ実装</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">2.6 BatchNormalization</a>
+<ul class="subnav">
+<li class="toctree-l5"><a class="nav-item toc" href="#261-batch-normalization">2.6.1 Batch Normalizationのアルゴリズム</a></li>
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">自然言語処理編</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../自然言語処理編/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../Flatten/">&laquo; Previous</a></div>
+    <div class="next"><a href="../Dropout/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>Ivoryライブラリ &raquo; </li><li>レイヤ実装</li>
+</ul>
+</nav>
+                <div id="content"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<h2 id="26-batchnormalization"><span class="pheasant-header"><span class="header"><span class="number">2.6</span> <span class="title">BatchNormalization</span></span></span></h2>
+<h3 id="261-batch-normalization"><span class="pheasant-header"><span class="header"><span class="number">2.6.1</span> <span class="title">Batch Normalizationのアルゴリズム</span></span></span></h3>
+<p>ミニバッチを単位として、データの分布が平均ゼロ、分散１になるように正規化します。</p>
+<div>
+<div class="MathJax_Preview">\mu_B \leftarrow \frac1m\sum_{i=1}^mx_i</div>
+<script type="math/tex; mode=display">\mu_B \leftarrow \frac1m\sum_{i=1}^mx_i</script>
+</div>
+<div>
+<div class="MathJax_Preview">\sigma_B^2 \leftarrow \frac1m\sum_{i=1}^m(x_i-\mu_B)^2</div>
+<script type="math/tex; mode=display">\sigma_B^2 \leftarrow \frac1m\sum_{i=1}^m(x_i-\mu_B)^2</script>
+</div>
+<div>
+<div class="MathJax_Preview">\hat{x}_i \leftarrow \frac{x_i-\mu_B}{\sqrt{\sigma_B^2+\epsilon}}</div>
+<script type="math/tex; mode=display">\hat{x}_i \leftarrow \frac{x_i-\mu_B}{\sqrt{\sigma_B^2+\epsilon}}</script>
+</div>
+<div>
+<div class="MathJax_Preview">y_i \leftarrow \gamma\hat{x}_i+\beta</div>
+<script type="math/tex; mode=display">y_i \leftarrow \gamma\hat{x}_i+\beta</script>
+</div>
+<p>逆伝搬で求めたいのは、</p>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial x_i}, \frac{\partial L}{\partial \gamma}, \frac{\partial L}{\partial \beta}</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial x_i}, \frac{\partial L}{\partial \gamma}, \frac{\partial L}{\partial \beta}</script>
+</div>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \beta} = \sum_i\frac{\partial L}{\partial y_i}\frac{\partial y_i}{\partial \beta} = \sum_i\frac{\partial L}{\partial y_i}</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \beta} = \sum_i\frac{\partial L}{\partial y_i}\frac{\partial y_i}{\partial \beta} = \sum_i\frac{\partial L}{\partial y_i}</script>
+</div>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \gamma} = \sum_i\frac{\partial L}{\partial y_i}\frac{\partial y_i}{\partial \gamma} = \sum_i\frac{\partial L}{\partial y_i}\hat{x}_i</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \gamma} = \sum_i\frac{\partial L}{\partial y_i}\frac{\partial y_i}{\partial \gamma} = \sum_i\frac{\partial L}{\partial y_i}\hat{x}_i</script>
+</div>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \hat{x}_i} = \sum_j\frac{\partial L}{\partial y_j}\frac{\partial y_j}{\partial \hat{x}_i} = \frac{\partial L}{\partial y_i}\gamma</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \hat{x}_i} = \sum_j\frac{\partial L}{\partial y_j}\frac{\partial y_j}{\partial \hat{x}_i} = \frac{\partial L}{\partial y_i}\gamma</script>
+</div>
+<div>
+<div class="MathJax_Preview">x_i = \sigma_B\hat{x}_i + \mu_B</div>
+<script type="math/tex; mode=display">x_i = \sigma_B\hat{x}_i + \mu_B</script>
+</div>
+<p>です。逆伝搬の導出は、Frederik Kratzertのブログ<a href="https://kratzert.github.io/2016/02/12/understanding-the-gradient-flow-through-the-batch-normalization-layer.html">「Understanding the backward pass through Batch Normalization Layer」</a>に詳しい解説があります。</p>
+<p>Batch Normalizationクラスを実装します。「ゼロから作るDeep Learning」の<code>common/layers.py</code>を参考にしています。以下では実装の中心となる<code>forward_2d</code>メソッドと<code>backward_2d</code>メソッドを記載します。</p>
+<div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">Code</span> <span class="number">2.9</span>
+<span class="title"><code>BatchNormalization.forward_2d</code>および<code>backward_2d</code></span></p>
+<div class="content">
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter source"><div class="code">
+      <pre><code class="python">    def forward_2d(self, x_2d):
+        if self.train.d:
+            mu = x_2d.mean(axis=0)
+            self.xc = x_2d - mu
+            var = np.mean(self.xc ** 2, axis=0)
+            self.std = np.sqrt(var + 1e-7)
+            self.xn = self.xc / self.std
+
+            momentum = 0.9
+            self.running_mean.d = momentum * self.running_mean.d + (1 - momentum) * mu
+            self.running_var.d = momentum * self.running_var.d + (1 - momentum) * var
+        else:
+            self.xc = x_2d - self.running_mean.d
+            self.xn = self.xc / np.sqrt(self.running_var.d + 1e-7)
+
+        return self.gamma.d * self.xn + self.beta.d
+
+
+    def backward_2d(self, dy_2d):
+        self.beta.g = dy_2d.sum(axis=0)
+        self.gamma.g = np.sum(self.xn * dy_2d, axis=0)
+        dxn = self.gamma.d * dy_2d
+        dxc = dxn / self.std
+        dstd = -np.sum((dxn * self.xc) / (self.std * self.std), axis=0)
+        dvar = 0.5 * dstd / self.std
+
+        batch_size = dy_2d.shape[0]
+        dxc += (2.0 / batch_size) * self.xc * dvar
+        dmu = np.sum(dxc, axis=0)
+        return dxc - dmu / batch_size
+</code></pre></div></div></div></div>
+
+</div></div></div>
+
+<p>さて、上記のクラスで正しいBatch Normalizationを実現できているか、確認します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+from ivory.core.model import sequential
+
+net = [
+    (&#34;input&#34;, 20),
+    (2, &#34;affine&#34;, 4, &#34;batch_normalization&#34;, &#34;relu&#34;),
+    (&#34;affine&#34;, 5, &#34;softmax_cross_entropy&#34;),
+]
+
+model = sequential(net)
+model.layers</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-12 20:01:13</span> (<span class="time">17.9ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">272ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[&lt;Affine(&#39;Affine.1&#39;, (20, 4)) at 0x2562a342860&gt;,
+ &lt;BatchNormalization(&#39;BatchNormalization.1&#39;, (4,)) at 0x2562a342940&gt;,
+ &lt;Relu(&#39;Relu.1&#39;, (4,)) at 0x2562a342b00&gt;,
+ &lt;Affine(&#39;Affine.2&#39;, (4, 4)) at 0x2562a342be0&gt;,
+ &lt;BatchNormalization(&#39;BatchNormalization.2&#39;, (4,)) at 0x2562a342da0&gt;,
+ &lt;Relu(&#39;Relu.2&#39;, (4,)) at 0x2562a342f98&gt;,
+ &lt;Affine(&#39;Affine.3&#39;, (4, 5)) at 0x2562a34b0b8&gt;,
+ &lt;SoftmaxCrossEntropy(&#39;SoftmaxCrossEntropy.1&#39;, (5,)) at 0x2562a34b278&gt;]</code></pre></div></div></div></div>
+
+<p>BatchNormalizationレイヤのパラメータを見てみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">bn = model.layers[1]
+bn.parameters</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-06-12 20:01:13</span> (<span class="time">7.04ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">279ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[&lt;Input(&#39;BatchNormalization.1.x&#39;, (4,)) at 0x2562a342978&gt;,
+ &lt;Output(&#39;BatchNormalization.1.y&#39;, (4,)) at 0x2562a3429e8&gt;,
+ &lt;Weight(&#39;BatchNormalization.1.gamma&#39;, (4,)) at 0x2562a3429b0&gt;,
+ &lt;Weight(&#39;BatchNormalization.1.beta&#39;, (4,)) at 0x2562a342a20&gt;,
+ &lt;State(&#39;BatchNormalization.1.running_mean&#39;, (4,)) at 0x2562a342a58&gt;,
+ &lt;State(&#39;BatchNormalization.1.running_var&#39;, (4,)) at 0x2562a342a90&gt;,
+ &lt;State(&#39;BatchNormalization.1.train&#39;, ()) at 0x2562a342ac8&gt;]</code></pre></div></div></div></div>
+
+<p>正規化後の変換を表す<span><span class="MathJax_Preview">\gamma</span><script type="math/tex">\gamma</script></span>と<span><span class="MathJax_Preview">\beta</span><script type="math/tex">\beta</script></span>があります。また、状態変数を持ちます。これらは、テスト時に用いる移動平均<code>running_mean</code>と移動分散<code>running_var</code>、および、訓練状態か否かのフラッグ<code>train</code>です。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(&#34;running mean:&#34;, bn.running_mean.d)
+print(&#34;running var: &#34;, bn.running_var.d)
+print(&#34;train:       &#34;, bn.train.d)</code></pre></div>
+<div class="report"><p><span class="count">[8]</span>
+<span class="start">2019-06-12 20:01:13</span> (<span class="time">12.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">291ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">running mean: [0. 0. 0. 0.]
+running var:  [0. 0. 0. 0.]
+train:        True</code></pre></div></div></div></div>
+
+<p>次に、BatchNormalizationレイヤの前後でのデータの変化をみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">xv, tv = model.data_input_variables
+layers = model.layers
+affine1, norm1 = layers[0].y, layers[1].y
+affine2, norm2 = layers[3].y, layers[4].y</code></pre></div>
+<div class="report"><p><span class="count">[9]</span>
+<span class="start">2019-06-12 20:01:13</span> (<span class="time">5.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">296ms</span>)</span></p></div></div></div></div>
+
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">batch_size = 100
+x = np.random.randn(batch_size, *xv.shape)
+high = layers[-1].x.shape[0]
+t = np.random.randint(0, high, (batch_size, *tv.shape))
+model.set_data(x, t)
+
+model.forward()
+model.backward()</code></pre></div>
+<div class="report"><p><span class="count">[10]</span>
+<span class="start">2019-06-12 20:01:13</span> (<span class="time">9.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">305ms</span>)</span></p></div></div></div></div>
+
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(affine1.d.mean(axis=0))
+print(affine1.d.std(axis=0))
+print(affine2.d.mean(axis=0))
+print(affine2.d.std(axis=0))
+print(norm1.d.mean(axis=0))
+print(norm1.d.std(axis=0))
+print(norm2.d.mean(axis=0))
+print(norm2.d.std(axis=0))</code></pre></div>
+<div class="report"><p><span class="count">[11]</span>
+<span class="start">2019-06-12 20:01:13</span> (<span class="time">17.8ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">323ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[-0.17217981  0.04251634  0.07352591 -0.01499862]
+[1.22741099 1.11893047 1.51183028 1.55530686]
+[ 0.36655023 -0.31966219  0.75286173 -0.73086581]
+[0.45863232 0.74070044 1.58615885 1.06805542]
+[0.00000000e+00 2.83106871e-17 4.10782519e-17 9.43689571e-18]
+[0.99999997 0.99999996 0.99999998 0.99999998]
+[ 2.44249065e-16 -3.71924713e-16  4.88498131e-17 -3.88578059e-18]
+[0.99999976 0.99999991 0.99999998 0.99999996]</code></pre></div></div></div></div>
+
+<p>このように、Batch Normalizationの出力は、ユニットごとのバッチ内分布が平均0、標準偏差1に正規化されています。次に勾配確認を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">for v in model.grad_variables:
+    print(v.parameters[0].name, model.gradient_error(v))</code></pre></div>
+<div class="report"><p><span class="count">[12]</span>
+<span class="start">2019-06-12 20:01:13</span> (<span class="time">816ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.14s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">x 9.548821898909256e-09
+W 7.558614830101108e-07
+b 6.837249950236712e-18
+gamma 1.7915361603249697e-06
+beta 2.9362385780152406e-07
+W 1.2863489168593275e-06
+b 1.8526304622346057e-17
+gamma 1.3054237404418363e-05
+beta 6.173637762865031e-07
+W 3.8470090224768275e-06
+b 2.617637083306146e-07</code></pre></div></div></div></div>
+
+<p>差分が小さい値になっていることが分かります。以上で、Batch Normalizationレイヤが実装できました。</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../Flatten/" title="2.5 Flatten"><span>Previous</span></a></div>
+        <div class="next"><a href="../Dropout/" title="2.7 Dropout"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

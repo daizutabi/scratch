@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>2.3 カウントベースの手法 &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2"><button class="section nav-item hide">Ivoryライブラリ</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">レイヤ実装</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2 current"><button class="section nav-item">自然言語処理編</button>
+<ul class="subnav">
+    <li class="toctree-l3"><a class="nav-item" href="../../0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">2章 自然言語と単語の分散表現</button>
+<ul class="subnav">
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">2.3 カウントベースの手法</a>
+<ul class="subnav">
+<li class="toctree-l5"><a class="nav-item toc" href="#231-python">2.3.1 Pythonによるコーパスの下準備</a></li>
+<li class="toctree-l5"><a class="nav-item toc" href="#234">2.3.4 共起行列</a></li>
+<li class="toctree-l5"><a class="nav-item toc" href="#235">2.3.5 ベクトル間の類似度</a></li>
+<li class="toctree-l5"><a class="nav-item toc" href="#236">2.3.6 類似単語のランキング表示</a></li>
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../../1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">&laquo; Previous</a></div>
+    <div class="next"><a href="../カウントベースの手法の改善/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>自然言語処理編 &raquo; </li><li>2章 自然言語と単語の分散表現</li>
+</ul>
+</nav>
+                <div id="content">
+<h2 id="23"><span class="pheasant-header"><span class="header"><span class="number">2.3</span> <span class="title">カウントベースの手法</span></span></span></h2>
+<p><a href="https://www.oreilly.co.jp/books/9784873118369/">「ゼロから作るDeep Learning ❷」</a>で用意されている関数をそのまま使います。</p>
+<h3 id="231-python"><span class="pheasant-header"><span class="header"><span class="number">2.3.1</span> <span class="title">Pythonによるコーパスの下準備</span></span></span></h3>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.util import preprocess
+
+text = &#34;You say goodbye and I say hello.&#34;
+corpus, word_to_id, id_to_word = preprocess(text)
+print(corpus)
+print(word_to_id)
+print(id_to_word)</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-06-12 17:40:39</span> (<span class="time">203ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">203ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[0 1 2 3 4 1 5 6]
+{&#39;you&#39;: 0, &#39;say&#39;: 1, &#39;goodbye&#39;: 2, &#39;and&#39;: 3, &#39;i&#39;: 4, &#39;hello&#39;: 5, &#39;.&#39;: 6}
+{0: &#39;you&#39;, 1: &#39;say&#39;, 2: &#39;goodbye&#39;, 3: &#39;and&#39;, 4: &#39;i&#39;, 5: &#39;hello&#39;, 6: &#39;.&#39;}</code></pre></div></div></div></div>
+
+<h3 id="234"><span class="pheasant-header"><span class="header"><span class="number">2.3.4</span> <span class="title">共起行列</span></span></span></h3>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import pandas as pd
+from ivory.common.util import create_co_matrix
+
+C = create_co_matrix(corpus, 7)
+v = list(id_to_word.values())
+df = pd.DataFrame(C, index=v, columns=v)
+df</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-12 17:40:39</span> (<span class="time">31.2ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">234ms</span>)</span></p></div></div>
+
+<div class="cell jupyter display"><div class="content"><table class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>you</th>
+      <th>say</th>
+      <th>goodbye</th>
+      <th>and</th>
+      <th>i</th>
+      <th>hello</th>
+      <th>.</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>you</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>say</th>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>goodbye</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>and</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>i</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>hello</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>.</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table></div></div></div></div>
+
+<h3 id="235"><span class="pheasant-header"><span class="header"><span class="number">2.3.5</span> <span class="title">ベクトル間の類似度</span></span></span></h3>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.util import cos_similarity
+
+c0 = C[word_to_id[&#34;you&#34;]]
+c1 = C[word_to_id[&#34;i&#34;]]
+cos_similarity(c0, c1)</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-12 17:40:39</span> (<span class="time">15.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">250ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">0.7071067691154799</code></pre></div></div></div></div>
+
+<h3 id="236"><span class="pheasant-header"><span class="header"><span class="number">2.3.6</span> <span class="title">類似単語のランキング表示</span></span></span></h3>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.util import most_similar
+
+most_similar(&#34;you&#34;, word_to_id, id_to_word, C, top=5)</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-12 17:40:39</span> (<span class="time">31.2ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">281ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">
+[query] you
+ goodbye: 0.7071067691154799
+ i: 0.7071067691154799
+ hello: 0.7071067691154799
+ say: 0.0
+ and: 0.0</code></pre></div></div></div></div></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../../1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/" title="1.4 ニューラルネットワークで問題を解く"><span>Previous</span></a></div>
+        <div class="next"><a href="../カウントベースの手法の改善/" title="2.4 カウントベースの手法の改善"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

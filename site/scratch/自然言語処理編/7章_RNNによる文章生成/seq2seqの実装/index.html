@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>7.3 seq2seqの実装 &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2"><button class="section nav-item hide">Ivoryライブラリ</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">レイヤ実装</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2 current"><button class="section nav-item">自然言語処理編</button>
+<ul class="subnav">
+    <li class="toctree-l3"><a class="nav-item" href="../../0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">7章 RNNによる文章生成</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">7.3 seq2seqの実装</a>
+<ul class="subnav">
+</ul></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../言語モデルを使った文章生成/">&laquo; Previous</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>自然言語処理編 &raquo; </li><li>7章 RNNによる文章生成</li>
+</ul>
+</nav>
+                <div id="content">
+<h2 id="73-seq2seq"><span class="pheasant-header"><span class="header"><span class="number">7.3</span> <span class="title">seq2seqの実装</span></span></span></h2>
+<p>足し算データセットを読み出します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.utils.repository import import_module
+
+sequence = import_module(&#34;scratch2/dataset/sequence&#34;)
+x_train, t_train = sequence.load_data(&#34;addition.txt&#34;)[0]
+char_to_id, id_to_char = sequence.get_vocab()</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">283ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.0s</span>)</span></p></div></div></div></div>
+
+<p>モデルの形状を設定します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">vocab_size = len(char_to_id)
+wordvec_size = 16
+hideen_size = 128</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">30.2ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.1s</span>)</span></p></div></div></div></div>
+
+<p>「ゼロから作るDeep Learning ❷」のモデルを読み込みます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">sequence = import_module(&#34;scratch2/ch07/seq2seq&#34;)
+seq2seq = sequence.Seq2seq(vocab_size, wordvec_size, hideen_size)
+for p in seq2seq.params:
+    print(p.shape)</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">46.9ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.1s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">(13, 16)
+(16, 512)
+(128, 512)
+(512,)
+(13, 16)
+(16, 512)
+(128, 512)
+(512,)
+(128, 13)
+(13,)</code></pre></div></div></div></div>
+
+<p>モデルを作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.model import branch, Model
+
+net_encoder = [
+    (&#34;input&#34;, vocab_size),
+    (&#34;embedding&#34;, wordvec_size),
+    (&#34;lstm&#34;, hideen_size, &#34;select&#34;),
+]
+
+net_decoder = [
+    (&#34;input&#34;, vocab_size),
+    (&#34;embedding&#34;, wordvec_size),
+    (&#34;lstm&#34;, hideen_size),
+    (&#34;affine&#34;, vocab_size, &#34;softmax_cross_entropy&#34;),
+]
+
+encoder = branch(net_encoder)
+decoder = branch(net_decoder)</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">15.5ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.1s</span>)</span></p></div></div></div></div>
+
+<p>エンコーダの出力をデコーダのLSTMレイヤに入力します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">v = encoder[-1].y.set_variable()
+decoder[1].h.set_variable(v)
+print(v)</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.2s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;Variable([&#39;Select.1.y&#39;, &#39;LSTM.2.h&#39;], (128,)) at 0x271a1d357f0&gt;</code></pre></div></div></div></div>
+
+<p>デコーダの損失パラメータを起点にしてモデルを構築します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model = Model([decoder[-1].loss])
+for k, layer in enumerate(model.layers):
+    print(f&#34;layers[{k}]&#34;, layer)
+for k, v in enumerate(model.data_input_variables):
+    print(f&#34;inputs[{k}]&#34;, v)</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">15.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.2s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">layers[0] &lt;Embedding(&#39;Embedding.1&#39;, (13, 16)) at 0x271a1d35b38&gt;
+layers[1] &lt;LSTM(&#39;LSTM.1&#39;, (16, 128)) at 0x271a1d35cc0&gt;
+layers[2] &lt;Select(&#39;Select.1&#39;, (128,)) at 0x271a1d35e48&gt;
+layers[3] &lt;Embedding(&#39;Embedding.2&#39;, (13, 16)) at 0x271a1d35f28&gt;
+layers[4] &lt;LSTM(&#39;LSTM.2&#39;, (16, 128)) at 0x271a1d280b8&gt;
+layers[5] &lt;Affine(&#39;Affine.1&#39;, (128, 13)) at 0x271a1d28240&gt;
+layers[6] &lt;SoftmaxCrossEntropy(&#39;SoftmaxCrossEntropy.1&#39;, (13,)) at 0x271a1d28400&gt;
+inputs[0] &lt;Variable([&#39;Embedding.1.x&#39;], ()) at 0x271a1d289e8&gt;
+inputs[1] &lt;Variable([&#39;Embedding.2.x&#39;], ()) at 0x271a1d28a20&gt;
+inputs[2] &lt;Variable([&#39;SoftmaxCrossEntropy.1.t&#39;], ()) at 0x271a1d28a90&gt;</code></pre></div></div></div></div>
+
+<p>重みの初期値を「ゼロから作るDeep Learning」と同じにします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">for p, data in zip(model.weights, seq2seq.params):
+    p.variable.data = data.copy()
+    print(p.layer.name, p.name, p.d.shape, p.d.dtype)</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.2s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">Embedding.1 W (13, 16) float32
+LSTM.1 W (16, 512) float32
+LSTM.1 U (128, 512) float32
+LSTM.1 b (512,) float32
+Embedding.2 W (13, 16) float32
+LSTM.2 W (16, 512) float32
+LSTM.2 U (128, 512) float32
+LSTM.2 b (512,) float32
+Affine.1 W (128, 13) float32
+Affine.1 b (13,) float32</code></pre></div></div></div></div>
+
+<p>エンコーダの<code>stateful</code>を<code>False</code>に設定します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">encoder[1].stateful.d = False</code></pre></div>
+<div class="report"><p><span class="count">[8]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">15.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.2s</span>)</span></p></div></div></div></div>
+
+<p>データを用意します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">batch_size = 2
+x, t = x_train[:batch_size, ::-1], t_train[:batch_size]</code></pre></div>
+<div class="report"><p><span class="count">[9]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.2s</span>)</span></p></div></div></div></div>
+
+<p>モデルに代入し、「ゼロから作るDeep Learning」の結果と比較します。</p>
+<p>順伝搬</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+
+model.reset_state()
+model.set_data(x, t[:, :-1], t[:, 1:])
+for layer in encoder:
+    layer.clear_data()
+    layer.forward()
+
+xs = seq2seq.encoder.embed.forward(x)
+hs = seq2seq.encoder.lstm.forward(xs)
+h = seq2seq.encoder.forward(x)
+print(np.allclose(xs, encoder[0].y.d))
+print(np.allclose(hs, encoder[1].y.d))
+print(np.allclose(h, encoder[2].y.d))
+
+for layer in decoder:
+    layer.clear_data()
+    layer.forward()
+
+seq2seq.decoder.lstm.set_state(h)
+out = seq2seq.decoder.embed.forward(t[:, :-1])
+out2 = seq2seq.decoder.lstm.forward(out)
+score = seq2seq.decoder.affine.forward(out2)
+loss = seq2seq.softmax.forward(score, t[:, 1:])
+print(np.allclose(out, decoder[0].y.d))
+print(np.allclose(out2, decoder[1].y.d))
+print(np.allclose(score, decoder[2].y.d))
+print(np.allclose(loss, model.loss))</code></pre></div>
+<div class="report"><p><span class="count">[10]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">109ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.3s</span>)</span></p></div></div><div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">TypeError: Cannot convert numpy.ndarray to cupy.core.core.ndarray</code></pre></div>
+      <div class="report"><pre><code class="nohighlight">TypeError                                 Traceback (most recent call last)
+&lt;ipython-input-55-dafc7b6b0081&gt; in &lt;module&gt;
+      5 for layer in encoder:
+      6     layer.clear_data()
+----&gt; 7     layer.forward()
+      8 
+      9 xs = seq2seq.encoder.embed.forward(x)
+
+~\Documents\GitHub\ivory\ivory\layers\recurrent.py in forward(self)
+     85         for t in range(T):
+     86             h = self.h_prev if t == 0 else y[:, t - 1]
+---&gt; 87             a = x[:, t] + h @ self.U.d + self.b.d
+     88             a[:, :M] = sigmoid(a[:, :M])  # f
+     89             a[:, M : 2 * M] = np.tanh(a[:, M : 2 * M])  # g
+
+cupy\core\core.pyx in cupy.core.core.ndarray.__matmul__()</code></pre></div></div></div></div>
+
+<p>逆伝搬</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">for layer in decoder[::-1]:
+    layer.clear_grad()
+    layer.backward()
+
+dscore = seq2seq.softmax.backward()
+dout2 = seq2seq.decoder.affine.backward(dscore)
+dout = seq2seq.decoder.lstm.backward(dout2)
+seq2seq.decoder.embed.backward(dout)
+dh = seq2seq.decoder.lstm.dh
+print(np.allclose(dout, decoder[1].x.g))
+print(np.allclose(dout2, decoder[2].x.g))
+print(np.allclose(dscore, decoder[3].x.g))
+print(np.allclose(dh, decoder[1].h.g))
+print(np.allclose(dh, encoder[2].y.g))
+
+for layer in encoder[::-1]:
+    layer.clear_grad()
+    layer.backward()
+
+dhs = np.zeros_like(seq2seq.encoder.hs)
+dhs[:, -1, :] = dh
+dout = seq2seq.encoder.lstm.backward(dhs)
+seq2seq.encoder.embed.backward(dout)
+print(np.allclose(dout, encoder[1].x.g))
+print(np.allclose(dhs, encoder[2].x.g))</code></pre></div>
+<div class="report"><p><span class="count">[11]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">137ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.5s</span>)</span></p></div></div><div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">AttributeError: &#39;SoftmaxCrossEntropy&#39; object has no attribute &#39;y_2d&#39;</code></pre></div>
+      <div class="report"><pre><code class="nohighlight">AttributeError                            Traceback (most recent call last)
+&lt;ipython-input-56-c100d3f306c5&gt; in &lt;module&gt;
+      1 for layer in decoder[::-1]:
+      2     layer.clear_grad()
+----&gt; 3     layer.backward()
+      4 
+      5 dscore = seq2seq.softmax.backward()
+
+~\Documents\GitHub\ivory\ivory\layers\loss.py in backward(self)
+     34 
+     35     def backward(self):
+---&gt; 36         self.y_2d[np.arange(self.size), self.t_1d] -= 1
+     37         self.x.g = self.y_2d.reshape(*self.x.d.shape) / self.size
+     38</code></pre></div></div></div></div>
+
+<p>勾配を比較します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">for p, grad in zip(model.weights, seq2seq.grads):
+    print(p.layer.name, p.name, np.allclose(p.variable.grad, grad))</code></pre></div>
+<div class="report"><p><span class="count">[12]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">156ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.6s</span>)</span></p></div></div><div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">TypeError: ufunc &#39;isfinite&#39; not supported for the input types, and the inputs could not be safely coerced to any supported types according to the casting rule &#39;&#39;safe&#39;&#39;</code></pre></div>
+      <div class="report"><pre><code class="nohighlight">TypeError                                 Traceback (most recent call last)
+&lt;ipython-input-57-edd9775e1fe5&gt; in &lt;module&gt;
+      1 for p, grad in zip(model.weights, seq2seq.grads):
+----&gt; 2     print(p.layer.name, p.name, np.allclose(p.variable.grad, grad))
+
+c:\users\daizu\miniconda3\envs\daizu\lib\site-packages\numpy\core\numeric.py in allclose(a, b, rtol, atol, equal_nan)
+   2421 
+   2422     &#34;&#34;&#34;
+-&gt; 2423     res = all(isclose(a, b, rtol=rtol, atol=atol, equal_nan=equal_nan))
+   2424     return bool(res)
+   2425 
+
+c:\users\daizu\miniconda3\envs\daizu\lib\site-packages\numpy\core\numeric.py in isclose(a, b, rtol, atol, equal_nan)
+   2519     y = array(y, dtype=dt, copy=False, subok=True)
+   2520 
+-&gt; 2521     xfin = isfinite(x)
+   2522     yfin = isfinite(y)
+   2523     if all(xfin) and all(yfin):</code></pre></div></div></div></div>
+
+<p>重みの更新</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">optimizer = import_module(&#34;scratch2/common/optimizer&#34;)
+util = import_module(&#34;scratch2/common/util&#34;)
+max_grad = 5.0
+util.clip_grads(seq2seq.grads, max_grad)
+adam_scratch = optimizer.Adam()
+adam_scratch.update(seq2seq.params, seq2seq.grads)
+
+from ivory.core.optimizer import Adam
+
+model.clip_grads(max_grad)
+adam = Adam()
+adam.set_model(model)
+adam.update()</code></pre></div>
+<div class="report"><p><span class="count">[13]</span>
+<span class="start">2019-08-30 08:17:38</span> (<span class="time">141ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.8s</span>)</span></p></div></div><div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">TypeError: unsupported operand type(s) for ** or pow(): &#39;NoneType&#39; and &#39;int&#39;</code></pre></div>
+      <div class="report"><pre><code class="nohighlight">TypeError                                 Traceback (most recent call last)
+&lt;ipython-input-58-55954568ec66&gt; in &lt;module&gt;
+      9 from ivory.core.optimizer import Adam
+     10 
+---&gt; 11 model.clip_grads(max_grad)
+     12 adam = Adam()
+     13 adam.set_model(model)
+
+~\Documents\GitHub\ivory\ivory\core\model.py in clip_grads(self, max_grad)
+    187         total_norm = 0.0
+    188         for grad in grads:
+--&gt; 189             total_norm += np.sum(grad ** 2)  # type:ignore
+    190         total_norm = np.sqrt(total_norm)
+    191         rate = max_grad / (total_norm + 1e-6)</code></pre></div></div></div></div>
+
+<p>更新された重みを比較します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">for p, data in zip(model.weights, seq2seq.params):
+    print(p.layer.name, p.name, np.allclose(p.variable.data, data))</code></pre></div>
+<div class="report"><p><span class="count">[14]</span>
+<span class="start">2019-08-30 08:17:39</span> (<span class="time">141ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">36.9s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">Embedding.1 W True
+LSTM.1 W True
+LSTM.1 U True
+LSTM.1 b True
+Embedding.2 W True
+LSTM.2 W True
+LSTM.2 U True
+LSTM.2 b True
+Affine.1 W True
+Affine.1 b True</code></pre></div></div></div></div>
+
+<p>モデル経由で訓練を実施します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">seq2seq = sequence.Seq2seq(vocab_size, wordvec_size, hideen_size)
+for p, data in zip(model.weights, seq2seq.params):
+    p.variable.data = data.copy()
+
+data_size = len(x_train)
+batch_size = 128
+
+for iters in range(5):
+    model.reset_state()
+    batch_x = x_train[iters * batch_size : (iters + 1) * batch_size]
+    batch_t = t_train[iters * batch_size : (iters + 1) * batch_size]
+
+    seq2seq.forward(batch_x, batch_t)
+    seq2seq.backward()
+    util.clip_grads(seq2seq.grads, max_grad)
+    adam_scratch.update(seq2seq.params, seq2seq.grads)
+
+    model.set_data(batch_x, batch_t[:, :-1], batch_t[:, 1:])
+    model.forward()
+    model.backward()
+    model.clip_grads(max_grad)
+    adam.update()
+
+    print(&#39;grad &#39;, end=&#39;&#39;)
+    for p, grad in zip(model.weights, seq2seq.grads):
+        print(np.allclose(p.variable.grad, grad), end=&#39;, &#39;)
+    print(&#39;\ndata &#39;, end=&#39;&#39;)
+    for p, data in zip(model.weights, seq2seq.params):
+        print(np.allclose(p.variable.data, data), end=&#39;, &#39;)
+    print()</code></pre></div>
+<div class="report"><p><span class="count">[15]</span>
+<span class="start">2019-08-30 08:17:39</span> (<span class="time">93.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">37.0s</span>)</span></p></div></div><div class="cell jupyter error"><div class="code"><pre><code class="nohighlight">TypeError: Cannot convert numpy.ndarray to cupy.core.core.ndarray</code></pre></div>
+      <div class="report"><pre><code class="nohighlight">TypeError                                 Traceback (most recent call last)
+&lt;ipython-input-60-42f6fb1ac084&gt; in &lt;module&gt;
+     17 
+     18     model.set_data(batch_x, batch_t[:, :-1], batch_t[:, 1:])
+---&gt; 19     model.forward()
+     20     model.backward()
+     21     model.clip_grads(max_grad)
+
+~\Documents\GitHub\ivory\ivory\core\model.py in forward(self, predict, start)
+     38             if predict and isinstance(layer, LossLayer):
+     39                 continue
+---&gt; 40             layer.forward()
+     41 
+     42     def backward(self):
+
+~\Documents\GitHub\ivory\ivory\layers\recurrent.py in forward(self)
+     85         for t in range(T):
+     86             h = self.h_prev if t == 0 else y[:, t - 1]
+---&gt; 87             a = x[:, t] + h @ self.U.d + self.b.d
+     88             a[:, :M] = sigmoid(a[:, :M])  # f
+     89             a[:, M : 2 * M] = np.tanh(a[:, M : 2 * M])  # g
+
+cupy\core\core.pyx in cupy.core.core.ndarray.__matmul__()</code></pre></div></div></div></div></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../言語モデルを使った文章生成/" title="7.1 言語モデルを使った文章生成"><span>Previous</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

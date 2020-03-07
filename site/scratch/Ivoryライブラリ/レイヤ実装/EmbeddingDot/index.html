@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>2.12 EmbeddingDot &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2 current"><button class="section nav-item">Ivoryライブラリ</button>
+<ul class="subnav">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">レイヤ実装</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">2.12 EmbeddingDot</a>
+<ul class="subnav">
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">自然言語処理編</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../自然言語処理編/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../EmbeddingMean/">&laquo; Previous</a></div>
+    <div class="next"><a href="../RNN/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>Ivoryライブラリ &raquo; </li><li>レイヤ実装</li>
+</ul>
+</nav>
+                <div id="content">
+<h2 id="212-embeddingdot"><span class="pheasant-header"><span class="header"><span class="number">2.12</span> <span class="title">EmbeddingDot</span></span></span></h2>
+<p>「ゼロから作るDeep Learning ❷」に従ったEmbeddingDotレイヤの実装は以下のようになります。</p>
+<div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">Code</span> <span class="number">2.15</span>
+<span class="title"><code>EmbeddingDot</code>クラス</span></p>
+<div class="content">
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter source"><div class="code">
+      <pre><code class="python">class EmbeddingDot(Layer):
+    def init(self):
+        self.W = self.add_weight(self.shape[::-1]).randn()
+        self.t = self.add_input()
+        self.y.shape = ()
+
+    def forward(self):
+        self.t_W = self.W.d[self.t.d]
+        self.y.d = np.sum(self.x.d * self.t_W, axis=1)
+
+    def backward(self):
+        dy = self.y.g.reshape(self.y.g.shape[0], 1)
+        grad = np.zeros_like(self.W.d)
+        np.scatter_add(grad, self.t.d, dy * self.x.d)  # np.add.at
+        self.W.g = grad
+        self.x.g = dy * self.t_W
+</code></pre></div></div></div></div>
+
+</div></div></div>
+
+<p>動作を確かめます。形状（バッチ数、単語ベクトルの次元、ターゲットラベルの次元）を以下の通りとします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">N, L, M = 10, 4, 5
+
+from ivory.layers.embedding import EmbeddingDot
+
+dot = EmbeddingDot((L, M))
+print(dot)
+print(dot.x)
+print(dot.t)
+print(dot.W)
+print(dot.y)</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-12 20:09:42</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">227ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;EmbeddingDot(&#39;EmbeddingDot.1&#39;, (4, 5)) at 0x20166f43be0&gt;
+&lt;Input(&#39;EmbeddingDot.1.x&#39;, (4,)) at 0x201661836a0&gt;
+&lt;Input(&#39;EmbeddingDot.1.t&#39;, ()) at 0x20166f43c88&gt;
+&lt;Weight(&#39;EmbeddingDot.1.W&#39;, (5, 4)) at 0x20166f43c50&gt;
+&lt;Output(&#39;EmbeddingDot.1.y&#39;, ()) at 0x20166f43ba8&gt;</code></pre></div></div></div></div>
+
+<p>これまでのレイヤと違い、レイヤの形状と重みの形状が逆転していることに注意します。また、出力は内積の結果なので、損失関数と同様にスカラー値となります。2つ目の入力<code>t</code>がEmbeddingレイヤへの入力でこちらもラベル表現なのでスカラー値となります。（バッチ数は除きます。）</p>
+<p>ランダムな入力他を作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+
+x = np.random.randn(N, L)
+t = np.random.randint(0, M, N)
+w = np.random.randn(M, L)</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-12 20:09:42</span> (<span class="time">15.8ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">242ms</span>)</span></p></div></div></div></div>
+
+<p>レイヤに入力し、順伝搬します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">dot.set_variables()
+dot.x.variable.data = x
+dot.t.variable.data = t
+dot.W.variable.data = w
+dot.forward()
+dot.y.d[:3]</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-06-12 20:09:42</span> (<span class="time">8.11ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">250ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([1.7249044 , 0.01588949, 1.82722988])</code></pre></div></div></div></div>
+
+<p>バッチ数分の内積値が出力されました。上記が正しいか、確かめます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">[xi @ w[ti] for xi, ti in zip(x, t)][:3]</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-12 20:09:42</span> (<span class="time">9.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">259ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[1.724904397256743, 0.01588949090515246, 1.827229877596224]</code></pre></div></div></div></div>
+
+<p>逆伝搬を検証するために、数値微分による勾配確認を行います。これまでと違い、SigmoidCrossEntropyレイヤを用います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.model import sequential
+
+net = [(&#34;input&#34;, L), (&#39;embeddingdot&#39;, M), (&#39;sigmoid_cross_entropy&#39;)]
+model = sequential(net)
+model.data_input_variables</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-06-12 20:09:42</span> (<span class="time">9.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">268ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[&lt;Variable([&#39;EmbeddingDot.2.x&#39;], (4,)) at 0x20166f67cc0&gt;,
+ &lt;Variable([&#39;EmbeddingDot.2.t&#39;], ()) at 0x20166f67cf8&gt;,
+ &lt;Variable([&#39;SigmoidCrossEntropy.1.t&#39;], ()) at 0x20166f67d30&gt;]</code></pre></div></div></div></div>
+
+<p>正解ラベルを乱数で生成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">t2 = np.random.randint(0, 2, N)</code></pre></div>
+<div class="report"><p><span class="count">[8]</span>
+<span class="start">2019-06-12 20:09:42</span> (<span class="time">8.04ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">277ms</span>)</span></p></div></div></div></div>
+
+<p>データを入力します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.set_data(x, t, t2)</code></pre></div>
+<div class="report"><p><span class="count">[9]</span>
+<span class="start">2019-06-12 20:09:42</span> (<span class="time">18.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">294ms</span>)</span></p></div></div></div></div>
+
+<p>数値微分による勾配を求めます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">W = model.layers[0].W
+model.numerical_gradient(W.variable)</code></pre></div>
+<div class="report"><p><span class="count">[10]</span>
+<span class="start">2019-06-12 20:09:42</span> (<span class="time">30.8ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">325ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[-0.07671048, -0.23686358, -0.06632242,  0.26851696],
+       [ 0.        ,  0.        ,  0.        ,  0.        ],
+       [ 0.03158904,  0.11123896,  0.31113186, -0.10000519],
+       [-0.00457926,  0.00334235,  0.23325554, -0.06364331],
+       [-0.03226531, -0.01438602,  0.01871012, -0.0163209 ]],
+      dtype=float32)</code></pre></div></div></div></div>
+
+<p>逆伝搬による勾配を求めます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.forward()
+model.backward()
+W.g</code></pre></div>
+<div class="report"><p><span class="count">[11]</span>
+<span class="start">2019-06-12 20:09:42</span> (<span class="time">9.96ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">335ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[-0.07672066, -0.236895  , -0.06633119,  0.26851252],
+       [ 0.        ,  0.        ,  0.        ,  0.        ],
+       [ 0.03158861,  0.11125373,  0.3111739 , -0.10001861],
+       [-0.00457919,  0.00334229,  0.23325166, -0.06364226],
+       [-0.03226477, -0.01438364,  0.01870981, -0.01631819]],
+      dtype=float32)</code></pre></div></div></div></div>
+
+<p>一致した結果が得られました。</p>
+<p>ここで<code>backward</code>メソッドを再掲します。</p>
+<div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">Code</span> <span class="number">2.16</span>
+<span class="title"><code>EmbeddingDot.backward</code>メソッド</span></p>
+<div class="content">
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter source"><div class="code">
+      <pre><code class="python">    def backward(self):
+        dy = self.y.g.reshape(self.y.g.shape[0], 1)
+        grad = np.zeros_like(self.W.d)
+        np.scatter_add(grad, self.t.d, dy * self.x.d)  # np.add.at
+        self.W.g = grad
+        self.x.g = dy * self.t_W
+</code></pre></div></div></div></div>
+
+</div></div></div>
+
+<p>Affineレイヤと同じように出力の勾配に内積の相手側を掛けた行列を入力側に逆伝搬しています。ただし、内積なので、要素ごとの積になっています。</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../EmbeddingMean/" title="2.11 EmbeddingMean"><span>Previous</span></a></div>
+        <div class="next"><a href="../RNN/" title="2.13 RNN"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

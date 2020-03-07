@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>1.4 ニューラルネットワークで問題を解く &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2"><button class="section nav-item hide">Ivoryライブラリ</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">レイヤ実装</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2 current"><button class="section nav-item">自然言語処理編</button>
+<ul class="subnav">
+    <li class="toctree-l3"><a class="nav-item" href="../../0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3 current"><button class="section nav-item">1章 ニューラルネットワークの復習</button>
+<ul class="subnav">
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">1.4 ニューラルネットワークで問題を解く</a>
+<ul class="subnav">
+</ul></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../../0章_はじめに/">&laquo; Previous</a></div>
+    <div class="next"><a href="../../2章_自然言語と単語の分散表現/カウントベースの手法/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>自然言語処理編 &raquo; </li><li>1章 ニューラルネットワークの復習</li>
+</ul>
+</nav>
+                <div id="content"><style>
+ .vega-actions a { margin-right: 12px; color: #757575; font-weight: normal; font-size: 13px; } .error { color: red; } </style>
+<script src="https://cdn.jsdelivr.net/npm/vega@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@2.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+<h2 id="14"><span class="pheasant-header"><span class="header"><span class="number">1.4</span> <span class="title">ニューラルネットワークで問題を解く</span></span></span></h2>
+<p><a href="https://www.oreilly.co.jp/books/9784873118369/">「ゼロから作るDeep Learning ❷」</a> 1章4節のスパイラルデータの学習を再現します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.utils.repository import import_module
+
+spiral = import_module(&#34;scratch2/dataset/spiral&#34;)
+x, t = spiral.load_data()
+t = t.argmax(axis=1)
+print(x.shape)
+print(t.shape)</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-06-12 17:40:34</span> (<span class="time">203ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">203ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">(300, 2)
+(300,)</code></pre></div></div></div></div>
+
+<p>カスタムのデータセットを作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.dataset import Dataset
+
+data = Dataset((x, t), name=&#34;spiral&#34;)
+data.shuffle()
+data.epochs = 300
+data.batch_size = 30
+data</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-12 17:40:34</span> (<span class="time">31.2ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">234ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">spiral(batch_size=30, epochs=300, len=10, column=0, size=(300,))</code></pre></div></div></div></div>
+
+<p>Trainerインスタンスを作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.trainer import sequential
+
+net = [(&#34;input&#34;, 2), (&#34;affine&#34;, 10, &#34;sigmoid&#34;), (&#34;affine&#34;, 3, &#34;softmax_cross_entropy&#34;)]
+
+trainer = sequential(net, metrics=[&#34;loss&#34;])
+trainer.optimizer.learning_rate = 1
+trainer = trainer.fit(data, epoch_data=data[:])
+df = trainer.to_frame()
+df.tail()</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-12 17:40:34</span> (<span class="time">500ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">734ms</span>)</span></p></div></div>
+
+<div class="cell jupyter display"><div class="content"><table class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>epoch</th>
+      <th>loss</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>296</th>
+      <td>296</td>
+      <td>0.099457</td>
+    </tr>
+    <tr>
+      <th>297</th>
+      <td>297</td>
+      <td>0.099133</td>
+    </tr>
+    <tr>
+      <th>298</th>
+      <td>298</td>
+      <td>0.098812</td>
+    </tr>
+    <tr>
+      <th>299</th>
+      <td>299</td>
+      <td>0.098493</td>
+    </tr>
+    <tr>
+      <th>300</th>
+      <td>300</td>
+      <td>0.098176</td>
+    </tr>
+  </tbody>
+</table></div></div></div></div>
+
+<p>損失の履歴をプロットします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import altair as alt
+
+df_mean = df.rolling(10, min_periods=0).mean()
+alt.Chart(df_mean).mark_line().encode(x=&#34;epoch&#34;, y=&#34;loss&#34;).properties(
+    width=200, height=160
+)</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-12 17:40:35</span> (<span class="time">46.8ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">781ms</span>)</span></p></div></div>
+
+<div class="cell jupyter display"><div class="content"><div id="pheasant-altair-1"><script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var spec = {"config": {"view": {"width": 400, "height": 300}}, "data": {"name": "data-0ac07cb08ef713225c5300ac0e821883"}, "mark": "line", "encoding": {"x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "loss"}}, "height": 160, "width": 200, "$schema": "https://vega.github.io/schema/vega-lite/v2.6.0.json", "datasets": {"data-0ac07cb08ef713225c5300ac0e821883": [{"epoch": 0.0, "loss": 1.0894848391083738}, {"epoch": 0.5, "loss": 1.0396914120823826}, {"epoch": 1.0, "loss": 1.0040335060630197}, {"epoch": 1.5, "loss": 0.9778451282090636}, {"epoch": 2.0, "loss": 0.9579800682987407}, {"epoch": 2.5, "loss": 0.9424510255258806}, {"epoch": 3.0, "loss": 0.9299802540519898}, {"epoch": 3.5, "loss": 0.9197238987788876}, {"epoch": 4.0, "loss": 0.911109680354842}, {"epoch": 4.5, "loss": 0.9037398842582174}, {"epoch": 5.5, "loss": 0.8781166007282121}, {"epoch": 6.5, "loss": 0.8620786135694966}, {"epoch": 7.5, "loss": 0.8514153686620303}, {"epoch": 8.5, "loss": 0.843774602577555}, {"epoch": 9.5, "loss": 0.837905047351571}, {"epoch": 10.5, "loss": 0.8331146106968284}, {"epoch": 11.5, "loss": 0.8290063899995517}, {"epoch": 12.5, "loss": 0.825344977498732}, {"epoch": 13.5, "loss": 0.8219859036098665}, {"epoch": 14.5, "loss": 0.8188370515788966}, {"epoch": 15.5, "loss": 0.8158368865837076}, {"epoch": 16.5, "loss": 0.8129418903252132}, {"epoch": 17.5, "loss": 0.8101191983333598}, {"epoch": 18.5, "loss": 0.8073422160857862}, {"epoch": 19.5, "loss": 0.8045880089404719}, {"epoch": 20.5, "loss": 0.8018357322903571}, {"epoch": 21.5, "loss": 0.7990656805078443}, {"epoch": 22.5, "loss": 0.7962587071580958}, {"epoch": 23.5, "loss": 0.7933958988111892}, {"epoch": 24.5, "loss": 0.7904583637904761}, {"epoch": 25.5, "loss": 0.7874271310691375}, {"epoch": 26.5, "loss": 0.7842831133712675}, {"epoch": 27.5, "loss": 0.7810071126030391}, {"epoch": 28.5, "loss": 0.7775798821757298}, {"epoch": 29.5, "loss": 0.7739822137617253}, {"epoch": 30.5, "loss": 0.7701950653151035}, {"epoch": 31.5, "loss": 0.7661997229008317}, {"epoch": 32.5, "loss": 0.7619779910112756}, {"epoch": 33.5, "loss": 0.7575124127365275}, {"epoch": 34.5, "loss": 0.7527865215389374}, {"epoch": 35.5, "loss": 0.7477850964510038}, {"epoch": 36.5, "loss": 0.7424944533736703}, {"epoch": 37.5, "loss": 0.7369027306583419}, {"epoch": 38.5, "loss": 0.7310001740875618}, {"epoch": 39.5, "loss": 0.7247794129592521}, {"epoch": 40.5, "loss": 0.7182357190066174}, {"epoch": 41.5, "loss": 0.7113672278280586}, {"epoch": 42.5, "loss": 0.7041751204392632}, {"epoch": 43.5, "loss": 0.6966637446798423}, {"epoch": 44.5, "loss": 0.6888406718182749}, {"epoch": 45.5, "loss": 0.6807166733727856}, {"epoch": 46.5, "loss": 0.6723056274105295}, {"epoch": 47.5, "loss": 0.6636243446808654}, {"epoch": 48.5, "loss": 0.6546923094274798}, {"epoch": 49.5, "loss": 0.645531360053181}, {"epoch": 50.5, "loss": 0.6361653057887026}, {"epoch": 51.5, "loss": 0.6266195031109265}, {"epoch": 52.5, "loss": 0.6169203994641006}, {"epoch": 53.5, "loss": 0.6070950841486236}, {"epoch": 54.5, "loss": 0.5971708335069259}, {"epoch": 55.5, "loss": 0.5871747052999785}, {"epoch": 56.5, "loss": 0.5771331569976821}, {"epoch": 57.5, "loss": 0.5670717186020605}, {"epoch": 58.5, "loss": 0.557014758281811}, {"epoch": 59.5, "loss": 0.5469852786828151}, {"epoch": 60.5, "loss": 0.5370047890131834}, {"epoch": 61.5, "loss": 0.5270932384501184}, {"epoch": 62.5, "loss": 0.5172690085979632}, {"epoch": 63.5, "loss": 0.5075489267808565}, {"epoch": 64.5, "loss": 0.4979483375685169}, {"epoch": 65.5, "loss": 0.4884811752149756}, {"epoch": 66.5, "loss": 0.4791600623516299}, {"epoch": 67.5, "loss": 0.4699963945672275}, {"epoch": 68.5, "loss": 0.4610004229691468}, {"epoch": 69.5, "loss": 0.4521813259899662}, {"epoch": 70.5, "loss": 0.4435472774822403}, {"epoch": 71.5, "loss": 0.43510548986236514}, {"epoch": 72.5, "loss": 0.42686224153372604}, {"epoch": 73.5, "loss": 0.4188228898886684}, {"epoch": 74.5, "loss": 0.41099188634732864}, {"epoch": 75.5, "loss": 0.40337278212585537}, {"epoch": 76.5, "loss": 0.3959682077618586}, {"epoch": 77.5, "loss": 0.38877991434640957}, {"epoch": 78.5, "loss": 0.381808747244273}, {"epoch": 79.5, "loss": 0.3750546914673151}, {"epoch": 80.5, "loss": 0.3685168870444043}, {"epoch": 81.5, "loss": 0.3621936631004833}, {"epoch": 82.5, "loss": 0.35608258838327167}, {"epoch": 83.5, "loss": 0.3501805339392255}, {"epoch": 84.5, "loss": 0.3444837263395407}, {"epoch": 85.5, "loss": 0.33898781610693585}, {"epoch": 86.5, "loss": 0.3336879719700862}, {"epoch": 87.5, "loss": 0.32857892161258795}, {"epoch": 88.5, "loss": 0.323655057101442}, {"epoch": 89.5, "loss": 0.318910490801622}, {"epoch": 90.5, "loss": 0.3143391340560242}, {"epoch": 91.5, "loss": 0.3099347544926865}, {"epoch": 92.5, "loss": 0.30569104342577696}, {"epoch": 93.5, "loss": 0.3016016717437634}, {"epoch": 94.5, "loss": 0.29766033635662936}, {"epoch": 95.5, "loss": 0.2938608041636718}, {"epoch": 96.5, "loss": 0.2901969445998346}, {"epoch": 97.5, "loss": 0.2866627664856525}, {"epoch": 98.5, "loss": 0.28325243496910596}, {"epoch": 99.5, "loss": 0.2799602985993289}, {"epoch": 100.5, "loss": 0.27678089368488185}, {"epoch": 101.5, "loss": 0.27370897475652556}, {"epoch": 102.5, "loss": 0.27073950005716585}, {"epoch": 103.5, "loss": 0.26786764635288557}, {"epoch": 104.5, "loss": 0.2650888039020417}, {"epoch": 105.5, "loss": 0.26239858041868264}, {"epoch": 106.5, "loss": 0.2597927946425836}, {"epoch": 107.5, "loss": 0.25726746587522076}, {"epoch": 108.5, "loss": 0.2548188269480242}, {"epoch": 109.5, "loss": 0.25244329472611376}, {"epoch": 110.5, "loss": 0.2501374733213626}, {"epoch": 111.5, "loss": 0.24789813932328877}, {"epoch": 112.5, "loss": 0.24572224943273438}, {"epoch": 113.5, "loss": 0.24360691041002785}, {"epoch": 114.5, "loss": 0.24154938767564943}, {"epoch": 115.5, "loss": 0.23954708850862544}, {"epoch": 116.5, "loss": 0.23759755605650038}, {"epoch": 117.5, "loss": 0.23569846621455198}, {"epoch": 118.5, "loss": 0.23384760497847012}, {"epoch": 119.5, "loss": 0.23204288276373625}, {"epoch": 120.5, "loss": 0.23028230810124156}, {"epoch": 121.5, "loss": 0.22856399952152012}, {"epoch": 122.5, "loss": 0.22688616344450732}, {"epoch": 123.5, "loss": 0.22524709581337116}, {"epoch": 124.5, "loss": 0.2236451776646458}, {"epoch": 125.5, "loss": 0.222078864098075}, {"epoch": 126.5, "loss": 0.2205466810348476}, {"epoch": 127.5, "loss": 0.21904723366913256}, {"epoch": 128.5, "loss": 0.21757918256520328}, {"epoch": 129.5, "loss": 0.21614124989363342}, {"epoch": 130.5, "loss": 0.21473222242360043}, {"epoch": 131.5, "loss": 0.21335093634604235}, {"epoch": 132.5, "loss": 0.21199626544231281}, {"epoch": 133.5, "loss": 0.21066714883435345}, {"epoch": 134.5, "loss": 0.20936255684279975}, {"epoch": 135.5, "loss": 0.20808151228652175}, {"epoch": 136.5, "loss": 0.20682307522661386}, {"epoch": 137.5, "loss": 0.20558633013457558}, {"epoch": 138.5, "loss": 0.20437040997568431}, {"epoch": 139.5, "loss": 0.2031744776685242}, {"epoch": 140.5, "loss": 0.2019977226015847}, {"epoch": 141.5, "loss": 0.2008393601179383}, {"epoch": 142.5, "loss": 0.19969864809943783}, {"epoch": 143.5, "loss": 0.19857485943751688}, {"epoch": 144.5, "loss": 0.1974672906184716}, {"epoch": 145.5, "loss": 0.19637526175041453}, {"epoch": 146.5, "loss": 0.19529811675629444}, {"epoch": 147.5, "loss": 0.19423522671872698}, {"epoch": 148.5, "loss": 0.1931859715800304}, {"epoch": 149.5, "loss": 0.19214975845020307}, {"epoch": 150.5, "loss": 0.19112600939196203}, {"epoch": 151.5, "loss": 0.19011416512455548}, {"epoch": 152.5, "loss": 0.18911367947173516}, {"epoch": 153.5, "loss": 0.18812402949801457}, {"epoch": 154.5, "loss": 0.18714470645808495}, {"epoch": 155.5, "loss": 0.18617521626758982}, {"epoch": 156.5, "loss": 0.18521508010259058}, {"epoch": 157.5, "loss": 0.18426383201264446}, {"epoch": 158.5, "loss": 0.1833210289246468}, {"epoch": 159.5, "loss": 0.182386234192001}, {"epoch": 160.5, "loss": 0.18145903223630325}, {"epoch": 161.5, "loss": 0.18053902292583496}, {"epoch": 162.5, "loss": 0.17962582043122985}, {"epoch": 163.5, "loss": 0.17871905028801258}, {"epoch": 164.5, "loss": 0.17781836014803318}, {"epoch": 165.5, "loss": 0.17692341423897667}, {"epoch": 166.5, "loss": 0.1760338903644862}, {"epoch": 167.5, "loss": 0.17514948777114325}, {"epoch": 168.5, "loss": 0.17426992310759218}, {"epoch": 169.5, "loss": 0.17339492654451932}, {"epoch": 170.5, "loss": 0.17252425558991472}, {"epoch": 171.5, "loss": 0.17165767961979705}, {"epoch": 172.5, "loss": 0.17079499420115407}, {"epoch": 173.5, "loss": 0.16993600828500716}, {"epoch": 174.5, "loss": 0.16908055892274654}, {"epoch": 175.5, "loss": 0.16822849596556688}, {"epoch": 176.5, "loss": 0.16737969789755724}, {"epoch": 177.5, "loss": 0.16653405683246358}, {"epoch": 178.5, "loss": 0.16569148985407103}, {"epoch": 179.5, "loss": 0.16485193686648736}, {"epoch": 180.5, "loss": 0.1640153521929863}, {"epoch": 181.5, "loss": 0.1631817127523961}, {"epoch": 182.5, "loss": 0.16235101550919256}, {"epoch": 183.5, "loss": 0.16152327673466807}, {"epoch": 184.5, "loss": 0.16069852603047946}, {"epoch": 185.5, "loss": 0.15987681659618475}, {"epoch": 186.5, "loss": 0.159058211482747}, {"epoch": 187.5, "loss": 0.15824279135051916}, {"epoch": 188.5, "loss": 0.15743064891992836}, {"epoch": 189.5, "loss": 0.1566218818057373}, {"epoch": 190.5, "loss": 0.15581660924643317}, {"epoch": 191.5, "loss": 0.15501495517238878}, {"epoch": 192.5, "loss": 0.1542170448473739}, {"epoch": 193.5, "loss": 0.15342301777745954}, {"epoch": 194.5, "loss": 0.15263301835877147}, {"epoch": 195.5, "loss": 0.1518471861779351}, {"epoch": 196.5, "loss": 0.15106567074653282}, {"epoch": 197.5, "loss": 0.15028861976666982}, {"epoch": 198.5, "loss": 0.14951617632254766}, {"epoch": 199.5, "loss": 0.1487484912237688}, {"epoch": 200.5, "loss": 0.14798570060092428}, {"epoch": 201.5, "loss": 0.14722794396810285}, {"epoch": 202.5, "loss": 0.1464753597089174}, {"epoch": 203.5, "loss": 0.14572807025943327}, {"epoch": 204.5, "loss": 0.14498619868155307}, {"epoch": 205.5, "loss": 0.14424985773592283}, {"epoch": 206.5, "loss": 0.14351915747449379}, {"epoch": 207.5, "loss": 0.14279419524891784}, {"epoch": 208.5, "loss": 0.14207506255710406}, {"epoch": 209.5, "loss": 0.14136184544700023}, {"epoch": 210.5, "loss": 0.14065462020051359}, {"epoch": 211.5, "loss": 0.13995344976102503}, {"epoch": 212.5, "loss": 0.13925839390382014}, {"epoch": 213.5, "loss": 0.13856950673789523}, {"epoch": 214.5, "loss": 0.137886824016828}, {"epoch": 215.5, "loss": 0.1372103861664679}, {"epoch": 216.5, "loss": 0.13654021209379485}, {"epoch": 217.5, "loss": 0.13587632429843932}, {"epoch": 218.5, "loss": 0.1352187329074221}, {"epoch": 219.5, "loss": 0.13456744036903057}, {"epoch": 220.5, "loss": 0.1339224438368126}, {"epoch": 221.5, "loss": 0.13328373768817806}, {"epoch": 222.5, "loss": 0.13265130384270774}, {"epoch": 223.5, "loss": 0.132025115754627}, {"epoch": 224.5, "loss": 0.13140515296960076}, {"epoch": 225.5, "loss": 0.1307913812297511}, {"epoch": 226.5, "loss": 0.1301837627128526}, {"epoch": 227.5, "loss": 0.12958225860315992}, {"epoch": 228.5, "loss": 0.12898682450148408}, {"epoch": 229.5, "loss": 0.1283974092854084}, {"epoch": 230.5, "loss": 0.1278139619670916}, {"epoch": 231.5, "loss": 0.1272364251456356}, {"epoch": 232.5, "loss": 0.12666474276231696}, {"epoch": 233.5, "loss": 0.12609886152478822}, {"epoch": 234.5, "loss": 0.12553871240144612}, {"epoch": 235.5, "loss": 0.1249842317808677}, {"epoch": 236.5, "loss": 0.12443535910218735}, {"epoch": 237.5, "loss": 0.12389202550356518}, {"epoch": 238.5, "loss": 0.1233541606513598}, {"epoch": 239.5, "loss": 0.12282169992434508}, {"epoch": 240.5, "loss": 0.12229457023100945}, {"epoch": 241.5, "loss": 0.1217727031656259}, {"epoch": 242.5, "loss": 0.12125602663203487}, {"epoch": 243.5, "loss": 0.12074446715401144}, {"epoch": 244.5, "loss": 0.12023795648653368}, {"epoch": 245.5, "loss": 0.11973642044446087}, {"epoch": 246.5, "loss": 0.11923978638369781}, {"epoch": 247.5, "loss": 0.11874798430862583}, {"epoch": 248.5, "loss": 0.11826094695231601}, {"epoch": 249.5, "loss": 0.11777860280494712}, {"epoch": 250.5, "loss": 0.11730088309613249}, {"epoch": 251.5, "loss": 0.11682771731149486}, {"epoch": 252.5, "loss": 0.11635903778415795}, {"epoch": 253.5, "loss": 0.11589477773701803}, {"epoch": 254.5, "loss": 0.11543486906248454}, {"epoch": 255.5, "loss": 0.11497924850328636}, {"epoch": 256.5, "loss": 0.11452784902089641}, {"epoch": 257.5, "loss": 0.11408060132114109}, {"epoch": 258.5, "loss": 0.11363744842572773}, {"epoch": 259.5, "loss": 0.11319832264525247}, {"epoch": 260.5, "loss": 0.11276316630530459}, {"epoch": 261.5, "loss": 0.11233191993358975}, {"epoch": 262.5, "loss": 0.11190451987099644}, {"epoch": 263.5, "loss": 0.11148090935707419}, {"epoch": 264.5, "loss": 0.11106103247013084}, {"epoch": 265.5, "loss": 0.11064483309033095}, {"epoch": 266.5, "loss": 0.11023225754971702}, {"epoch": 267.5, "loss": 0.10982325477682223}, {"epoch": 268.5, "loss": 0.10941776249024696}, {"epoch": 269.5, "loss": 0.10901573607753252}, {"epoch": 270.5, "loss": 0.10861711759663199}, {"epoch": 271.5, "loss": 0.1082218580928769}, {"epoch": 272.5, "loss": 0.10782991180877292}, {"epoch": 273.5, "loss": 0.10744122833189844}, {"epoch": 274.5, "loss": 0.10705576069920227}, {"epoch": 275.5, "loss": 0.10667346386843415}, {"epoch": 276.5, "loss": 0.10629429027718758}, {"epoch": 277.5, "loss": 0.10591819576809273}, {"epoch": 278.5, "loss": 0.10554513817765136}, {"epoch": 279.5, "loss": 0.10517507137061584}, {"epoch": 280.5, "loss": 0.104807956626918}, {"epoch": 281.5, "loss": 0.10444375270402691}, {"epoch": 282.5, "loss": 0.10408242005937718}, {"epoch": 283.5, "loss": 0.10372391916902964}, {"epoch": 284.5, "loss": 0.10336821300147488}, {"epoch": 285.5, "loss": 0.10301526108930822}, {"epoch": 286.5, "loss": 0.10266502711668087}, {"epoch": 287.5, "loss": 0.10231747449138602}, {"epoch": 288.5, "loss": 0.10197256786773153}, {"epoch": 289.5, "loss": 0.10163027505151156}, {"epoch": 290.5, "loss": 0.10129056179611255}, {"epoch": 291.5, "loss": 0.10095339296501157}, {"epoch": 292.5, "loss": 0.10061873620056627}, {"epoch": 293.5, "loss": 0.10028655788831872}, {"epoch": 294.5, "loss": 0.09995682789628821}, {"epoch": 295.5, "loss": 0.09962951512438374}]}};
+    var opt = {
+      "mode": "vega-lite",
+      "renderer": "canvas",
+      "actions": {"editor": true, "source": true, "export": true}
+    };
+    vegaEmbed("#pheasant-altair-1", spec, opt).catch(console.err);
+  });</script></div></div></div></div></div>
+
+<p>分類結果を可視化します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+
+x, y = np.meshgrid(np.arange(-1, 1, 0.01), np.arange(-1, 1, 0.01))
+X = np.c_[x.ravel(), y.ravel()]
+z = trainer.predict(X).reshape(x.shape)
+plt.contourf(x, y, z)
+plt.axis(&#34;off&#34;)
+
+x, t = data[:]
+df = pd.DataFrame(x, columns=[&#34;x&#34;, &#34;y&#34;])
+df[&#34;t&#34;] = t
+markers = [&#34;o&#34;, &#34;x&#34;, &#34;^&#34;]
+for (key, sub), marker in zip(df.groupby(&#34;t&#34;), markers):
+    plt.scatter(sub.x, sub.y, s=40, marker=marker)
+plt.show()</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-12 17:40:35</span> (<span class="time">141ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.05s</span>)</span></p></div></div>
+
+<div class="cell jupyter display"><div class="content"><p><img alt="image/png" src="data:image/png;base64,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
+"/></p></div></div></div></div></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../../0章_はじめに/" title="はじめに"><span>Previous</span></a></div>
+        <div class="next"><a href="../../2章_自然言語と単語の分散表現/カウントベースの手法/" title="2.3 カウントベースの手法"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

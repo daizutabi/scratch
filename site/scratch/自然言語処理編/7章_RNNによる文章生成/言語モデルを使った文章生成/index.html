@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>7.1 言語モデルを使った文章生成 &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2"><button class="section nav-item hide">Ivoryライブラリ</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">レイヤ実装</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2 current"><button class="section nav-item">自然言語処理編</button>
+<ul class="subnav">
+    <li class="toctree-l3"><a class="nav-item" href="../../0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">7章 RNNによる文章生成</button>
+<ul class="subnav">
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">7.1 言語モデルを使った文章生成</a>
+<ul class="subnav">
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../../6章_ゲート付きRNN/まとめ/">&laquo; Previous</a></div>
+    <div class="next"><a href="../seq2seqの実装/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>自然言語処理編 &raquo; </li><li>7章 RNNによる文章生成</li>
+</ul>
+</nav>
+                <div id="content">
+<h2 id="71"><span class="pheasant-header"><span class="header"><span class="number">7.1</span> <span class="title">言語モデルを使った文章生成</span></span></span></h2>
+<p>高速化のためにGPUを使います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.common.context import np
+np.context = &#39;gpu&#39;</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-06-20 22:45:26</span> (<span class="time">192ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">192ms</span>)</span></p></div></div></div></div>
+
+<p>PTBデータセットを読み出します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.utils.repository import import_module
+
+ptb = import_module(&#34;scratch2/dataset/ptb&#34;)
+corpus, word_to_id, id_to_word = ptb.load_data(&#34;train&#34;)</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-20 22:45:26</span> (<span class="time">14.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">206ms</span>)</span></p></div></div></div></div>
+
+<p>モデルを作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.model import sequential
+
+net = [
+    (&#34;input&#34;, 10000),
+    (&#34;embedding&#34;, 650),
+    (&#34;lstm&#34;, 650),
+    (&#34;lstm&#34;, 650),
+    (&#34;affine&#34;, 10000, &#34;softmax_cross_entropy&#34;),
+]
+model = sequential(net)</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-20 22:45:26</span> (<span class="time">971ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.18s</span>)</span></p></div></div></div></div>
+
+<p>重みの共有をします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">em = model.layers[0]
+affine = model.layers[-2]
+affine.W.share_variable(em.W, transpose=True)
+model.build()</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-20 22:45:27</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.19s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">&lt;ivory.core.model.Model at 0x17fb832e0b8&gt;</code></pre></div></div></div></div>
+
+<p>学習済みの重みを読み出します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import os
+import pickle
+import ivory
+
+directory = os.path.dirname(ivory.__file__)
+directory = os.path.join(directory, &#34;../docs/script&#34;)
+with open(os.path.join(directory, &#39;better_rnnlm.pkl&#39;), &#39;rb&#39;) as f:
+    weights = pickle.load(f)
+
+for v, weight in zip(model.weight_variables, weights):
+    v.data = np.asarray(weight)</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-06-20 22:45:27</span> (<span class="time">109ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.30s</span>)</span></p></div></div></div></div>
+
+<p>start文字とskip文字を設定します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">start_word = &#39;you&#39;
+start_id = word_to_id[start_word]
+skip_words = [&#39;N&#39;, &#39;&lt;unk&gt;&#39;, &#39;$&#39;]
+skip_ids = [word_to_id[w] for w in skip_words]</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-20 22:45:27</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.32s</span>)</span></p></div></div></div></div>
+
+<p>Softmax関数を定義します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">def softmax(x):
+    y = np.exp(x - x.max())
+    return y / y.sum()</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-06-20 22:45:27</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.33s</span>)</span></p></div></div></div></div>
+
+<p>文章ジェネレータを定義します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">def generate(word_id, skip_ids=None):
+    score = model.layers[-1].x
+    yield id_to_word[word_id]
+    while True:
+        x = np.array(word_id).reshape(1, 1)
+        model.set_data(x)
+        model.forward(predict=True)
+        p = softmax(score.d.flatten())
+        sampled = np.random.choice(len(p), size=1, p=p)
+        if skip_ids is None or sampled not in skip_ids:
+            word_id = int(sampled)
+            yield id_to_word[word_id]</code></pre></div>
+<div class="report"><p><span class="count">[8]</span>
+<span class="start">2019-06-20 22:45:27</span> (<span class="time">5.97ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.34s</span>)</span></p></div></div></div></div>
+
+<p>文章を生成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">sentences = []
+for _ in range(5):
+    gen = generate(start_id, skip_ids)
+    words = [word for word, _ in zip(gen, range(100))]
+    sentences.append(&#34; &#34;.join(words))</code></pre></div>
+<div class="report"><p><span class="count">[9]</span>
+<span class="start">2019-06-20 22:45:27</span> (<span class="time">5.14s</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">6.48s</span>)</span></p></div></div></div></div>
+
+<ul>
+<li>
+<p>you only support the course of the disaster &lt;eos&gt; that &#39;s not only five weeks ago when the legislature has a couple of days well &lt;eos&gt; it &#39;s the responsibility for declared by a new york school of public and political analysis &lt;eos&gt; mr. markey has all but the son of the cia &lt;eos&gt; while the two invented a commanding report himself in the 1930s spokesman said the report had worked out after of the o&#39;kicki when there said that cathay &#39;s administrative consultants are minimal &lt;eos&gt; in recent weeks farmers would use in the trade when the public needs</p>
+</li>
+<li>
+<p>you and and the massachusetts law firm the office of management audit through the united states &lt;eos&gt; it also has been several years ago santa fe cities\/abc inc. said it obtained approval of certain charges of its legal and litigation to focus more on the closing too much more difficult to announce unsecured services &lt;eos&gt; the plan to merge with all of the units and sanford i. lee jr. an executive vice president in charge of the firm &#39;s senior interest magazines montedison is joining a new syndicate &lt;eos&gt; the contract also seeks the power and other business ventures &lt;eos&gt;</p>
+</li>
+<li>
+<p>you &#39;re making a appeal with daniel b. barrett jr. as well as an admitted group to sell the plane &lt;eos&gt; amgen said the company expects output and revenue to improve revenue and the widely expected results &lt;eos&gt; valley pacific &#39;s financial adviser and pricings in electric america was as great &lt;eos&gt; indeed any review will place this is among the company &#39;s biggest buyers &lt;eos&gt; merabank will write off an ira banker said adjacent to the options &lt;eos&gt; but the bank has been attempting to press a plan to buy the remaining common operations in a leveraged transaction at</p>
+</li>
+<li>
+<p>you be looking for a big role &lt;eos&gt; and since when the trust took steps to sell the company to move a stake in its bid to buy two shares of common stock will be redeemed at least or just a spokesman added &lt;eos&gt; late this year the company chose to cut cash on its other stock in check and may make an offer for the company from a labor-management group to take over the launched &lt;eos&gt; further debt may also be short-lived by the debt he said &lt;eos&gt; the minneapolis glass company for example reduced its interest in increase</p>
+</li>
+<li>
+<p>you has recruited as a cautious price and in other financial markets the grand and office holder will receive m$ million or more &lt;eos&gt; but with real estate &lt;eos&gt; recently revco has soared to the highest price until the settlement in the first six months &lt;eos&gt; henry and other shareholder partners asked the union to change the price attempt to be converted the share of the new wealth under its shareholders or time with it &lt;eos&gt; plans to close a majority stake in the company to draw financing for its longtime vanguard partners is how the company &#39;s needs to</p>
+</li>
+</ul></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../../6章_ゲート付きRNN/まとめ/" title="6.6 まとめ"><span>Previous</span></a></div>
+        <div class="next"><a href="../seq2seqの実装/" title="7.3 seq2seqの実装"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

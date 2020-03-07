@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>2.11 EmbeddingMean &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2 current"><button class="section nav-item">Ivoryライブラリ</button>
+<ul class="subnav">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">レイヤ実装</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">2.11 EmbeddingMean</a>
+<ul class="subnav">
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">自然言語処理編</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../自然言語処理編/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../MatMulMean/">&laquo; Previous</a></div>
+    <div class="next"><a href="../EmbeddingDot/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>Ivoryライブラリ &raquo; </li><li>レイヤ実装</li>
+</ul>
+</nav>
+                <div id="content">
+<h2 id="211-embeddingmean"><span class="pheasant-header"><span class="header"><span class="number">2.11</span> <span class="title">EmbeddingMean</span></span></span></h2>
+<p>Embeddingレイヤの入力は、バッチ数分のラベル値でした。よって、EmbeddingMeanレイヤへは、(バッチ数, 入力数)のラベルとなります。</p>
+<p>Embeddingレイヤの<code>forward</code>メソッドは以下の通りでした。</p>
+<div class="pheasant-fenced-code"><div class="cell embed source"><div class="code"><pre><code class="python">   def forward(self):
+       self.y.d = self.W.d[self.x.d]</code></pre></div></div></div>
+
+<p>まずはこれを拡張します。形状を（バッチ数、入力数、入力の次元、出力の次元）とします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+
+N, I, L, M = 2, 3, 5, 3</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">5.98ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">5.98ms</span>)</span></p></div></div></div></div>
+
+<p>重みは、</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">w = np.random.randn(L, M)
+print(w)</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">37.3ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[ 0.3342486  -1.23969602 -0.71566716]
+ [-0.94152091 -0.666604    1.02151093]
+ [ 0.76440342 -0.66294955  0.23458379]
+ [-0.87572989 -0.09520326 -0.14725043]
+ [ 1.44295605  1.82698823 -0.52967815]]</code></pre></div></div></div></div>
+
+<p>入力は、</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = np.random.randint(0, L, (N, I))
+print(x)</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">52.9ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[0 1 0]
+ [4 3 4]]</code></pre></div></div></div></div>
+
+<p>各入力に対する出力は、</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(w[x.T])</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">11.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">63.9ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[[ 0.3342486  -1.23969602 -0.71566716]
+  [ 1.44295605  1.82698823 -0.52967815]]
+
+ [[-0.94152091 -0.666604    1.02151093]
+  [-0.87572989 -0.09520326 -0.14725043]]
+
+ [[ 0.3342486  -1.23969602 -0.71566716]
+  [ 1.44295605  1.82698823 -0.52967815]]]</code></pre></div></div></div></div>
+
+<p>となり、複数の入力に対する出力を平均化するので、</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(w[x.T].sum(axis=0) / I)</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">7.01ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">70.9ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[-0.0910079  -1.04866535 -0.1366078 ]
+ [ 0.67006074  1.18625773 -0.40220225]]</code></pre></div></div></div></div>
+
+<p>となりますが、同じことは、</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">print(w[x].sum(axis=1) / I)</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">5.95ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">76.9ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[[-0.0910079  -1.04866535 -0.1366078 ]
+ [ 0.67006074  1.18625773 -0.40220225]]</code></pre></div></div></div></div>
+
+<p>でもできます。以上が順伝搬になります。ここまでを実装します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.layer import Layer
+
+class EmbeddingMean(Layer):
+    def init(self):
+        self.W = self.add_weight(self.shape[1:]).randn()
+
+    def forward(self):
+        self.y.d = self.W.d[self.x.d].sum(axis=1) / self.shape[0]</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">185ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">261ms</span>)</span></p></div></div></div></div>
+
+<p>すでにあるMatMulMeanレイヤと比較します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.model import sequential
+from ivory.common.util import convert_one_hot
+
+N, I, L, M = 20, 10, 4, 3
+net_mat = [(&#34;input&#34;, I, L), (&#34;matmulmean&#34;, M, &#34;softmax_cross_entropy&#34;)]
+model_mat = sequential(net_mat)
+net_em = [(&#34;input&#34;, I, L), (&#34;embeddingmean&#34;, M, &#34;softmax_cross_entropy&#34;)]
+model_em = sequential(net_em)</code></pre></div>
+<div class="report"><p><span class="count">[8]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">11.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">272ms</span>)</span></p></div></div></div></div>
+
+<p>ランダムな入力を作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = np.random.randint(0, L, (N, I))
+t = np.random.randint(0, M, N)</code></pre></div>
+<div class="report"><p><span class="count">[9]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">21.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">294ms</span>)</span></p></div></div></div></div>
+
+<p>MatMulレイヤへ入力するために、one-hot表現に変換します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model_mat.set_data(convert_one_hot(x, L), t)</code></pre></div>
+<div class="report"><p><span class="count">[10]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">309ms</span>)</span></p></div></div></div></div>
+
+<p>Embeddingレイヤへは、そのまま入力します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model_em.set_data(x, t)</code></pre></div>
+<div class="report"><p><span class="count">[11]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">15.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">325ms</span>)</span></p></div></div></div></div>
+
+<p>両者を比較するために重みを同じ値に設定します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">mat, em = model_mat.layers[0], model_em.layers[0]
+em.share_weight_variables(mat)</code></pre></div>
+<div class="report"><p><span class="count">[12]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">9.06ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">334ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[&lt;Variable([&#39;MatMulMean.1.W&#39;, &#39;EmbeddingMean.1.W&#39;], (4, 3)) at 0x1c3413b49b0&gt;]</code></pre></div></div></div></div>
+
+<p>順伝搬を比較します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model_mat.forward()
+model_em.forward()
+model_mat.loss, model_em.loss</code></pre></div>
+<div class="report"><p><span class="count">[13]</span>
+<span class="start">2019-06-12 20:09:37</span> (<span class="time">14.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">348ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">(1.1459859498179688, 1.1459858894348145)</code></pre></div></div></div></div>
+
+<p>次に逆伝搬を実装します。ここでも勾配確認のテクニックを使います。数値微分による勾配を求めます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model_em.numerical_gradient(em.W.variable)</code></pre></div>
+<div class="report"><p><span class="count">[14]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">10.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">358ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[ 0.06580353, -0.04482269, -0.02145767],
+       [ 0.02384186, -0.00762939, -0.01573563],
+       [ 0.02527237, -0.01049042, -0.01382828],
+       [ 0.04720688, -0.02098083, -0.02574921]], dtype=float32)</code></pre></div></div></div></div>
+
+<p>EmbeddingMeanレイヤの出力の勾配を求めます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">try:
+    model_em.backward()
+except AttributeError:  # まだ、backwardメソッドを定義していないため
+    pass</code></pre></div>
+<div class="report"><p><span class="count">[15]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">8.03ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">366ms</span>)</span></p></div></div></div></div>
+
+<p>Embeddingレイヤの逆伝搬と同じことをしますが、形状を合わせるために転置します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">grad = np.zeros_like(em.W.d)
+np.add.at(grad, em.x.d.T, em.y.g)
+grad /= em.shape[0]
+grad</code></pre></div>
+<div class="report"><p><span class="count">[16]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">21.9ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">388ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[ 0.06625388, -0.04501684, -0.02123704],
+       [ 0.02375701, -0.0081978 , -0.01555922],
+       [ 0.02524898, -0.01056978, -0.01467921],
+       [ 0.04702323, -0.02069013, -0.0263331 ]], dtype=float32)</code></pre></div></div></div></div>
+
+<p>一致が確認できました。最終的な実装は以下のようになります。</p>
+<div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">Code</span> <span class="number">2.14</span>
+<span class="title"><code>EmbeddingMean</code>クラス</span></p>
+<div class="content">
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter source"><div class="code">
+      <pre><code class="python">class EmbeddingMean(Layer):
+    input_ndim = -2
+
+    def init(self):
+        self.y.shape = self.shape[-1:]
+        self.W = self.add_weight(self.shape[1:]).randn()
+
+    def forward(self):
+        self.y.d = self.W.d[self.x.d].sum(axis=1) / self.shape[0]
+
+    def backward(self):
+        grad = np.zeros_like(self.W.d)
+        np.scatter_add(grad, self.x.d.T, self.y.g)  # np.add.at
+        grad /= self.shape[0]
+        self.W.g = grad
+</code></pre></div></div></div></div>
+
+</div></div></div>
+
+<p>MatMulMeanクラスの代わりに使ってみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">N, I, L, M = 20, 10, 4, 3
+net_mat = [(&#34;input&#34;, I, L), (&#34;matmulmean&#34;, M, &#34;softmax_cross_entropy&#34;)]
+model_mat = sequential(net_mat)
+net_em = [(&#34;input&#34;, I, L), (&#34;embeddingmean&#34;, M, &#34;softmax_cross_entropy&#34;)]
+model_em = sequential(net_em)</code></pre></div>
+<div class="report"><p><span class="count">[19]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">14.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">457ms</span>)</span></p></div></div></div></div>
+
+<p>ランダムな入力を作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">x = np.random.randint(0, L, (N, I))
+t = np.random.randint(0, M, N)</code></pre></div>
+<div class="report"><p><span class="count">[20]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">7.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">464ms</span>)</span></p></div></div></div></div>
+
+<p>MatMulレイヤへ入力するために、one-hot表現に変換します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model_mat.set_data(convert_one_hot(x, L), t)</code></pre></div>
+<div class="report"><p><span class="count">[21]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">7.02ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">471ms</span>)</span></p></div></div></div></div>
+
+<p>Embeddingレイヤへは、そのまま入力します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model_em.set_data(x, t)</code></pre></div>
+<div class="report"><p><span class="count">[22]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">503ms</span>)</span></p></div></div></div></div>
+
+<p>両者を比較するために重みを同じ値に設定します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">mat, em = model_mat.layers[0], model_em.layers[0]
+em.share_weight_variables(mat)</code></pre></div>
+<div class="report"><p><span class="count">[23]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">15.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">518ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[&lt;Variable([&#39;MatMulMean.2.W&#39;, &#39;EmbeddingMean.2.W&#39;], (4, 3)) at 0x1c3413dd080&gt;]</code></pre></div></div></div></div>
+
+<p>順伝搬を比較します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model_mat.forward()
+model_em.forward()
+model_mat.loss, model_em.loss</code></pre></div>
+<div class="report"><p><span class="count">[24]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">8.99ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">527ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">(1.2578249141870912, 1.2578248977661133)</code></pre></div></div></div></div>
+
+<p>逆伝搬を比較します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model_mat.backward()
+model_em.backward()
+mat.W.g, em.W.g</code></pre></div>
+<div class="report"><p><span class="count">[25]</span>
+<span class="start">2019-06-12 20:09:38</span> (<span class="time">8.05ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">535ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">(array([[-0.06191752, -0.0654019 ,  0.12731942],
+        [-0.01291479, -0.11174937,  0.12466416],
+        [ 0.00272195, -0.113053  ,  0.11033104],
+        [-0.00093432, -0.08884086,  0.08977518]]),
+ array([[-0.06191752, -0.0654019 ,  0.12731942],
+        [-0.01291479, -0.11174937,  0.12466416],
+        [ 0.00272195, -0.113053  ,  0.11033104],
+        [-0.00093432, -0.08884086,  0.08977518]]))</code></pre></div></div></div></div>
+
+<p>一致が確認できました。</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../MatMulMean/" title="2.10 MatMulMean"><span>Previous</span></a></div>
+        <div class="next"><a href="../EmbeddingDot/" title="2.12 EmbeddingDot"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

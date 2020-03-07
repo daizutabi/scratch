@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>6.3 Batch Normalization &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2"><button class="section nav-item hide">Ivoryライブラリ</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">レイヤ実装</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/MatMulMean/">2.10 MatMulMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/レイヤ実装/Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Ivoryライブラリ/拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2 current"><button class="section nav-item">Deep Learningの理論と実践</button>
+<ul class="subnav">
+    <li class="toctree-l3"><a class="nav-item" href="../../0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">6章 学習に関するテクニック</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">6.3 Batch Normalization</a>
+<ul class="subnav">
+<li class="toctree-l5"><a class="nav-item toc" href="#631-batch-normalization">6.3.1 Batch Normalizationの評価</a></li>
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">自然言語処理編</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../自然言語処理編/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../重みの初期値/">&laquo; Previous</a></div>
+    <div class="next"><a href="../正則化/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>Deep Learningの理論と実践 &raquo; </li><li>6章 学習に関するテクニック</li>
+</ul>
+</nav>
+                <div id="content"><style>
+ .vega-actions a { margin-right: 12px; color: #757575; font-weight: normal; font-size: 13px; } .error { color: red; } </style>
+<script src="https://cdn.jsdelivr.net/npm/vega@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-lite@2.6.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+<h2 id="63-batch-normalization"><span class="pheasant-header"><span class="header"><span class="number">6.3</span> <span class="title">Batch Normalization</span></span></span></h2>
+<p><a href="https://www.oreilly.co.jp/books/9784873117584/">「ゼロから作るDeep Learning」</a> 6章3節の内容を学習しながら、IvoryライブラリでBatch Normalizationの評価を行います。「ゼロから作るDeep Learning」では、次節から学習の効率化のために<code>Trainer</code>クラスを導入しますが、ここでは一足先に活用していきます。</p>
+<h3 id="631-batch-normalization"><span class="pheasant-header"><span class="header"><span class="number">6.3.1</span> <span class="title">Batch Normalizationの評価</span></span></span></h3>
+<p>「ゼロから作るDeep Learning」のサンプルコードを参考にしながらIvoryライブラリでの評価を行います。「拡張版の全結合による多層ニューラルネットワーク」は<code>common/multi_layer_net_extend.py</code>の中の<code>MultiLayerNetExtend</code>クラスで定義されています。また、実際の訓練は、<code>ch06/batch_norm_test.py</code>で実行されます。</p>
+<p>データセットを用意します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.datasets.mnist import load_dataset
+
+data = load_dataset(train_only=True)
+data.length = 1000  # データセットの大きさを制限します。
+data.batch_size = 100
+data.epochs = 20
+data.random = True
+data</code></pre></div>
+<div class="report"><p><span class="count">[1]</span>
+<span class="start">2019-06-12 17:36:38</span> (<span class="time">1.92s</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.92s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">mnist_train(batch_size=100, epochs=20, len=10, column=0, size=(1000,))</code></pre></div></div></div></div>
+
+<p>Batch Normalizationレイヤの有無を指定して、ネットワークを作り分ける関数を定義します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">def create_net(batch_norm):
+    bn = (&#34;batch_normalization&#34;,) if batch_norm else ()
+    return [
+        (&#34;input&#34;, 784),
+        (5, &#34;affine&#34;, 100, *bn, &#34;relu&#34;),
+        (&#34;affine&#34;, 10, &#34;softmax_cross_entropy&#34;),
+    ]
+
+net = create_net(True)
+net</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-12 17:36:40</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.95s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">[(&#39;input&#39;, 784),
+ (5, &#39;affine&#39;, 100, &#39;batch_normalization&#39;, &#39;relu&#39;),
+ (&#39;affine&#39;, 10, &#39;softmax_cross_entropy&#39;)]</code></pre></div></div></div></div>
+
+<p>次に導入する<code>Trainer</code>クラスは上述のようなレイヤ表現を引数にとる<code>ivory.common.trainer</code>モジュールの<code>sequential</code>関数で作成できます。ちょうど<code>Layer</code>インスタンスのリストを<code>ivory.common.layer</code>モジュールの<code>sequential</code>関数で作成していたのと同じです。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.trainer import sequential
+
+trainer = sequential(net)
+print(trainer.model.losses)
+print(trainer.optimizer)</code></pre></div>
+<div class="report"><p><span class="count">[3]</span>
+<span class="start">2019-06-12 17:36:40</span> (<span class="time">31.2ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">1.98s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">[&lt;Loss(&#39;SoftmaxCrossEntropy.1.loss&#39;, ()) at 0x21a10f25b38&gt;]
+SGD(learning_rate=0.01, name=&#39;SGD&#39;)</code></pre></div></div></div></div>
+
+<p><code>Trainer</code>インスタンスのレイヤパラメータを初期化するには、<code>init</code>メソッドを呼び出します。オプショナルの<code>std</code>キーワード引数を指定すると、標準偏差を設定できます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">W = trainer.model.weights[0]
+print(W.d.std())
+trainer.init(std=100)
+print(W.d.std())
+trainer.init(std=&#34;he&#34;)
+print(W.d.std())</code></pre></div>
+<div class="report"><p><span class="count">[4]</span>
+<span class="start">2019-06-12 17:36:40</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.02s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">0.050397325
+100.40856
+0.050782025</code></pre></div></div></div></div>
+
+<p>BatchNormalizationレイヤの<code>train</code>状態を見てみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">bn = trainer.model.layers[1]
+bn.train.d</code></pre></div>
+<div class="report"><p><span class="count">[5]</span>
+<span class="start">2019-06-12 17:36:40</span> (<span class="time">15.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.03s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">True</code></pre></div></div></div></div>
+
+<p><code>False</code>にした後初期化します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">bn.train.d = False
+trainer.init(std=&#34;he&#34;)
+bn.train.d</code></pre></div>
+<div class="report"><p><span class="count">[6]</span>
+<span class="start">2019-06-12 17:36:40</span> (<span class="time">31.2ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.06s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">True</code></pre></div></div></div></div>
+
+<p><code>True</code>に戻っています。</p>
+<p>実際に学習してみます。<code>init</code>メソッドは自分自身を返すので、呼び出しをチェインできます。<code>fit</code>メソッドも同様に訓練データの設定をした後、自分自身を返します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">net = create_net(True)
+trainer = sequential(net, metrics=[&#34;accuracy&#34;]).init(std=0.1)
+trainer = trainer.fit(data, epoch_data=data[:])
+trainer</code></pre></div>
+<div class="report"><p><span class="count">[7]</span>
+<span class="start">2019-06-12 17:36:40</span> (<span class="time">46.8ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.11s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">Trainer(inputs=[(784,), ()], optimizer=&#39;SGD&#39;, metrics=[&#39;accuracy&#39;])</code></pre></div></div></div></div>
+
+<p>実際の訓練はイタレータを作って行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">it = iter(trainer)
+print(next(it))
+print(next(it))
+print(next(it))</code></pre></div>
+<div class="report"><p><span class="count">[8]</span>
+<span class="start">2019-06-12 17:36:40</span> (<span class="time">188ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">2.30s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">(0, 0.111)
+(1, 0.146)
+(2, 0.24)</code></pre></div></div></div></div>
+
+<p><code>to_frame</code>メソッドは訓練を行った後に結果をデータフレームで返します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">df = trainer.to_frame()
+df.tail()</code></pre></div>
+<div class="report"><p><span class="count">[9]</span>
+<span class="start">2019-06-12 17:36:41</span> (<span class="time">1.47s</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">3.77s</span>)</span></p></div></div>
+
+<div class="cell jupyter display"><div class="content"><table class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>epoch</th>
+      <th>accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>16</th>
+      <td>16</td>
+      <td>0.861</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>17</td>
+      <td>0.868</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>18</td>
+      <td>0.881</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>19</td>
+      <td>0.886</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>20</td>
+      <td>0.890</td>
+    </tr>
+  </tbody>
+</table></div></div></div></div>
+
+<p>重みの初期値の標準偏差、および、Batch Normalizationレイヤの有無をモデルのハイパーパラメータとします。これらをマトリックスにして学習の実験を行います。これには、<code>ivory.core.trainer</code>モジュールの<code>product</code>メソッドを使います。<code>product</code>メソッドは、標準モジュール<code>itertools</code>の<code>product</code>関数のように動作します。第1引数は、第2引数以降を受け取って<code>Trainer</code>インスタンスを返す関数です。戻り値は<code>Product</code>クラスのインスタンスであり、通常の<code>Trainer</code>インスタンスと同様に<code>fit</code>メソッドを持ちます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+from ivory.core.trainer import product
+
+def trainer(std, batch_norm):
+    net = create_net(batch_norm)
+    return sequential(net, metrics=[&#34;accuracy&#34;]).init(std=std)
+
+stds = np.logspace(0, -4, num=16)
+prod = product(trainer, stds, [True, False])
+prod = prod.fit(data, epoch_data=data[:])
+prod</code></pre></div>
+<div class="report"><p><span class="count">[10]</span>
+<span class="start">2019-06-12 17:36:42</span> (<span class="time">31.3ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">3.80s</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">Product(iterables=(&lt;16&gt;, &lt;2&gt;))</code></pre></div></div></div></div>
+
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">it = iter(prod)
+print(next(it))
+print(next(it))
+print(next(it))</code></pre></div>
+<div class="report"><p><span class="count">[11]</span>
+<span class="start">2019-06-12 17:36:42</span> (<span class="time">203ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">4.00s</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">(1.0, True, 0, 0.159)
+(1.0, True, 1, 0.159)
+(1.0, True, 2, 0.164)</code></pre></div></div></div></div>
+
+<p>訓練を実行し、結果をデータフレームで返します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">df = prod.to_frame(columns=[&#34;std&#34;, &#34;bn&#34;])
+df.tail()</code></pre></div>
+<div class="report"><p><span class="count">[12]</span>
+<span class="start">2019-06-12 17:36:42</span> (<span class="time">36.5s</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">40.5s</span>)</span></p></div></div><div class="cell jupyter stderr"><div class="code">
+      <pre><code class="nohighlight">C:\Users\daizu\Documents\GitHub\ivory\ivory\layers\affine.py:11: RuntimeWarning: overflow encountered in matmul
+  self.y.d = self.x.d @ self.W.d + self.b.d
+C:\Users\daizu\Documents\GitHub\ivory\ivory\layers\affine.py:11: RuntimeWarning: invalid value encountered in matmul
+  self.y.d = self.x.d @ self.W.d + self.b.d
+C:\Users\daizu\Documents\GitHub\ivory\ivory\layers\activation.py:19: RuntimeWarning: invalid value encountered in less_equal
+  self.mask = self.x.d &lt;= 0
+C:\Users\daizu\Documents\GitHub\ivory\ivory\layers\affine.py:16: RuntimeWarning: invalid value encountered in matmul
+  self.W.g = self.x.d.T @ self.y.g + self.weight_decay.d * self.W.d</code></pre></div></div>
+
+<div class="cell jupyter display"><div class="content"><table class="dataframe">
+  <thead>
+    <tr>
+      <th></th>
+      <th>std</th>
+      <th>bn</th>
+      <th>epoch</th>
+      <th>accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>667</th>
+      <td>0.0001</td>
+      <td>False</td>
+      <td>16</td>
+      <td>0.117</td>
+    </tr>
+    <tr>
+      <th>668</th>
+      <td>0.0001</td>
+      <td>False</td>
+      <td>17</td>
+      <td>0.117</td>
+    </tr>
+    <tr>
+      <th>669</th>
+      <td>0.0001</td>
+      <td>False</td>
+      <td>18</td>
+      <td>0.117</td>
+    </tr>
+    <tr>
+      <th>670</th>
+      <td>0.0001</td>
+      <td>False</td>
+      <td>19</td>
+      <td>0.117</td>
+    </tr>
+    <tr>
+      <th>671</th>
+      <td>0.0001</td>
+      <td>False</td>
+      <td>20</td>
+      <td>0.117</td>
+    </tr>
+  </tbody>
+</table></div></div></div></div>
+
+<p>可視化します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import altair as alt
+
+def plot(std, df):
+    y = alt.Y(&#34;accuracy&#34;, scale=alt.Scale(domain=[0, 1]))
+    return (
+        alt.Chart(df)
+        .mark_line()
+        .encode(x=&#34;epoch&#34;, y=y, color=&#34;bn&#34;)
+        .properties(width=80, height=80, title=f&#34;std={std:.05f}&#34;)
+    )
+
+charts = [plot(*x) for x in df.groupby(&#34;std&#34;)][::-1]
+alt.vconcat(*(alt.hconcat(*charts[k : k + 4]) for k in range(0, 16, 4)))</code></pre></div>
+<div class="report"><p><span class="count">[13]</span>
+<span class="start">2019-06-12 17:37:19</span> (<span class="time">297ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">40.8s</span>)</span></p></div></div>
+
+<div class="cell jupyter display"><div class="content"><div id="pheasant-altair-1"><script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    var spec = {"config": {"view": {"width": 400, "height": 300}}, "vconcat": [{"hconcat": [{"data": {"name": "data-153689b34ce1c06716b9dac2dedb1c1b"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=1.00000", "width": 80}, {"data": {"name": "data-ed2558a076c16adab3c384249fac9ff5"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.54117", "width": 80}, {"data": {"name": "data-a2ec418116f054c305543f935b465738"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.29286", "width": 80}, {"data": {"name": "data-bfe63d86572d2f32efdaf2988f363d3d"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.15849", "width": 80}]}, {"hconcat": [{"data": {"name": "data-7741eb6cbda2b3d2d6241942ba725fd0"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.08577", "width": 80}, {"data": {"name": "data-e892c25b5006c28091631ae12ad6181d"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.04642", "width": 80}, {"data": {"name": "data-ce723458fe97a41db7c658ab3c55dae9"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.02512", "width": 80}, {"data": {"name": "data-e420fd225d387dcce7c260f1419d8f6d"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.01359", "width": 80}]}, {"hconcat": [{"data": {"name": "data-4a6a31d5bd8e17f4ea43b9221d6877a0"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.00736", "width": 80}, {"data": {"name": "data-2198f49bab1f9cc12b004df8e395cc33"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.00398", "width": 80}, {"data": {"name": "data-bb7024463235925764bca64161312744"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.00215", "width": 80}, {"data": {"name": "data-33d662f48b79feb3e018998e183eb3e5"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.00117", "width": 80}]}, {"hconcat": [{"data": {"name": "data-b7c06d7da64c4c6ec92948662fe6d153"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.00063", "width": 80}, {"data": {"name": "data-2b053518a6270452058468cabacc7f3a"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.00034", "width": 80}, {"data": {"name": "data-a9eaf2f591b0880b1efbb985b450eae5"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.00018", "width": 80}, {"data": {"name": "data-78c119943b34ecf65c3e8d13dc7da10d"}, "mark": "line", "encoding": {"color": {"type": "nominal", "field": "bn"}, "x": {"type": "quantitative", "field": "epoch"}, "y": {"type": "quantitative", "field": "accuracy", "scale": {"domain": [0, 1]}}}, "height": 80, "title": "std=0.00010", "width": 80}]}], "$schema": "https://vega.github.io/schema/vega-lite/v2.6.0.json", "datasets": {"data-153689b34ce1c06716b9dac2dedb1c1b": [{"std": 1.0, "bn": true, "epoch": 0, "accuracy": 0.123}, {"std": 1.0, "bn": true, "epoch": 1, "accuracy": 0.115}, {"std": 1.0, "bn": true, "epoch": 2, "accuracy": 0.144}, {"std": 1.0, "bn": true, "epoch": 3, "accuracy": 0.15}, {"std": 1.0, "bn": true, "epoch": 4, "accuracy": 0.171}, {"std": 1.0, "bn": true, "epoch": 5, "accuracy": 0.19}, {"std": 1.0, "bn": true, "epoch": 6, "accuracy": 0.214}, {"std": 1.0, "bn": true, "epoch": 7, "accuracy": 0.236}, {"std": 1.0, "bn": true, "epoch": 8, "accuracy": 0.261}, {"std": 1.0, "bn": true, "epoch": 9, "accuracy": 0.28}, {"std": 1.0, "bn": true, "epoch": 10, "accuracy": 0.295}, {"std": 1.0, "bn": true, "epoch": 11, "accuracy": 0.314}, {"std": 1.0, "bn": true, "epoch": 12, "accuracy": 0.323}, {"std": 1.0, "bn": true, "epoch": 13, "accuracy": 0.34}, {"std": 1.0, "bn": true, "epoch": 14, "accuracy": 0.354}, {"std": 1.0, "bn": true, "epoch": 15, "accuracy": 0.364}, {"std": 1.0, "bn": true, "epoch": 16, "accuracy": 0.374}, {"std": 1.0, "bn": true, "epoch": 17, "accuracy": 0.393}, {"std": 1.0, "bn": true, "epoch": 18, "accuracy": 0.409}, {"std": 1.0, "bn": true, "epoch": 19, "accuracy": 0.413}, {"std": 1.0, "bn": true, "epoch": 20, "accuracy": 0.428}, {"std": 1.0, "bn": false, "epoch": 0, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 1, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 2, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 3, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 4, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 5, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 6, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 7, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 8, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 9, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 10, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 11, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 12, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 13, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 14, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 15, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 16, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 17, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 18, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 19, "accuracy": 0.097}, {"std": 1.0, "bn": false, "epoch": 20, "accuracy": 0.097}], "data-ed2558a076c16adab3c384249fac9ff5": [{"std": 0.5411695265464637, "bn": true, "epoch": 0, "accuracy": 0.076}, {"std": 0.5411695265464637, "bn": true, "epoch": 1, "accuracy": 0.085}, {"std": 0.5411695265464637, "bn": true, "epoch": 2, "accuracy": 0.12}, {"std": 0.5411695265464637, "bn": true, "epoch": 3, "accuracy": 0.132}, {"std": 0.5411695265464637, "bn": true, "epoch": 4, "accuracy": 0.146}, {"std": 0.5411695265464637, "bn": true, "epoch": 5, "accuracy": 0.16}, {"std": 0.5411695265464637, "bn": true, "epoch": 6, "accuracy": 0.182}, {"std": 0.5411695265464637, "bn": true, "epoch": 7, "accuracy": 0.202}, {"std": 0.5411695265464637, "bn": true, "epoch": 8, "accuracy": 0.224}, {"std": 0.5411695265464637, "bn": true, "epoch": 9, "accuracy": 0.25}, {"std": 0.5411695265464637, "bn": true, "epoch": 10, "accuracy": 0.284}, {"std": 0.5411695265464637, "bn": true, "epoch": 11, "accuracy": 0.299}, {"std": 0.5411695265464637, "bn": true, "epoch": 12, "accuracy": 0.331}, {"std": 0.5411695265464637, "bn": true, "epoch": 13, "accuracy": 0.345}, {"std": 0.5411695265464637, "bn": true, "epoch": 14, "accuracy": 0.379}, {"std": 0.5411695265464637, "bn": true, "epoch": 15, "accuracy": 0.402}, {"std": 0.5411695265464637, "bn": true, "epoch": 16, "accuracy": 0.413}, {"std": 0.5411695265464637, "bn": true, "epoch": 17, "accuracy": 0.431}, {"std": 0.5411695265464637, "bn": true, "epoch": 18, "accuracy": 0.453}, {"std": 0.5411695265464637, "bn": true, "epoch": 19, "accuracy": 0.469}, {"std": 0.5411695265464637, "bn": true, "epoch": 20, "accuracy": 0.486}, {"std": 0.5411695265464637, "bn": false, "epoch": 0, "accuracy": 0.105}, {"std": 0.5411695265464637, "bn": false, "epoch": 1, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 2, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 3, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 4, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 5, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 6, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 7, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 8, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 9, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 10, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 11, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 12, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 13, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 14, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 15, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 16, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 17, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 18, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 19, "accuracy": 0.097}, {"std": 0.5411695265464637, "bn": false, "epoch": 20, "accuracy": 0.097}], "data-a2ec418116f054c305543f935b465738": [{"std": 0.2928644564625237, "bn": true, "epoch": 0, "accuracy": 0.089}, {"std": 0.2928644564625237, "bn": true, "epoch": 1, "accuracy": 0.073}, {"std": 0.2928644564625237, "bn": true, "epoch": 2, "accuracy": 0.091}, {"std": 0.2928644564625237, "bn": true, "epoch": 3, "accuracy": 0.127}, {"std": 0.2928644564625237, "bn": true, "epoch": 4, "accuracy": 0.168}, {"std": 0.2928644564625237, "bn": true, "epoch": 5, "accuracy": 0.207}, {"std": 0.2928644564625237, "bn": true, "epoch": 6, "accuracy": 0.244}, {"std": 0.2928644564625237, "bn": true, "epoch": 7, "accuracy": 0.29}, {"std": 0.2928644564625237, "bn": true, "epoch": 8, "accuracy": 0.33}, {"std": 0.2928644564625237, "bn": true, "epoch": 9, "accuracy": 0.374}, {"std": 0.2928644564625237, "bn": true, "epoch": 10, "accuracy": 0.398}, {"std": 0.2928644564625237, "bn": true, "epoch": 11, "accuracy": 0.429}, {"std": 0.2928644564625237, "bn": true, "epoch": 12, "accuracy": 0.461}, {"std": 0.2928644564625237, "bn": true, "epoch": 13, "accuracy": 0.497}, {"std": 0.2928644564625237, "bn": true, "epoch": 14, "accuracy": 0.514}, {"std": 0.2928644564625237, "bn": true, "epoch": 15, "accuracy": 0.532}, {"std": 0.2928644564625237, "bn": true, "epoch": 16, "accuracy": 0.561}, {"std": 0.2928644564625237, "bn": true, "epoch": 17, "accuracy": 0.578}, {"std": 0.2928644564625237, "bn": true, "epoch": 18, "accuracy": 0.596}, {"std": 0.2928644564625237, "bn": true, "epoch": 19, "accuracy": 0.608}, {"std": 0.2928644564625237, "bn": true, "epoch": 20, "accuracy": 0.615}, {"std": 0.2928644564625237, "bn": false, "epoch": 0, "accuracy": 0.163}, {"std": 0.2928644564625237, "bn": false, "epoch": 1, "accuracy": 0.352}, {"std": 0.2928644564625237, "bn": false, "epoch": 2, "accuracy": 0.491}, {"std": 0.2928644564625237, "bn": false, "epoch": 3, "accuracy": 0.588}, {"std": 0.2928644564625237, "bn": false, "epoch": 4, "accuracy": 0.665}, {"std": 0.2928644564625237, "bn": false, "epoch": 5, "accuracy": 0.737}, {"std": 0.2928644564625237, "bn": false, "epoch": 6, "accuracy": 0.765}, {"std": 0.2928644564625237, "bn": false, "epoch": 7, "accuracy": 0.815}, {"std": 0.2928644564625237, "bn": false, "epoch": 8, "accuracy": 0.859}, {"std": 0.2928644564625237, "bn": false, "epoch": 9, "accuracy": 0.882}, {"std": 0.2928644564625237, "bn": false, "epoch": 10, "accuracy": 0.912}, {"std": 0.2928644564625237, "bn": false, "epoch": 11, "accuracy": 0.924}, {"std": 0.2928644564625237, "bn": false, "epoch": 12, "accuracy": 0.945}, {"std": 0.2928644564625237, "bn": false, "epoch": 13, "accuracy": 0.957}, {"std": 0.2928644564625237, "bn": false, "epoch": 14, "accuracy": 0.965}, {"std": 0.2928644564625237, "bn": false, "epoch": 15, "accuracy": 0.97}, {"std": 0.2928644564625237, "bn": false, "epoch": 16, "accuracy": 0.974}, {"std": 0.2928644564625237, "bn": false, "epoch": 17, "accuracy": 0.975}, {"std": 0.2928644564625237, "bn": false, "epoch": 18, "accuracy": 0.983}, {"std": 0.2928644564625237, "bn": false, "epoch": 19, "accuracy": 0.986}, {"std": 0.2928644564625237, "bn": false, "epoch": 20, "accuracy": 0.987}], "data-bfe63d86572d2f32efdaf2988f363d3d": [{"std": 0.15848931924611134, "bn": true, "epoch": 0, "accuracy": 0.084}, {"std": 0.15848931924611134, "bn": true, "epoch": 1, "accuracy": 0.133}, {"std": 0.15848931924611134, "bn": true, "epoch": 2, "accuracy": 0.209}, {"std": 0.15848931924611134, "bn": true, "epoch": 3, "accuracy": 0.283}, {"std": 0.15848931924611134, "bn": true, "epoch": 4, "accuracy": 0.34}, {"std": 0.15848931924611134, "bn": true, "epoch": 5, "accuracy": 0.404}, {"std": 0.15848931924611134, "bn": true, "epoch": 6, "accuracy": 0.45}, {"std": 0.15848931924611134, "bn": true, "epoch": 7, "accuracy": 0.485}, {"std": 0.15848931924611134, "bn": true, "epoch": 8, "accuracy": 0.521}, {"std": 0.15848931924611134, "bn": true, "epoch": 9, "accuracy": 0.553}, {"std": 0.15848931924611134, "bn": true, "epoch": 10, "accuracy": 0.588}, {"std": 0.15848931924611134, "bn": true, "epoch": 11, "accuracy": 0.619}, {"std": 0.15848931924611134, "bn": true, "epoch": 12, "accuracy": 0.643}, {"std": 0.15848931924611134, "bn": true, "epoch": 13, "accuracy": 0.663}, {"std": 0.15848931924611134, "bn": true, "epoch": 14, "accuracy": 0.684}, {"std": 0.15848931924611134, "bn": true, "epoch": 15, "accuracy": 0.708}, {"std": 0.15848931924611134, "bn": true, "epoch": 16, "accuracy": 0.738}, {"std": 0.15848931924611134, "bn": true, "epoch": 17, "accuracy": 0.754}, {"std": 0.15848931924611134, "bn": true, "epoch": 18, "accuracy": 0.772}, {"std": 0.15848931924611134, "bn": true, "epoch": 19, "accuracy": 0.782}, {"std": 0.15848931924611134, "bn": true, "epoch": 20, "accuracy": 0.798}, {"std": 0.15848931924611134, "bn": false, "epoch": 0, "accuracy": 0.118}, {"std": 0.15848931924611134, "bn": false, "epoch": 1, "accuracy": 0.229}, {"std": 0.15848931924611134, "bn": false, "epoch": 2, "accuracy": 0.396}, {"std": 0.15848931924611134, "bn": false, "epoch": 3, "accuracy": 0.496}, {"std": 0.15848931924611134, "bn": false, "epoch": 4, "accuracy": 0.552}, {"std": 0.15848931924611134, "bn": false, "epoch": 5, "accuracy": 0.599}, {"std": 0.15848931924611134, "bn": false, "epoch": 6, "accuracy": 0.652}, {"std": 0.15848931924611134, "bn": false, "epoch": 7, "accuracy": 0.669}, {"std": 0.15848931924611134, "bn": false, "epoch": 8, "accuracy": 0.702}, {"std": 0.15848931924611134, "bn": false, "epoch": 9, "accuracy": 0.74}, {"std": 0.15848931924611134, "bn": false, "epoch": 10, "accuracy": 0.746}, {"std": 0.15848931924611134, "bn": false, "epoch": 11, "accuracy": 0.772}, {"std": 0.15848931924611134, "bn": false, "epoch": 12, "accuracy": 0.769}, {"std": 0.15848931924611134, "bn": false, "epoch": 13, "accuracy": 0.799}, {"std": 0.15848931924611134, "bn": false, "epoch": 14, "accuracy": 0.797}, {"std": 0.15848931924611134, "bn": false, "epoch": 15, "accuracy": 0.815}, {"std": 0.15848931924611134, "bn": false, "epoch": 16, "accuracy": 0.822}, {"std": 0.15848931924611134, "bn": false, "epoch": 17, "accuracy": 0.841}, {"std": 0.15848931924611134, "bn": false, "epoch": 18, "accuracy": 0.845}, {"std": 0.15848931924611134, "bn": false, "epoch": 19, "accuracy": 0.849}, {"std": 0.15848931924611134, "bn": false, "epoch": 20, "accuracy": 0.863}], "data-7741eb6cbda2b3d2d6241942ba725fd0": [{"std": 0.08576958985908942, "bn": true, "epoch": 0, "accuracy": 0.071}, {"std": 0.08576958985908942, "bn": true, "epoch": 1, "accuracy": 0.13}, {"std": 0.08576958985908942, "bn": true, "epoch": 2, "accuracy": 0.261}, {"std": 0.08576958985908942, "bn": true, "epoch": 3, "accuracy": 0.413}, {"std": 0.08576958985908942, "bn": true, "epoch": 4, "accuracy": 0.488}, {"std": 0.08576958985908942, "bn": true, "epoch": 5, "accuracy": 0.542}, {"std": 0.08576958985908942, "bn": true, "epoch": 6, "accuracy": 0.594}, {"std": 0.08576958985908942, "bn": true, "epoch": 7, "accuracy": 0.637}, {"std": 0.08576958985908942, "bn": true, "epoch": 8, "accuracy": 0.679}, {"std": 0.08576958985908942, "bn": true, "epoch": 9, "accuracy": 0.716}, {"std": 0.08576958985908942, "bn": true, "epoch": 10, "accuracy": 0.746}, {"std": 0.08576958985908942, "bn": true, "epoch": 11, "accuracy": 0.772}, {"std": 0.08576958985908942, "bn": true, "epoch": 12, "accuracy": 0.786}, {"std": 0.08576958985908942, "bn": true, "epoch": 13, "accuracy": 0.823}, {"std": 0.08576958985908942, "bn": true, "epoch": 14, "accuracy": 0.837}, {"std": 0.08576958985908942, "bn": true, "epoch": 15, "accuracy": 0.844}, {"std": 0.08576958985908942, "bn": true, "epoch": 16, "accuracy": 0.849}, {"std": 0.08576958985908942, "bn": true, "epoch": 17, "accuracy": 0.858}, {"std": 0.08576958985908942, "bn": true, "epoch": 18, "accuracy": 0.874}, {"std": 0.08576958985908942, "bn": true, "epoch": 19, "accuracy": 0.882}, {"std": 0.08576958985908942, "bn": true, "epoch": 20, "accuracy": 0.887}, {"std": 0.08576958985908942, "bn": false, "epoch": 0, "accuracy": 0.11}, {"std": 0.08576958985908942, "bn": false, "epoch": 1, "accuracy": 0.11}, {"std": 0.08576958985908942, "bn": false, "epoch": 2, "accuracy": 0.125}, {"std": 0.08576958985908942, "bn": false, "epoch": 3, "accuracy": 0.136}, {"std": 0.08576958985908942, "bn": false, "epoch": 4, "accuracy": 0.148}, {"std": 0.08576958985908942, "bn": false, "epoch": 5, "accuracy": 0.153}, {"std": 0.08576958985908942, "bn": false, "epoch": 6, "accuracy": 0.161}, {"std": 0.08576958985908942, "bn": false, "epoch": 7, "accuracy": 0.173}, {"std": 0.08576958985908942, "bn": false, "epoch": 8, "accuracy": 0.187}, {"std": 0.08576958985908942, "bn": false, "epoch": 9, "accuracy": 0.189}, {"std": 0.08576958985908942, "bn": false, "epoch": 10, "accuracy": 0.213}, {"std": 0.08576958985908942, "bn": false, "epoch": 11, "accuracy": 0.225}, {"std": 0.08576958985908942, "bn": false, "epoch": 12, "accuracy": 0.232}, {"std": 0.08576958985908942, "bn": false, "epoch": 13, "accuracy": 0.248}, {"std": 0.08576958985908942, "bn": false, "epoch": 14, "accuracy": 0.258}, {"std": 0.08576958985908942, "bn": false, "epoch": 15, "accuracy": 0.265}, {"std": 0.08576958985908942, "bn": false, "epoch": 16, "accuracy": 0.263}, {"std": 0.08576958985908942, "bn": false, "epoch": 17, "accuracy": 0.265}, {"std": 0.08576958985908942, "bn": false, "epoch": 18, "accuracy": 0.276}, {"std": 0.08576958985908942, "bn": false, "epoch": 19, "accuracy": 0.278}, {"std": 0.08576958985908942, "bn": false, "epoch": 20, "accuracy": 0.283}], "data-e892c25b5006c28091631ae12ad6181d": [{"std": 0.046415888336127795, "bn": true, "epoch": 0, "accuracy": 0.146}, {"std": 0.046415888336127795, "bn": true, "epoch": 1, "accuracy": 0.192}, {"std": 0.046415888336127795, "bn": true, "epoch": 2, "accuracy": 0.389}, {"std": 0.046415888336127795, "bn": true, "epoch": 3, "accuracy": 0.526}, {"std": 0.046415888336127795, "bn": true, "epoch": 4, "accuracy": 0.628}, {"std": 0.046415888336127795, "bn": true, "epoch": 5, "accuracy": 0.668}, {"std": 0.046415888336127795, "bn": true, "epoch": 6, "accuracy": 0.705}, {"std": 0.046415888336127795, "bn": true, "epoch": 7, "accuracy": 0.745}, {"std": 0.046415888336127795, "bn": true, "epoch": 8, "accuracy": 0.77}, {"std": 0.046415888336127795, "bn": true, "epoch": 9, "accuracy": 0.813}, {"std": 0.046415888336127795, "bn": true, "epoch": 10, "accuracy": 0.828}, {"std": 0.046415888336127795, "bn": true, "epoch": 11, "accuracy": 0.847}, {"std": 0.046415888336127795, "bn": true, "epoch": 12, "accuracy": 0.866}, {"std": 0.046415888336127795, "bn": true, "epoch": 13, "accuracy": 0.883}, {"std": 0.046415888336127795, "bn": true, "epoch": 14, "accuracy": 0.893}, {"std": 0.046415888336127795, "bn": true, "epoch": 15, "accuracy": 0.905}, {"std": 0.046415888336127795, "bn": true, "epoch": 16, "accuracy": 0.91}, {"std": 0.046415888336127795, "bn": true, "epoch": 17, "accuracy": 0.92}, {"std": 0.046415888336127795, "bn": true, "epoch": 18, "accuracy": 0.928}, {"std": 0.046415888336127795, "bn": true, "epoch": 19, "accuracy": 0.937}, {"std": 0.046415888336127795, "bn": true, "epoch": 20, "accuracy": 0.946}, {"std": 0.046415888336127795, "bn": false, "epoch": 0, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 1, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 2, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 3, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 4, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 5, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 6, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 7, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 8, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 9, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 10, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 11, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 12, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 13, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 14, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 15, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 16, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 17, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 18, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 19, "accuracy": 0.116}, {"std": 0.046415888336127795, "bn": false, "epoch": 20, "accuracy": 0.116}], "data-ce723458fe97a41db7c658ab3c55dae9": [{"std": 0.025118864315095794, "bn": true, "epoch": 0, "accuracy": 0.081}, {"std": 0.025118864315095794, "bn": true, "epoch": 1, "accuracy": 0.241}, {"std": 0.025118864315095794, "bn": true, "epoch": 2, "accuracy": 0.619}, {"std": 0.025118864315095794, "bn": true, "epoch": 3, "accuracy": 0.72}, {"std": 0.025118864315095794, "bn": true, "epoch": 4, "accuracy": 0.743}, {"std": 0.025118864315095794, "bn": true, "epoch": 5, "accuracy": 0.786}, {"std": 0.025118864315095794, "bn": true, "epoch": 6, "accuracy": 0.805}, {"std": 0.025118864315095794, "bn": true, "epoch": 7, "accuracy": 0.842}, {"std": 0.025118864315095794, "bn": true, "epoch": 8, "accuracy": 0.867}, {"std": 0.025118864315095794, "bn": true, "epoch": 9, "accuracy": 0.898}, {"std": 0.025118864315095794, "bn": true, "epoch": 10, "accuracy": 0.921}, {"std": 0.025118864315095794, "bn": true, "epoch": 11, "accuracy": 0.936}, {"std": 0.025118864315095794, "bn": true, "epoch": 12, "accuracy": 0.952}, {"std": 0.025118864315095794, "bn": true, "epoch": 13, "accuracy": 0.967}, {"std": 0.025118864315095794, "bn": true, "epoch": 14, "accuracy": 0.971}, {"std": 0.025118864315095794, "bn": true, "epoch": 15, "accuracy": 0.976}, {"std": 0.025118864315095794, "bn": true, "epoch": 16, "accuracy": 0.979}, {"std": 0.025118864315095794, "bn": true, "epoch": 17, "accuracy": 0.986}, {"std": 0.025118864315095794, "bn": true, "epoch": 18, "accuracy": 0.987}, {"std": 0.025118864315095794, "bn": true, "epoch": 19, "accuracy": 0.992}, {"std": 0.025118864315095794, "bn": true, "epoch": 20, "accuracy": 0.992}, {"std": 0.025118864315095794, "bn": false, "epoch": 0, "accuracy": 0.116}, {"std": 0.025118864315095794, "bn": false, "epoch": 1, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 2, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 3, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 4, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 5, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 6, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 7, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 8, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 9, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 10, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 11, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 12, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 13, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 14, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 15, "accuracy": 0.117}, {"std": 0.025118864315095794, "bn": false, "epoch": 16, "accuracy": 0.116}, {"std": 0.025118864315095794, "bn": false, "epoch": 17, "accuracy": 0.186}, {"std": 0.025118864315095794, "bn": false, "epoch": 18, "accuracy": 0.116}, {"std": 0.025118864315095794, "bn": false, "epoch": 19, "accuracy": 0.116}, {"std": 0.025118864315095794, "bn": false, "epoch": 20, "accuracy": 0.116}], "data-e420fd225d387dcce7c260f1419d8f6d": [{"std": 0.013593563908785255, "bn": true, "epoch": 0, "accuracy": 0.146}, {"std": 0.013593563908785255, "bn": true, "epoch": 1, "accuracy": 0.453}, {"std": 0.013593563908785255, "bn": true, "epoch": 2, "accuracy": 0.762}, {"std": 0.013593563908785255, "bn": true, "epoch": 3, "accuracy": 0.83}, {"std": 0.013593563908785255, "bn": true, "epoch": 4, "accuracy": 0.855}, {"std": 0.013593563908785255, "bn": true, "epoch": 5, "accuracy": 0.89}, {"std": 0.013593563908785255, "bn": true, "epoch": 6, "accuracy": 0.928}, {"std": 0.013593563908785255, "bn": true, "epoch": 7, "accuracy": 0.945}, {"std": 0.013593563908785255, "bn": true, "epoch": 8, "accuracy": 0.956}, {"std": 0.013593563908785255, "bn": true, "epoch": 9, "accuracy": 0.973}, {"std": 0.013593563908785255, "bn": true, "epoch": 10, "accuracy": 0.977}, {"std": 0.013593563908785255, "bn": true, "epoch": 11, "accuracy": 0.984}, {"std": 0.013593563908785255, "bn": true, "epoch": 12, "accuracy": 0.991}, {"std": 0.013593563908785255, "bn": true, "epoch": 13, "accuracy": 0.993}, {"std": 0.013593563908785255, "bn": true, "epoch": 14, "accuracy": 0.997}, {"std": 0.013593563908785255, "bn": true, "epoch": 15, "accuracy": 0.996}, {"std": 0.013593563908785255, "bn": true, "epoch": 16, "accuracy": 0.997}, {"std": 0.013593563908785255, "bn": true, "epoch": 17, "accuracy": 0.998}, {"std": 0.013593563908785255, "bn": true, "epoch": 18, "accuracy": 0.998}, {"std": 0.013593563908785255, "bn": true, "epoch": 19, "accuracy": 0.999}, {"std": 0.013593563908785255, "bn": true, "epoch": 20, "accuracy": 1.0}, {"std": 0.013593563908785255, "bn": false, "epoch": 0, "accuracy": 0.097}, {"std": 0.013593563908785255, "bn": false, "epoch": 1, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 2, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 3, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 4, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 5, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 6, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 7, "accuracy": 0.116}, {"std": 0.013593563908785255, "bn": false, "epoch": 8, "accuracy": 0.116}, {"std": 0.013593563908785255, "bn": false, "epoch": 9, "accuracy": 0.116}, {"std": 0.013593563908785255, "bn": false, "epoch": 10, "accuracy": 0.116}, {"std": 0.013593563908785255, "bn": false, "epoch": 11, "accuracy": 0.116}, {"std": 0.013593563908785255, "bn": false, "epoch": 12, "accuracy": 0.116}, {"std": 0.013593563908785255, "bn": false, "epoch": 13, "accuracy": 0.116}, {"std": 0.013593563908785255, "bn": false, "epoch": 14, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 15, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 16, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 17, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 18, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 19, "accuracy": 0.117}, {"std": 0.013593563908785255, "bn": false, "epoch": 20, "accuracy": 0.117}], "data-4a6a31d5bd8e17f4ea43b9221d6877a0": [{"std": 0.007356422544596414, "bn": true, "epoch": 0, "accuracy": 0.12}, {"std": 0.007356422544596414, "bn": true, "epoch": 1, "accuracy": 0.365}, {"std": 0.007356422544596414, "bn": true, "epoch": 2, "accuracy": 0.7}, {"std": 0.007356422544596414, "bn": true, "epoch": 3, "accuracy": 0.788}, {"std": 0.007356422544596414, "bn": true, "epoch": 4, "accuracy": 0.872}, {"std": 0.007356422544596414, "bn": true, "epoch": 5, "accuracy": 0.929}, {"std": 0.007356422544596414, "bn": true, "epoch": 6, "accuracy": 0.951}, {"std": 0.007356422544596414, "bn": true, "epoch": 7, "accuracy": 0.974}, {"std": 0.007356422544596414, "bn": true, "epoch": 8, "accuracy": 0.979}, {"std": 0.007356422544596414, "bn": true, "epoch": 9, "accuracy": 0.986}, {"std": 0.007356422544596414, "bn": true, "epoch": 10, "accuracy": 0.99}, {"std": 0.007356422544596414, "bn": true, "epoch": 11, "accuracy": 0.991}, {"std": 0.007356422544596414, "bn": true, "epoch": 12, "accuracy": 0.991}, {"std": 0.007356422544596414, "bn": true, "epoch": 13, "accuracy": 0.993}, {"std": 0.007356422544596414, "bn": true, "epoch": 14, "accuracy": 0.995}, {"std": 0.007356422544596414, "bn": true, "epoch": 15, "accuracy": 0.997}, {"std": 0.007356422544596414, "bn": true, "epoch": 16, "accuracy": 0.997}, {"std": 0.007356422544596414, "bn": true, "epoch": 17, "accuracy": 0.997}, {"std": 0.007356422544596414, "bn": true, "epoch": 18, "accuracy": 0.998}, {"std": 0.007356422544596414, "bn": true, "epoch": 19, "accuracy": 0.998}, {"std": 0.007356422544596414, "bn": true, "epoch": 20, "accuracy": 0.998}, {"std": 0.007356422544596414, "bn": false, "epoch": 0, "accuracy": 0.094}, {"std": 0.007356422544596414, "bn": false, "epoch": 1, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 2, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 3, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 4, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 5, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 6, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 7, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 8, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 9, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 10, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 11, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 12, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 13, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 14, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 15, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 16, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 17, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 18, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 19, "accuracy": 0.117}, {"std": 0.007356422544596414, "bn": false, "epoch": 20, "accuracy": 0.117}], "data-2198f49bab1f9cc12b004df8e395cc33": [{"std": 0.003981071705534973, "bn": true, "epoch": 0, "accuracy": 0.113}, {"std": 0.003981071705534973, "bn": true, "epoch": 1, "accuracy": 0.509}, {"std": 0.003981071705534973, "bn": true, "epoch": 2, "accuracy": 0.694}, {"std": 0.003981071705534973, "bn": true, "epoch": 3, "accuracy": 0.75}, {"std": 0.003981071705534973, "bn": true, "epoch": 4, "accuracy": 0.782}, {"std": 0.003981071705534973, "bn": true, "epoch": 5, "accuracy": 0.787}, {"std": 0.003981071705534973, "bn": true, "epoch": 6, "accuracy": 0.861}, {"std": 0.003981071705534973, "bn": true, "epoch": 7, "accuracy": 0.873}, {"std": 0.003981071705534973, "bn": true, "epoch": 8, "accuracy": 0.888}, {"std": 0.003981071705534973, "bn": true, "epoch": 9, "accuracy": 0.893}, {"std": 0.003981071705534973, "bn": true, "epoch": 10, "accuracy": 0.904}, {"std": 0.003981071705534973, "bn": true, "epoch": 11, "accuracy": 0.918}, {"std": 0.003981071705534973, "bn": true, "epoch": 12, "accuracy": 0.971}, {"std": 0.003981071705534973, "bn": true, "epoch": 13, "accuracy": 0.964}, {"std": 0.003981071705534973, "bn": true, "epoch": 14, "accuracy": 0.986}, {"std": 0.003981071705534973, "bn": true, "epoch": 15, "accuracy": 0.993}, {"std": 0.003981071705534973, "bn": true, "epoch": 16, "accuracy": 0.945}, {"std": 0.003981071705534973, "bn": true, "epoch": 17, "accuracy": 0.904}, {"std": 0.003981071705534973, "bn": true, "epoch": 18, "accuracy": 0.979}, {"std": 0.003981071705534973, "bn": true, "epoch": 19, "accuracy": 0.993}, {"std": 0.003981071705534973, "bn": true, "epoch": 20, "accuracy": 0.994}, {"std": 0.003981071705534973, "bn": false, "epoch": 0, "accuracy": 0.1}, {"std": 0.003981071705534973, "bn": false, "epoch": 1, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 2, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 3, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 4, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 5, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 6, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 7, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 8, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 9, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 10, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 11, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 12, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 13, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 14, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 15, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 16, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 17, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 18, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 19, "accuracy": 0.117}, {"std": 0.003981071705534973, "bn": false, "epoch": 20, "accuracy": 0.117}], "data-bb7024463235925764bca64161312744": [{"std": 0.0021544346900318843, "bn": true, "epoch": 0, "accuracy": 0.124}, {"std": 0.0021544346900318843, "bn": true, "epoch": 1, "accuracy": 0.672}, {"std": 0.0021544346900318843, "bn": true, "epoch": 2, "accuracy": 0.739}, {"std": 0.0021544346900318843, "bn": true, "epoch": 3, "accuracy": 0.748}, {"std": 0.0021544346900318843, "bn": true, "epoch": 4, "accuracy": 0.858}, {"std": 0.0021544346900318843, "bn": true, "epoch": 5, "accuracy": 0.824}, {"std": 0.0021544346900318843, "bn": true, "epoch": 6, "accuracy": 0.856}, {"std": 0.0021544346900318843, "bn": true, "epoch": 7, "accuracy": 0.961}, {"std": 0.0021544346900318843, "bn": true, "epoch": 8, "accuracy": 0.968}, {"std": 0.0021544346900318843, "bn": true, "epoch": 9, "accuracy": 0.976}, {"std": 0.0021544346900318843, "bn": true, "epoch": 10, "accuracy": 0.924}, {"std": 0.0021544346900318843, "bn": true, "epoch": 11, "accuracy": 0.935}, {"std": 0.0021544346900318843, "bn": true, "epoch": 12, "accuracy": 0.987}, {"std": 0.0021544346900318843, "bn": true, "epoch": 13, "accuracy": 0.989}, {"std": 0.0021544346900318843, "bn": true, "epoch": 14, "accuracy": 0.992}, {"std": 0.0021544346900318843, "bn": true, "epoch": 15, "accuracy": 0.989}, {"std": 0.0021544346900318843, "bn": true, "epoch": 16, "accuracy": 0.992}, {"std": 0.0021544346900318843, "bn": true, "epoch": 17, "accuracy": 0.974}, {"std": 0.0021544346900318843, "bn": true, "epoch": 18, "accuracy": 0.971}, {"std": 0.0021544346900318843, "bn": true, "epoch": 19, "accuracy": 0.996}, {"std": 0.0021544346900318843, "bn": true, "epoch": 20, "accuracy": 0.996}, {"std": 0.0021544346900318843, "bn": false, "epoch": 0, "accuracy": 0.105}, {"std": 0.0021544346900318843, "bn": false, "epoch": 1, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 2, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 3, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 4, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 5, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 6, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 7, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 8, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 9, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 10, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 11, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 12, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 13, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 14, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 15, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 16, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 17, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 18, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 19, "accuracy": 0.117}, {"std": 0.0021544346900318843, "bn": false, "epoch": 20, "accuracy": 0.117}], "data-33d662f48b79feb3e018998e183eb3e5": [{"std": 0.0011659144011798323, "bn": true, "epoch": 0, "accuracy": 0.099}, {"std": 0.0011659144011798323, "bn": true, "epoch": 1, "accuracy": 0.567}, {"std": 0.0011659144011798323, "bn": true, "epoch": 2, "accuracy": 0.594}, {"std": 0.0011659144011798323, "bn": true, "epoch": 3, "accuracy": 0.661}, {"std": 0.0011659144011798323, "bn": true, "epoch": 4, "accuracy": 0.667}, {"std": 0.0011659144011798323, "bn": true, "epoch": 5, "accuracy": 0.662}, {"std": 0.0011659144011798323, "bn": true, "epoch": 6, "accuracy": 0.668}, {"std": 0.0011659144011798323, "bn": true, "epoch": 7, "accuracy": 0.77}, {"std": 0.0011659144011798323, "bn": true, "epoch": 8, "accuracy": 0.77}, {"std": 0.0011659144011798323, "bn": true, "epoch": 9, "accuracy": 0.793}, {"std": 0.0011659144011798323, "bn": true, "epoch": 10, "accuracy": 0.791}, {"std": 0.0011659144011798323, "bn": true, "epoch": 11, "accuracy": 0.795}, {"std": 0.0011659144011798323, "bn": true, "epoch": 12, "accuracy": 0.814}, {"std": 0.0011659144011798323, "bn": true, "epoch": 13, "accuracy": 0.804}, {"std": 0.0011659144011798323, "bn": true, "epoch": 14, "accuracy": 0.799}, {"std": 0.0011659144011798323, "bn": true, "epoch": 15, "accuracy": 0.802}, {"std": 0.0011659144011798323, "bn": true, "epoch": 16, "accuracy": 0.803}, {"std": 0.0011659144011798323, "bn": true, "epoch": 17, "accuracy": 0.871}, {"std": 0.0011659144011798323, "bn": true, "epoch": 18, "accuracy": 0.854}, {"std": 0.0011659144011798323, "bn": true, "epoch": 19, "accuracy": 0.782}, {"std": 0.0011659144011798323, "bn": true, "epoch": 20, "accuracy": 0.883}, {"std": 0.0011659144011798323, "bn": false, "epoch": 0, "accuracy": 0.094}, {"std": 0.0011659144011798323, "bn": false, "epoch": 1, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 2, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 3, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 4, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 5, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 6, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 7, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 8, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 9, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 10, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 11, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 12, "accuracy": 0.116}, {"std": 0.0011659144011798323, "bn": false, "epoch": 13, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 14, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 15, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 16, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 17, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 18, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 19, "accuracy": 0.117}, {"std": 0.0011659144011798323, "bn": false, "epoch": 20, "accuracy": 0.117}], "data-b7c06d7da64c4c6ec92948662fe6d153": [{"std": 0.000630957344480193, "bn": true, "epoch": 0, "accuracy": 0.126}, {"std": 0.000630957344480193, "bn": true, "epoch": 1, "accuracy": 0.397}, {"std": 0.000630957344480193, "bn": true, "epoch": 2, "accuracy": 0.409}, {"std": 0.000630957344480193, "bn": true, "epoch": 3, "accuracy": 0.464}, {"std": 0.000630957344480193, "bn": true, "epoch": 4, "accuracy": 0.541}, {"std": 0.000630957344480193, "bn": true, "epoch": 5, "accuracy": 0.556}, {"std": 0.000630957344480193, "bn": true, "epoch": 6, "accuracy": 0.533}, {"std": 0.000630957344480193, "bn": true, "epoch": 7, "accuracy": 0.568}, {"std": 0.000630957344480193, "bn": true, "epoch": 8, "accuracy": 0.569}, {"std": 0.000630957344480193, "bn": true, "epoch": 9, "accuracy": 0.597}, {"std": 0.000630957344480193, "bn": true, "epoch": 10, "accuracy": 0.595}, {"std": 0.000630957344480193, "bn": true, "epoch": 11, "accuracy": 0.575}, {"std": 0.000630957344480193, "bn": true, "epoch": 12, "accuracy": 0.586}, {"std": 0.000630957344480193, "bn": true, "epoch": 13, "accuracy": 0.587}, {"std": 0.000630957344480193, "bn": true, "epoch": 14, "accuracy": 0.598}, {"std": 0.000630957344480193, "bn": true, "epoch": 15, "accuracy": 0.603}, {"std": 0.000630957344480193, "bn": true, "epoch": 16, "accuracy": 0.59}, {"std": 0.000630957344480193, "bn": true, "epoch": 17, "accuracy": 0.648}, {"std": 0.000630957344480193, "bn": true, "epoch": 18, "accuracy": 0.55}, {"std": 0.000630957344480193, "bn": true, "epoch": 19, "accuracy": 0.584}, {"std": 0.000630957344480193, "bn": true, "epoch": 20, "accuracy": 0.605}, {"std": 0.000630957344480193, "bn": false, "epoch": 0, "accuracy": 0.105}, {"std": 0.000630957344480193, "bn": false, "epoch": 1, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 2, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 3, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 4, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 5, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 6, "accuracy": 0.117}, {"std": 0.000630957344480193, "bn": false, "epoch": 7, "accuracy": 0.117}, {"std": 0.000630957344480193, "bn": false, "epoch": 8, "accuracy": 0.117}, {"std": 0.000630957344480193, "bn": false, "epoch": 9, "accuracy": 0.117}, {"std": 0.000630957344480193, "bn": false, "epoch": 10, "accuracy": 0.117}, {"std": 0.000630957344480193, "bn": false, "epoch": 11, "accuracy": 0.117}, {"std": 0.000630957344480193, "bn": false, "epoch": 12, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 13, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 14, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 15, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 16, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 17, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 18, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 19, "accuracy": 0.116}, {"std": 0.000630957344480193, "bn": false, "epoch": 20, "accuracy": 0.117}], "data-2b053518a6270452058468cabacc7f3a": [{"std": 0.0003414548873833601, "bn": true, "epoch": 0, "accuracy": 0.099}, {"std": 0.0003414548873833601, "bn": true, "epoch": 1, "accuracy": 0.246}, {"std": 0.0003414548873833601, "bn": true, "epoch": 2, "accuracy": 0.407}, {"std": 0.0003414548873833601, "bn": true, "epoch": 3, "accuracy": 0.458}, {"std": 0.0003414548873833601, "bn": true, "epoch": 4, "accuracy": 0.553}, {"std": 0.0003414548873833601, "bn": true, "epoch": 5, "accuracy": 0.506}, {"std": 0.0003414548873833601, "bn": true, "epoch": 6, "accuracy": 0.517}, {"std": 0.0003414548873833601, "bn": true, "epoch": 7, "accuracy": 0.589}, {"std": 0.0003414548873833601, "bn": true, "epoch": 8, "accuracy": 0.594}, {"std": 0.0003414548873833601, "bn": true, "epoch": 9, "accuracy": 0.596}, {"std": 0.0003414548873833601, "bn": true, "epoch": 10, "accuracy": 0.609}, {"std": 0.0003414548873833601, "bn": true, "epoch": 11, "accuracy": 0.478}, {"std": 0.0003414548873833601, "bn": true, "epoch": 12, "accuracy": 0.606}, {"std": 0.0003414548873833601, "bn": true, "epoch": 13, "accuracy": 0.6}, {"std": 0.0003414548873833601, "bn": true, "epoch": 14, "accuracy": 0.613}, {"std": 0.0003414548873833601, "bn": true, "epoch": 15, "accuracy": 0.61}, {"std": 0.0003414548873833601, "bn": true, "epoch": 16, "accuracy": 0.608}, {"std": 0.0003414548873833601, "bn": true, "epoch": 17, "accuracy": 0.619}, {"std": 0.0003414548873833601, "bn": true, "epoch": 18, "accuracy": 0.621}, {"std": 0.0003414548873833601, "bn": true, "epoch": 19, "accuracy": 0.622}, {"std": 0.0003414548873833601, "bn": true, "epoch": 20, "accuracy": 0.621}, {"std": 0.0003414548873833601, "bn": false, "epoch": 0, "accuracy": 0.097}, {"std": 0.0003414548873833601, "bn": false, "epoch": 1, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 2, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 3, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 4, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 5, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 6, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 7, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 8, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 9, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 10, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 11, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 12, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 13, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 14, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 15, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 16, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 17, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 18, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 19, "accuracy": 0.117}, {"std": 0.0003414548873833601, "bn": false, "epoch": 20, "accuracy": 0.117}], "data-a9eaf2f591b0880b1efbb985b450eae5": [{"std": 0.00018478497974222906, "bn": true, "epoch": 0, "accuracy": 0.097}, {"std": 0.00018478497974222906, "bn": true, "epoch": 1, "accuracy": 0.287}, {"std": 0.00018478497974222906, "bn": true, "epoch": 2, "accuracy": 0.336}, {"std": 0.00018478497974222906, "bn": true, "epoch": 3, "accuracy": 0.376}, {"std": 0.00018478497974222906, "bn": true, "epoch": 4, "accuracy": 0.404}, {"std": 0.00018478497974222906, "bn": true, "epoch": 5, "accuracy": 0.395}, {"std": 0.00018478497974222906, "bn": true, "epoch": 6, "accuracy": 0.401}, {"std": 0.00018478497974222906, "bn": true, "epoch": 7, "accuracy": 0.413}, {"std": 0.00018478497974222906, "bn": true, "epoch": 8, "accuracy": 0.401}, {"std": 0.00018478497974222906, "bn": true, "epoch": 9, "accuracy": 0.414}, {"std": 0.00018478497974222906, "bn": true, "epoch": 10, "accuracy": 0.415}, {"std": 0.00018478497974222906, "bn": true, "epoch": 11, "accuracy": 0.416}, {"std": 0.00018478497974222906, "bn": true, "epoch": 12, "accuracy": 0.417}, {"std": 0.00018478497974222906, "bn": true, "epoch": 13, "accuracy": 0.419}, {"std": 0.00018478497974222906, "bn": true, "epoch": 14, "accuracy": 0.419}, {"std": 0.00018478497974222906, "bn": true, "epoch": 15, "accuracy": 0.416}, {"std": 0.00018478497974222906, "bn": true, "epoch": 16, "accuracy": 0.416}, {"std": 0.00018478497974222906, "bn": true, "epoch": 17, "accuracy": 0.418}, {"std": 0.00018478497974222906, "bn": true, "epoch": 18, "accuracy": 0.415}, {"std": 0.00018478497974222906, "bn": true, "epoch": 19, "accuracy": 0.419}, {"std": 0.00018478497974222906, "bn": true, "epoch": 20, "accuracy": 0.42}, {"std": 0.00018478497974222906, "bn": false, "epoch": 0, "accuracy": 0.092}, {"std": 0.00018478497974222906, "bn": false, "epoch": 1, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 2, "accuracy": 0.117}, {"std": 0.00018478497974222906, "bn": false, "epoch": 3, "accuracy": 0.117}, {"std": 0.00018478497974222906, "bn": false, "epoch": 4, "accuracy": 0.117}, {"std": 0.00018478497974222906, "bn": false, "epoch": 5, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 6, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 7, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 8, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 9, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 10, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 11, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 12, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 13, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 14, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 15, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 16, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 17, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 18, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 19, "accuracy": 0.116}, {"std": 0.00018478497974222906, "bn": false, "epoch": 20, "accuracy": 0.116}], "data-78c119943b34ecf65c3e8d13dc7da10d": [{"std": 0.0001, "bn": true, "epoch": 0, "accuracy": 0.163}, {"std": 0.0001, "bn": true, "epoch": 1, "accuracy": 0.205}, {"std": 0.0001, "bn": true, "epoch": 2, "accuracy": 0.366}, {"std": 0.0001, "bn": true, "epoch": 3, "accuracy": 0.397}, {"std": 0.0001, "bn": true, "epoch": 4, "accuracy": 0.42}, {"std": 0.0001, "bn": true, "epoch": 5, "accuracy": 0.385}, {"std": 0.0001, "bn": true, "epoch": 6, "accuracy": 0.398}, {"std": 0.0001, "bn": true, "epoch": 7, "accuracy": 0.427}, {"std": 0.0001, "bn": true, "epoch": 8, "accuracy": 0.428}, {"std": 0.0001, "bn": true, "epoch": 9, "accuracy": 0.427}, {"std": 0.0001, "bn": true, "epoch": 10, "accuracy": 0.431}, {"std": 0.0001, "bn": true, "epoch": 11, "accuracy": 0.429}, {"std": 0.0001, "bn": true, "epoch": 12, "accuracy": 0.432}, {"std": 0.0001, "bn": true, "epoch": 13, "accuracy": 0.428}, {"std": 0.0001, "bn": true, "epoch": 14, "accuracy": 0.435}, {"std": 0.0001, "bn": true, "epoch": 15, "accuracy": 0.463}, {"std": 0.0001, "bn": true, "epoch": 16, "accuracy": 0.476}, {"std": 0.0001, "bn": true, "epoch": 17, "accuracy": 0.457}, {"std": 0.0001, "bn": true, "epoch": 18, "accuracy": 0.484}, {"std": 0.0001, "bn": true, "epoch": 19, "accuracy": 0.524}, {"std": 0.0001, "bn": true, "epoch": 20, "accuracy": 0.525}, {"std": 0.0001, "bn": false, "epoch": 0, "accuracy": 0.105}, {"std": 0.0001, "bn": false, "epoch": 1, "accuracy": 0.099}, {"std": 0.0001, "bn": false, "epoch": 2, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 3, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 4, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 5, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 6, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 7, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 8, "accuracy": 0.116}, {"std": 0.0001, "bn": false, "epoch": 9, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 10, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 11, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 12, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 13, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 14, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 15, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 16, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 17, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 18, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 19, "accuracy": 0.117}, {"std": 0.0001, "bn": false, "epoch": 20, "accuracy": 0.117}]}};
+    var opt = {
+      "mode": "vega-lite",
+      "renderer": "canvas",
+      "actions": {"editor": true, "source": true, "export": true}
+    };
+    vegaEmbed("#pheasant-altair-1", spec, opt).catch(console.err);
+  });</script></div></div></div></div></div></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../重みの初期値/" title="6.2 重みの初期値"><span>Previous</span></a></div>
+        <div class="next"><a href="../正則化/" title="6.4 正則化"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>

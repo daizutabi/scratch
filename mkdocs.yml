@@ -1,0 +1,22 @@
+site_name: Ivory
+site_author: daizutabi
+site_url: https://ivory.daizutabi.net/
+repo_url: https://github.com/daizutabi/ivory/
+edit_uri: ""
+
+theme: ivory
+
+markdown_extensions:
+  - admonition
+  - pymdownx.arithmatex
+
+plugins:
+  - pheasant:
+      jupyter: true
+
+nav:
+- Home: index.md
+- ゼロから作るDeep Learning: scratch
+# - Keras: keras
+# - TensorFlow: tensorflow
+# - NNabla: nnabla

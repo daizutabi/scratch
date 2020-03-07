@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="daizutabi">
+    <link rel="shortcut icon" href="../../../../img/favicon.ico">
+    <title>2.10 MatMulMean &mdash; Ivory</title>
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Lato:400,700">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/tonsky/FiraCode@1.206/distr/fira_code.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/theme.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    <link rel="stylesheet" href="../../../../css/pheasant.css">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script> 
+</head>
+
+<body ontouchstart="">
+    <div id="container">
+        <aside>
+            <div class="home">
+                <div class="title">
+                    <button class="hamburger"></button>
+                    <a href="../../../.." class="site-name"> Ivory</a>
+                </div>
+            </div>
+            <nav class="nav">
+                <ul class="root">
+                    <li class="toctree-l1"><a class="nav-item" href="../../../..">Deep Learning自習室</a></li>
+                    <li class="toctree-l1"><button class="section nav-item">ゼロから作るDeep Learning</button>
+<ul class="subnav">
+    <li class="toctree-l2 current"><button class="section nav-item">Ivoryライブラリ</button>
+<ul class="subnav">
+    <li class="toctree-l3"><button class="section nav-item hide">基本機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/はじめに/">1 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/変数/">1.1 変数</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/レイヤ/">1.2 レイヤ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/パラメータ/">1.3 パラメータ</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/モデル/">1.4 モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/順伝搬と逆伝搬/">1.5 順伝搬と逆伝搬</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/データセット/">1.6 データセット</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/トレーナー/">1.7 トレーナー</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../基本機能/CUDAによる学習の高速化/">1.8 CUDAによる学習の高速化</a></li>
+</ul></li>
+    <li class="toctree-l3 current"><button class="section nav-item">レイヤ実装</button>
+<ul class="subnav">
+    <li class="toctree-l4"><a class="nav-item" href="../はじめに/">2 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SigmoidCrossEntropy/">2.1 SigmoidCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../SoftmaxCrossEntropy/">2.2 SoftmaxCrossEntropy</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Sigmoid_ReLU/">2.3 Sigmoid/ReLU</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Affine/">2.4 Affine</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Flatten/">2.5 Flatten</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../BatchNormalization/">2.6 BatchNormalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Dropout/">2.7 Dropout</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Convolution_Pooling/">2.8 Convolution/Pooling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../MatMul_Embedding/">2.9 MatMul/Embeddingレイヤ</a></li>
+    <li class="toctree-l4 current"><a class="nav-item current" href="./">2.10 MatMulMean</a>
+<ul class="subnav">
+</ul></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingMean/">2.11 EmbeddingMean</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../EmbeddingDot/">2.12 EmbeddingDot</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../RNN/">2.13 RNN</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../LSTM/">2.14 LSTM</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../Select/">2.15 Select</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">拡張機能</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/はじめに/">3 はじめに</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Negative_Sampling/">3.1 Negative Sampling</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/TimeDataset/">3.2 TimeDataset</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../拡張機能/Weight_Tying/">3.3 重み共有</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">Deep Learningの理論と実践</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../Deep_Learningの理論と実践/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 誤差逆伝搬法</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/5章_誤差逆伝搬法/誤差逆伝搬法の実装/">5.7 誤差逆伝搬法の実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 学習に関するテクニック</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/パラメータの更新/">6.1 パラメータの更新</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/重みの初期値/">6.2 重みの初期値</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/Batch_Normalization/">6.3 Batch Normalization</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/正則化/">6.4 正則化</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/6章_学習に関するテクニック/ハイパーパラメータの検証/">6.5 ハイパーパラメータの検証</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 畳み込みニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../Deep_Learningの理論と実践/7章_畳み込みニューラルネットワーク/CNNの実装/">7.5 CNNの実装</a></li>
+</ul></li>
+</ul></li>
+    <li class="toctree-l2"><button class="section nav-item hide">自然言語処理編</button>
+<ul class="subnav hide">
+    <li class="toctree-l3"><a class="nav-item" href="../../../自然言語処理編/0章_はじめに/">はじめに</a></li>
+    <li class="toctree-l3"><button class="section nav-item hide">1章 ニューラルネットワークの復習</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/1章_ニューラルネットワークの復習/ニューラルネットワークで問題を解く/">1.4 ニューラルネットワークで問題を解く</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">2章 自然言語と単語の分散表現</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法/">2.3 カウントベースの手法</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/2章_自然言語と単語の分散表現/カウントベースの手法の改善/">2.4 カウントベースの手法の改善</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">3章 word2vec</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/学習データの準備/">3.3 学習データの準備</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/3章_word2vec/CBOWモデルの実装/">3.4 CBOWモデルの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">4章 word2vecの高速化</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/4章_word2vecの高速化/改良版word2vecの学習/">4.3 改良版word2vecの実装</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">5章 リカレントニューラルネットワーク</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/5章_リカレントニューラルネットワーク/RNNLMの学習と評価/">5.7 RNNLMの学習と評価</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">6章 ゲート付きRNN</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/LSTMを使った言語モデル/">6.4 LSTMを使った言語モデル</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/RNNLMのさらなる改善/">6.5 RNNLMのさらなる改善</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/6章_ゲート付きRNN/まとめ/">6.6 まとめ</a></li>
+</ul></li>
+    <li class="toctree-l3"><button class="section nav-item hide">7章 RNNによる文章生成</button>
+<ul class="subnav hide">
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/言語モデルを使った文章生成/">7.1 言語モデルを使った文章生成</a></li>
+    <li class="toctree-l4"><a class="nav-item" href="../../../自然言語処理編/7章_RNNによる文章生成/seq2seqの実装/">7.3 seq2seqの実装</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+                </ul>
+            </nav>
+            <div class="repo">
+    <div class="link">
+        <a href="https://github.com/daizutabi/ivory/" class="fa fa-github"> GitHub</a>
+    </div>
+    <div class="previous"><a href="../MatMul_Embedding/">&laquo; Previous</a></div>
+    <div class="next"><a href="../EmbeddingMean/">Next &raquo;</a></div>
+</div>
+        </aside>
+        <div id="spacer"><button class="arrow"></button></div>
+        <main>
+            <div class="home-top">
+                <button class="hamburger"></button>
+                <a href="../../../.." class="site-name"> Ivory</a>
+            </div>
+            <div id="main">
+                <nav class="breadcrumbs">
+<ul>
+    <li>ゼロから作るDeep Learning &raquo; </li><li>Ivoryライブラリ &raquo; </li><li>レイヤ実装</li>
+</ul>
+</nav>
+                <div id="content"><script type="text/x-mathjax-config">MathJax.Hub.Config({
+TeX: { equationNumbers: { autoNumber: "AMS" } } });</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+
+<h2 id="210-matmulmean"><span class="pheasant-header"><span class="header"><span class="number">2.10</span> <span class="title">MatMulMean</span></span></span></h2>
+<p>「ゼロから作るDeep Learning ❷」3章のword2vecでは、2つのMatMulレイヤが重みを共有しながら、両者の出力を平均を出力していました。ここでは、形状確認と勾配確認の手法を使って一つのレイヤとして実装します。</p>
+<p>まずは、形状を定義します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">N, I, L, M = 2, 3, 4, 5</code></pre></div>
+<div class="report"><p><span class="count">[2]</span>
+<span class="start">2019-06-12 20:01:35</span> (<span class="time">19.8ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">207ms</span>)</span></p></div></div></div></div>
+
+<p>ここで<span><span class="MathJax_Preview">N</span><script type="math/tex">N</script></span>はバッチ数、<span><span class="MathJax_Preview">I</span><script type="math/tex">I</script></span>は入力数、<span><span class="MathJax_Preview">L</span><script type="math/tex">L</script></span>は入力の次元、<span><span class="MathJax_Preview">M</span><script type="math/tex">M</script></span>は出力の次元です。</p>
+<p>通常のMatMulレイヤの順伝搬、逆伝搬は以下の通りです。</p>
+<div>
+<div class="MathJax_Preview">\mathbf{Y}=\mathbf{X}\cdot\mathbf{W}</div>
+<script type="math/tex; mode=display">\mathbf{Y}=\mathbf{X}\cdot\mathbf{W}</script>
+</div>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \mathbf{X}}=\frac{\partial L}{\partial \mathbf{Y}}\cdot \mathbf{W}^\mathrm{T}</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \mathbf{X}}=\frac{\partial L}{\partial \mathbf{Y}}\cdot \mathbf{W}^\mathrm{T}</script>
+</div>
+<div>
+<div class="MathJax_Preview">\frac{\partial L}{\partial \mathbf{W}}=\mathbf{X}^\mathrm{T}\cdot \frac{\partial L}{\partial \mathbf{Y}}</div>
+<script type="math/tex; mode=display">\frac{\partial L}{\partial \mathbf{W}}=\mathbf{X}^\mathrm{T}\cdot \frac{\partial L}{\partial \mathbf{Y}}</script>
+</div>
+<p>実験のために、乱数行列を作成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">import numpy as np
+
+x = np.random.randn(N, I, L)
+w = np.random.randn(L, M)</code></pre></div>
+<div class="report"><p><span class="count">[12]</span>
+<span class="start">2019-06-12 20:01:36</span> (<span class="time">8.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">327ms</span>)</span></p></div></div></div></div>
+
+<p>まずは、入力を別々にして、MatMulレイヤの計算をひとつずつ行った場合を示します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">xs = x.transpose(1, 0, 2)
+sum(xi @ w for xi in xs) / len(xs)</code></pre></div>
+<div class="report"><p><span class="count">[13]</span>
+<span class="start">2019-06-12 20:01:36</span> (<span class="time">7.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">334ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[ 0.37747743,  0.62237493, -0.67779153,  0.17521082,  0.39120128],
+       [ 0.31547654, -3.08890347,  0.28518512,  1.49883203,  1.34925693]])</code></pre></div></div></div></div>
+
+<p>各パラメータの形状を確認しておきます。</p>
+<table>
+<thead>
+<tr>
+<th>パラメータ</th>
+<th>形状</th>
+<th>具体例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf X</span><script type="math/tex">\mathbf X</script></span></td>
+<td><span><span class="MathJax_Preview">(N, I, L)</span><script type="math/tex">(N, I, L)</script></span></td>
+<td><span><span class="MathJax_Preview">(2, 3, 4)</span><script type="math/tex">(2, 3, 4)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf W</span><script type="math/tex">\mathbf W</script></span></td>
+<td><span><span class="MathJax_Preview">(L, M)</span><script type="math/tex">(L, M)</script></span></td>
+<td><span><span class="MathJax_Preview">(4, 5)</span><script type="math/tex">(4, 5)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf X\cdot\mathbf W</span><script type="math/tex">\mathbf X\cdot\mathbf W</script></span></td>
+<td><span><span class="MathJax_Preview">(N, I, M)</span><script type="math/tex">(N, I, M)</script></span></td>
+<td><span><span class="MathJax_Preview">(2, 3, 5)</span><script type="math/tex">(2, 3, 5)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf Y</span><script type="math/tex">\mathbf Y</script></span></td>
+<td><span><span class="MathJax_Preview">(N, M)</span><script type="math/tex">(N, M)</script></span></td>
+<td><span><span class="MathJax_Preview">(2, 5)</span><script type="math/tex">(2, 5)</script></span></td>
+</tr>
+</tbody>
+</table>
+<p><span><span class="MathJax_Preview">\mathbf{X}</span><script type="math/tex">\mathbf{X}</script></span>と<span><span class="MathJax_Preview">\mathbf{W}</span><script type="math/tex">\mathbf{W}</script></span>の内積をとった後に<span><span class="MathJax_Preview">\mathbf{Y}</span><script type="math/tex">\mathbf{Y}</script></span>の形状に合わせるには、軸1で和を取ります。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">np.sum(x @ w, axis=1) / x.shape[1]</code></pre></div>
+<div class="report"><p><span class="count">[27]</span>
+<span class="start">2019-06-12 20:01:36</span> (<span class="time">22.8ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">519ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[ 0.37747743,  0.62237493, -0.67779153,  0.17521082,  0.39120128],
+       [ 0.31547654, -3.08890347,  0.28518512,  1.49883203,  1.34925693]])</code></pre></div></div></div></div>
+
+<p>順伝搬は以上です。ひとまず、ここまでを<code>MatMulMean</code>レイヤとして実装します。イニシャライザに与える形状は、<span><span class="MathJax_Preview">(I, L, M)</span><script type="math/tex">(I, L, M)</script></span>とします。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.layer import Layer
+
+class MatMulMean(Layer):
+    def init(self):
+        self.W = self.add_weight(self.shape[1:]).randn()
+
+    def forward(self):
+        self.y.d = np.sum(self.x.d @ self.W.d, axis=1) / self.shape[0]</code></pre></div>
+<div class="report"><p><span class="count">[28]</span>
+<span class="start">2019-06-12 20:01:36</span> (<span class="time">7.07ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">526ms</span>)</span></p></div></div></div></div>
+
+<p>動作を確認しておきます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">layer = MatMulMean((I, L, M))
+print(layer)
+print(layer.x)
+print(layer.W)
+print(layer.y)</code></pre></div>
+<div class="report"><p><span class="count">[29]</span>
+<span class="start">2019-06-12 20:01:36</span> (<span class="time">9.56ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">536ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">&lt;MatMulMean(&#39;MatMulMean.1&#39;, (3, 4, 5)) at 0x22c1f150710&gt;
+&lt;Input(&#39;MatMulMean.1.x&#39;, (3, 4)) at 0x22c1d7d8588&gt;
+&lt;Weight(&#39;MatMulMean.1.W&#39;, (4, 5)) at 0x22c0ab6e2e8&gt;
+&lt;Output(&#39;MatMulMean.1.y&#39;, (5,)) at 0x22c1df36a20&gt;</code></pre></div></div></div></div>
+
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">vs = layer.set_variables()
+vs[0].data = x
+vs[2].data = w
+layer.forward()
+layer.y.d</code></pre></div>
+<div class="report"><p><span class="count">[30]</span>
+<span class="start">2019-06-12 20:01:36</span> (<span class="time">8.00ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">544ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[ 0.37747743,  0.62237493, -0.67779153,  0.17521082,  0.39120128],
+       [ 0.31547654, -3.08890347,  0.28518512,  1.49883203,  1.34925693]])</code></pre></div></div></div></div>
+
+<p>次に逆伝搬を実装します。ここで勾配確認のテクニックを使います。今作ったMatMulMeanレイヤに損失関数を繋げます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.model import Model
+from ivory.layers.loss import SoftmaxCrossEntropy
+
+loss_layer = SoftmaxCrossEntropy((M,))
+loss_layer.set_input_layer(layer)
+model = Model([loss_layer.loss]).build()</code></pre></div>
+<div class="report"><p><span class="count">[31]</span>
+<span class="start">2019-06-12 20:01:36</span> (<span class="time">18.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">563ms</span>)</span></p></div></div></div></div>
+
+<p>ターゲットを乱数で生成します。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">loss_layer.t.variable.data = np.random.randint(0, M, N)</code></pre></div>
+<div class="report"><p><span class="count">[32]</span>
+<span class="start">2019-06-12 20:01:36</span> (<span class="time">15.7ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">578ms</span>)</span></p></div></div></div></div>
+
+<p>数値微分による勾配を求めます。まずは、<span><span class="MathJax_Preview">\partial L/\partial \mathbf{X}</span><script type="math/tex">\partial L/\partial \mathbf{X}</script></span>です。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.numerical_gradient(layer.x.variable)</code></pre></div>
+<div class="report"><p><span class="count">[34]</span>
+<span class="start">2019-06-12 20:01:36</span> (<span class="time">12.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">607ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[[ 0.00071336, -0.27242102, -0.08968653, -0.02660314],
+        [ 0.00071336, -0.27242102, -0.08968653, -0.02660314],
+        [ 0.00071336, -0.27242102, -0.08968653, -0.02660314]],
+
+       [[-0.25583178,  0.49819441,  0.22915949,  0.03552404],
+        [-0.25583178,  0.49819441,  0.22915949,  0.03552404],
+        [-0.25583178,  0.49819441,  0.22915949,  0.03552404]]])</code></pre></div></div></div></div>
+
+<p>入力数の数だけ、同じ勾配が分配されていることが分かります。</p>
+<p>MatMulMeanレイヤの出力の勾配を求めます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">try:
+    model.backward()
+except AttributeError:  # まだ、backwardメソッドを定義していないため
+    pass
+layer.y.g</code></pre></div>
+<div class="report"><p><span class="count">[35]</span>
+<span class="start">2019-06-12 20:01:37</span> (<span class="time">13.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">620ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[ 0.11220109,  0.14333581,  0.03905706,  0.0916545 , -0.38624847],
+       [ 0.06187598, -0.49794393,  0.06002869,  0.20205965,  0.17397961]])</code></pre></div></div></div></div>
+
+<p>これを使ってとにかく単純なMatMulレイヤと同様の計算をしてみます。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">dx = (layer.y.g @ layer.W.d.T) / layer.shape[0]
+dx</code></pre></div>
+<div class="report"><p><span class="count">[36]</span>
+<span class="start">2019-06-12 20:01:37</span> (<span class="time">15.6ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">635ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[ 0.00071336, -0.27242114, -0.08968657, -0.02660315],
+       [-0.25583625,  0.49820791,  0.22916519,  0.03551903]])</code></pre></div></div></div></div>
+
+<p>軸0で<code>repeat</code>した後、<code>reshape</code>するのがよさそうです。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">np.repeat(dx, layer.shape[0], axis=0).reshape(*layer.x.d.shape)</code></pre></div>
+<div class="report"><p><span class="count">[37]</span>
+<span class="start">2019-06-12 20:01:37</span> (<span class="time">17.9ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">653ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[[ 0.00071336, -0.27242114, -0.08968657, -0.02660315],
+        [ 0.00071336, -0.27242114, -0.08968657, -0.02660315],
+        [ 0.00071336, -0.27242114, -0.08968657, -0.02660315]],
+
+       [[-0.25583625,  0.49820791,  0.22916519,  0.03551903],
+        [-0.25583625,  0.49820791,  0.22916519,  0.03551903],
+        [-0.25583625,  0.49820791,  0.22916519,  0.03551903]]])</code></pre></div></div></div></div>
+
+<p>数値微分と一致しました。次は、<span><span class="MathJax_Preview">\partial L/\partial \mathbf{W}</span><script type="math/tex">\partial L/\partial \mathbf{W}</script></span>です。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">model.numerical_gradient(layer.W.variable)</code></pre></div>
+<div class="report"><p><span class="count">[39]</span>
+<span class="start">2019-06-12 20:01:37</span> (<span class="time">12.1ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">674ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[-0.01558251,  0.35705042, -0.03057175, -0.11170919, -0.19918698],
+       [ 0.06852379, -0.31887347,  0.05096554,  0.16268992,  0.03669422],
+       [-0.00880439, -0.5160213 ,  0.03060959,  0.12534984,  0.36886626],
+       [-0.02559231,  0.20198423, -0.02456447, -0.08252685, -0.06930061]])</code></pre></div></div></div></div>
+
+<p>MatMulレイヤと同様の計算をする前に、形状を確認しておきます。</p>
+<table>
+<thead>
+<tr>
+<th>パラメータ</th>
+<th>形状</th>
+<th>具体例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf{Y}</span><script type="math/tex">\mathbf{Y}</script></span></td>
+<td><span><span class="MathJax_Preview">(N, M)</span><script type="math/tex">(N, M)</script></span></td>
+<td><span><span class="MathJax_Preview">(2, 5)</span><script type="math/tex">(2, 5)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf X</span><script type="math/tex">\mathbf X</script></span></td>
+<td><span><span class="MathJax_Preview">(N, I, L)</span><script type="math/tex">(N, I, L)</script></span></td>
+<td><span><span class="MathJax_Preview">(2, 3, 4)</span><script type="math/tex">(2, 3, 4)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf{X}^\mathrm{T}</span><script type="math/tex">\mathbf{X}^\mathrm{T}</script></span></td>
+<td><span><span class="MathJax_Preview">(L, I, N)</span><script type="math/tex">(L, I, N)</script></span></td>
+<td><span><span class="MathJax_Preview">(4, 3, 2)</span><script type="math/tex">(4, 3, 2)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf{X}^\mathrm{T}\cdot \partial L/\partial \mathbf{Y}</span><script type="math/tex">\mathbf{X}^\mathrm{T}\cdot \partial L/\partial \mathbf{Y}</script></span></td>
+<td><span><span class="MathJax_Preview">(L, I, M)</span><script type="math/tex">(L, I, M)</script></span></td>
+<td><span><span class="MathJax_Preview">(4, 3, 5)</span><script type="math/tex">(4, 3, 5)</script></span></td>
+</tr>
+<tr>
+<td><span><span class="MathJax_Preview">\mathbf W</span><script type="math/tex">\mathbf W</script></span></td>
+<td><span><span class="MathJax_Preview">(L, M)</span><script type="math/tex">(L, M)</script></span></td>
+<td><span><span class="MathJax_Preview">(4, 5)</span><script type="math/tex">(4, 5)</script></span></td>
+</tr>
+</tbody>
+</table>
+<p>これより、必要な計算が明らかになります。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">np.sum(layer.x.d.T @ layer.y.g, axis=1) / layer.shape[0]</code></pre></div>
+<div class="report"><p><span class="count">[58]</span>
+<span class="start">2019-06-12 20:01:37</span> (<span class="time">7.03ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">901ms</span>)</span></p></div></div><div class="cell jupyter output"><div class="code"><pre><code class="nohighlight">array([[-0.01558197,  0.35705834, -0.03057052, -0.1117174 , -0.19918845],
+       [ 0.06852323, -0.31888197,  0.05096423,  0.16269879,  0.03669573],
+       [-0.00880513, -0.51603192,  0.03060795,  0.12536083,  0.36886827],
+       [-0.02559198,  0.20198915, -0.02456371, -0.08253197, -0.0693015 ]])</code></pre></div></div></div></div>
+
+<p>数値微分と一致しました。<code>backward</code>メソッドを追加した実装は以下の通りです。</p>
+<div class="pheasant-header"><div class="other"><p class="caption"><span class="prefix">Code</span> <span class="number">2.13</span>
+<span class="title"><code>MatMulMean</code>クラスの実装</span></p>
+<div class="content">
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter source"><div class="code">
+      <pre><code class="python">class MatMulMean(Layer):
+    def init(self):
+        self.W = self.add_weight(self.shape[1:]).randn()
+
+    def forward(self):
+        self.y.d = np.sum(self.x.d @ self.W.d, axis=1) / self.shape[0]
+
+    def backward(self):
+        dx = (self.y.g @ self.W.d.T) / self.shape[0]
+        self.x.g = np.repeat(dx, self.shape[0], axis=0).reshape(*self.x.d.shape)
+        self.W.g = np.sum(self.x.d.T @ self.y.g, axis=1) / self.shape[0]
+</code></pre></div></div></div></div>
+
+</div></div></div>
+
+<p>動作の確認を行います。</p>
+<div class="pheasant-fenced-code"><div class="cached"><div class="cell jupyter input"><div class="code"><pre><code class="python">from ivory.core.model import sequential
+
+net = [(&#34;input&#34;, I, L), (&#34;matmulmean&#34;, M, &#34;softmax_cross_entropy&#34;)]
+model = sequential(net)
+mat = model.layers[0]
+mat.x
+
+model.set_data(np.random.randn(N, I, L), np.random.randint(0, M, N))
+model.forward()
+model.backward()
+
+for var in model.grad_variables:
+    error = model.gradient_error(var)
+    print(var.parameters[0].name, f&#34;{error:.04e}&#34;)</code></pre></div>
+<div class="report"><p><span class="count">[61]</span>
+<span class="start">2019-06-12 20:01:37</span> (<span class="time">22.0ms</span>)
+<span class="right"><span class="kernel">python3</span> (<span class="total">971ms</span>)</span></p></div></div><div class="cell jupyter stdout"><div class="code">
+      <pre><code class="nohighlight">x 1.7170e-07
+W 1.7841e-05</code></pre></div></div></div></div>
+
+<p>以上のように、形状確認と勾配確認によって、新規にレイヤを実装することができました。</p></div>
+                <footer>
+    <div class="footer-buttons">
+        <div class="previous"><a href="../MatMul_Embedding/" title="2.9 MatMul/Embeddingレイヤ"><span>Previous</span></a></div>
+        <div class="next"><a href="../EmbeddingMean/" title="2.11 EmbeddingMean"><span>Next</span></a></div>
+    </div>
+    <div class="footer-note">
+        <p>
+            Built with <a href="http://www.mkdocs.org">MkDocs</a> using
+            <a href="https://github.com/daizutabi/mkdocs-ivory">Ivory theme</a>.
+        </p>
+    </div>
+</footer>
+            </div>
+        </main>
+    </div>
+    <script>
+        var base_url = '.';
+    </script>
+    <script src="../../../../js/theme.js"></script>
+    <script src="../../../../js/pheasant.js"></script>
+</body>
+
+</html>
